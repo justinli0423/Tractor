@@ -1,5 +1,6 @@
 class Round {
-    constructor(declarers, opponents, trump_value) {
+    constructor(cards, declarers, opponents, trump_value) {
+        this._cards = cards
         this._declarers = declarers
         this._opponents = opponents
         this._declarer_points = 0
@@ -7,6 +8,20 @@ class Round {
         this._trump_value = trump_value
         this._trump_suit = null
         this._bottom = null
+    }
+
+    get cards() {
+        let cards = this._cards.slice()
+        this._cards = []
+        return cards
+    }
+
+    deal(cards) {
+
+    }
+
+    set cards(cards) {
+        this._cards.push(...cards)
     }
 
     get declarers() {
