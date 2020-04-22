@@ -9,6 +9,7 @@ const app = express();
 app.use(index);
 const server = http.createServer(app);
 const io = socketIo(server);
+const sockets = {};
 
 let interval;
 
@@ -17,8 +18,15 @@ const getApiAndEmit = socket => {
     socket.emit('FromApi', response);
 }
 
+const getSocketID = socket => {
+    socket.on('setSocketID', (username) => {
+        socket.username = username
+    });
+}
+
 io.on('connection', (socket) => {
-    console.log('newClient');
+    console.log('newClient', socket);
+
     if (interval) {
         clearInterval(interval);
     }
