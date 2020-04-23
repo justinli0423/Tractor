@@ -16,11 +16,11 @@ const io = socketIo(server);
 const sockets = {};
 let interval;
 
-var i = 0
-const game = new Game()
-const deck = new Deck()
+var i = 0;
+// const game = new Game();
+const deck = new Deck();
 deck.populate()
-deck.shuffle()
+// deck.shuffle()
 
 const getApiAndEmit = socket => {
     const response = new Date();
@@ -28,8 +28,13 @@ const getApiAndEmit = socket => {
 }
 
 const getCard = socket => {
+    if (deck.isEmpty()) {
+        clearInterval(interval);
+        return;
+    }
     const card = deck.deal();
-    socket.emit('DealCard', card.value, card.suit);
+    console.log(card)
+    socket.emit('DealCard', [card.value, card.suit]);
 }
 
 io.on('connection', (socket) => {
@@ -42,11 +47,8 @@ io.on('connection', (socket) => {
     }
 
     interval = setInterval(() => {
-        if (deck.isEmpty()) {
-            clearInterval(interval);
-        }
-        return getCard(socket);
-    }, 1000);
+        getCard(socket);
+    }, 5);
 
     socket.on('setSocketID', (username) => {
         console.log(username)

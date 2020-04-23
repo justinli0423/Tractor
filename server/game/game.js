@@ -2,7 +2,7 @@ const Round = require('./round');
 const Deck = require('./deck');
 
 class Game {
-    constructor(players) {
+    constructor(players = null) {
         this._players = players
         this._team1_level = '2'
         this._team2_level = '2'
@@ -38,4 +38,4 @@ class Game {
     }
 }
 
-export default Game
+module.exports = Game;

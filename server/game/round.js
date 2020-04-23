@@ -72,4 +72,4 @@ class Round {
 
 }
 
-export default Round
+module.exports = Round;

@@ -18,8 +18,8 @@ const default_ranks = {
 
 const points = {'5': 5, '10': 10, 'K': 10}
 
-export default class Card {
-    constructor(suit, value, trump_value = null, trump_suit = null) {
+class Card {
+    constructor(value, suit, trump_value = null, trump_suit = null) {
         this._suit = suit
         this._value = value
         this._rank = default_ranks[this._value] +
@@ -43,3 +43,5 @@ export default class Card {
         return points[this._value] ? points[this._value] : 0
     }
 }
+
+module.exports = Card
