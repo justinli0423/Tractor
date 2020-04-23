@@ -1,10 +1,14 @@
-import socketIOClient from "socket.io-client";
+import io from "socket.io-client";
 
 const ENDPOINT = "http://127.0.0.1:8000";
+var socket = null;
 
 export function connectToSocket() {
-  return socketIOClient(ENDPOINT);
-  // socket.on("FromApi", (data: React.SetStateAction<any>) => {
-  //   setConnection(true);
-  // });
+  socket = io(ENDPOINT);
+  return socket;
 }
+
+export function setSocketID(id) {
+  return socket.emit('setSocketID', id);
+}
+

@@ -3,22 +3,37 @@ import styled from 'styled-components';
 
 import Game from './components/Game';
 
-import { connectToSocket } from './socket/connect';
+import { connectToSocket, setSocketID } from './socket/connect';
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
       socket: {connected: false},
+      connectionStatus: false,
+      name: '',
     };
   }
 
+  componentDidUpdate() {
+    const { socket } = this.state;
+    socket.on('connectionStatus', (connectionStatus) => {
+      this.setState({
+        connectionStatus
+      })
+    })
+  }
+
   connect() {
+    const id = this.refs.nameRef.value;
+    if (!id) {
+      console.log('enter a name');
+      return;
+    }
+
     let socket = connectToSocket();
-    this.setState({
-      socket,
-      connectionStatus: socket.connected
-    });
+    setSocketID(id);
+    this.setState({ socket });
   }
 
   renderPreConnection() {
@@ -27,7 +42,9 @@ class App extends Component {
         <Title>
           Tractor
       </Title>
-
+        <NameInput
+          ref="nameRef"
+        />
         <Button
           onClick={() => { this.connect() }}
         >
@@ -46,9 +63,8 @@ class App extends Component {
   }
 
   render() {
-    const { socket } = this.state;
-    console.log(socket.connected);
-    return socket.connected ? this.renderPostConnection() : this.renderPreConnection();
+    const { connectionStatus } = this.state;
+    return connectionStatus ? this.renderPostConnection() : this.renderPreConnection();
   }
 }
 
@@ -65,6 +81,12 @@ const Container = styled.div`
 const Title = styled.h1`
   margin: 5px;
   padding: 0;
+`;
+
+const NameInput = styled.input`
+  margin: 7px;
+  padding: 4px;
+  width: 7em;
 `;
 
 const Button = styled.button`

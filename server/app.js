@@ -11,32 +11,28 @@ const server = http.createServer(app);
 const io = socketIo(server);
 const sockets = {};
 
+
 let interval;
-
-
-
-const getApiAndEmit = socket => {
-    const response = new Date();
-    socket.emit('FromApi', response);
-}
 
 const getSocketID = socket => {
     socket.on('setSocketID', (username) => {
-        socket.username = username
+        socket.username = username;
+        console.log(socket.username);
+        return socket;
     });
+}
+
+const getConnectionStatus = socket => {
+    socket.emit('connectionStatus', socket.connected);
 }
 
 io.on('connection', (socket) => {
     console.log('newClient');
 
-    if (interval) {
-        clearInterval(interval);
-    }
-    interval = setInterval(() => {
-        return getApiAndEmit(socket);
-    }, 1000);
+    getConnectionStatus(socket);
+
     socket.on('disconnect', () => {
-        console.log('client disconnected');
+        console.log(`socket ${socket.username} disconnected`);
         clearInterval(interval);
     })
 })
