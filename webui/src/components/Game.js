@@ -28,7 +28,7 @@ class Game extends Component {
 
   render() {
     const {
-      cards,
+      // cards,
       cardSvgs
     } = this.state;
     return(

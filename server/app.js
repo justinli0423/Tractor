@@ -15,26 +15,20 @@ const server = http.createServer(app);
 const io = socketIo(server);
 // io.sockets.connected[socketId] to get ID
 // io.to(socketid).emit(); to send to specific client
-const sockets = [];
-let interval;
-
-const getSocketID = socket => {
-    socket.on('setSocketID', (username) => {
-        socket.username = username;
-        console.log(socket.username);
-        return socket;
-    });
-
-var users = 0;
+const sockets = {};
+// socket
+var interval;
+var numClients = 0;
 var curuser = 0;
 // const game = new Game();
 const deck = new Deck();
-deck.populate()
-deck.shuffle()
+deck.populate();
+deck.shuffle();
 
-const getApiAndEmit = socket => {
-    const response = new Date();
-    socket.emit('FromApi', response);
+const getSocketID = socket => {
+    socket.on('setSocketID', (username) => {
+        trackClients(socket.id, username);
+    });
 }
 
 const getCard = socket => {
@@ -50,17 +44,28 @@ const getConnectionStatus = socket => {
     socket.emit('connectionStatus', socket.connected);
 }
 
+const trackClients = (socketId, userId) => {
+    console.log(`Client #${numClients} (${userId}) has connected`);
+    numClients += 1;
+    sockets[socketId] = userId;
+}
+
+const removeClient = (socket) => {
+    console.log(`Client ${sockets[socket.id]} has disconnected`);
+    sockets[socket.id] = null;
+    numClients -= 1;
+}
+
 io.on('connection', (socket) => {
-    console.log('newClient ' + users);
-    users += 1;
-    sockets.push(socket);
 
     getConnectionStatus(socket);
+    getSocketID(socket);
+
     if (interval) {
-        clearInterval(interval);
+        clearInterval(interval);    
     }
 
-    if (users === 2) {
+    if (numClients === 2) {
         interval = setInterval(() => {
             getCard(sockets[curuser]);
             curuser = 1 - curuser;
@@ -68,16 +73,16 @@ io.on('connection', (socket) => {
     }
 
     socket.on('setSocketID', (username) => {
-        console.log(username)
         socket.username = username
     });
 
     socket.on('disconnect', () => {
-        console.log(`socket ${socket.username} disconnected`);
         clearInterval(interval);
+        removeClient(socket);
     })
 })
 
 server.listen(port, () => {
     console.log(`Listening on port: ${port}`);
-})
+});
+
