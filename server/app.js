@@ -11,7 +11,8 @@ const server = http.createServer(app);
 const io = socketIo(server);
 const sockets = {};
 
-
+// io.sockets.connected[socketId] to get ID
+// io.to(socketid).emit(); to send to specific client
 let interval;
 
 const getSocketID = socket => {

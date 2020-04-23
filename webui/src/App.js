@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import Game from './components/Game';
 
-import { connectToSocket, setSocketID } from './socket/connect';
+import { connectToSocket } from './socket/connect';
 
 class App extends Component {
   constructor(props) {
@@ -15,25 +15,18 @@ class App extends Component {
     };
   }
 
-  componentDidUpdate() {
-    const { socket } = this.state;
-    socket.on('connectionStatus', (connectionStatus) => {
-      this.setState({
-        connectionStatus
-      })
-    })
+  setConnectionStatus(connectionStatus) {
+    this.setState({ connectionStatus });
   }
 
   connect() {
-    const id = this.refs.nameRef.value;
+    const id = this.nameRef.value;
     if (!id) {
       console.log('enter a name');
       return;
     }
 
-    let socket = connectToSocket();
-    setSocketID(id);
-    this.setState({ socket });
+    connectToSocket(this.setConnectionStatus.bind(this), id);
   }
 
   renderPreConnection() {
@@ -43,7 +36,7 @@ class App extends Component {
           Tractor
       </Title>
         <NameInput
-          ref="nameRef"
+          ref={(nameRef) => { this.nameRef = nameRef }}
         />
         <Button
           onClick={() => { this.connect() }}
@@ -69,6 +62,7 @@ class App extends Component {
 }
 
 const Container = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;

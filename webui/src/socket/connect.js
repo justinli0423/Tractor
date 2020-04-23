@@ -1,14 +1,19 @@
 import io from "socket.io-client";
 
 const ENDPOINT = "http://127.0.0.1:8000";
+
 var socket = null;
 
-export function connectToSocket() {
+export function connectToSocket(getStatusCb, id) {
   socket = io(ENDPOINT);
-  return socket;
+  getConnectionStatus(getStatusCb);
+  setSocketID(id);
 }
 
-export function setSocketID(id) {
-  return socket.emit('setSocketID', id);
+function setSocketID(id) {
+  socket.emit('setSocketID', id);
 }
 
+function getConnectionStatus(setStatusCb) {
+  socket.on('connectionStatus', status => setStatusCb(status));
+}
