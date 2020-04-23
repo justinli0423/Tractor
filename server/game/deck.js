@@ -26,12 +26,11 @@ class Deck {
     }
 
     shuffle() {
-        for (let n = 0; n < 3; n++)
-        {
-            for (let i = 0; i < this._cards.length; i++) {
-                let j = Math.floor(Math.random() * (this._cards.length - i)) + i;
-                this._cards[i], this._cards[j] = this._cards[j], this._cards[i];
-            }
+        for (let i = 0; i < this._cards.length; i++) {
+            let j = Math.floor(Math.random() * (this._cards.length - i)) + i;
+            let temp = this._cards[j];
+            this._cards[j] = this._cards[i];
+            this._cards[i] = temp;
         }
     }
 

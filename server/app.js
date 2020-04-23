@@ -13,14 +13,15 @@ const app = express();
 app.use(index);
 const server = http.createServer(app);
 const io = socketIo(server);
-const sockets = {};
+const sockets = [];
 let interval;
 
-var i = 0;
+var users = 0;
+var curuser = 0;
 // const game = new Game();
 const deck = new Deck();
 deck.populate()
-// deck.shuffle()
+deck.shuffle()
 
 const getApiAndEmit = socket => {
     const response = new Date();
@@ -33,22 +34,24 @@ const getCard = socket => {
         return;
     }
     const card = deck.deal();
-    console.log(card)
     socket.emit('DealCard', [card.value, card.suit]);
 }
 
 io.on('connection', (socket) => {
-    console.log('newClient ' + i);
-    i += 1;
-    console.log('newClient');
+    console.log('newClient ' + users);
+    users += 1;
+    sockets.push(socket);
 
     if (interval) {
         clearInterval(interval);
     }
 
-    interval = setInterval(() => {
-        getCard(socket);
-    }, 5);
+    if (users === 2) {
+        interval = setInterval(() => {
+            getCard(sockets[curuser]);
+            curuser = 1 - curuser;
+        }, 5);
+    }
 
     socket.on('setSocketID', (username) => {
         console.log(username)
@@ -64,4 +67,3 @@ io.on('connection', (socket) => {
 server.listen(port, () => {
     console.log(`Listening on port: ${port}`);
 })
-
