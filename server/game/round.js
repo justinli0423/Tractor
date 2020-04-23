@@ -1,4 +1,4 @@
-import Deck from './deck'
+const Deck = require('./deck');
 
 class Round {
     constructor(deck, declarers, opponents, trump_value) {
@@ -10,6 +10,7 @@ class Round {
         this._trump_value = trump_value
         this._trump_suit = null
         this._bottom = null
+        this._winner = null
     }
 
     deal() {
@@ -65,6 +66,10 @@ class Round {
         this._bottom = cards
     }
 
+    winner() {
+        self._winner = this._opponent_points >= 80 ? 'Opponents' : 'Declarers'
+    }
+
 }
 
-export default Round
+module.exports = Round;
