@@ -13,6 +13,8 @@ const sockets = {};
 
 let interval;
 
+
+
 const getApiAndEmit = socket => {
     const response = new Date();
     socket.emit('FromApi', response);
@@ -25,7 +27,7 @@ const getSocketID = socket => {
 }
 
 io.on('connection', (socket) => {
-    console.log('newClient', socket);
+    console.log('newClient');
 
     if (interval) {
         clearInterval(interval);
@@ -42,3 +44,4 @@ io.on('connection', (socket) => {
 server.listen(port, () => {
     console.log(`Listening on port: ${port}`);
 })
+

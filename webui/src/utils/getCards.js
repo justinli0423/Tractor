@@ -1,7 +1,7 @@
 export class Card {
-  suits: Array<string>;
-  jokers: Array<string>;
-  cards: Array<any>;
+  suits = [];
+  jokers = [];
+  cards = [];
 
   constructor() {
     this.suits = ['H', 'C', 'S', 'D']; //hearts, clubs, spades, diamonds
@@ -9,19 +9,19 @@ export class Card {
     this.cards = ['A', 2, 3, 4, 5, 6, 7, 8, 9, 10, 'J', 'Q', 'K'];
   }
 
-  isValidCard(arr: any[]) {
+  isValidCard(arr) {
     if (arr[1] === 'T') {
       // if it is a joker,
       return this.jokers.includes(arr[0]);
     }
     
-    let valid_card: boolean = this.cards.includes(arr[0]);
-    let valid_suit: boolean = this.suits.includes(arr[1]);
+    let valid_card = this.cards.includes(arr[0]);
+    let valid_suit = this.suits.includes(arr[1]);
 
     return valid_card && valid_suit;
   }
 
-  getSvg(arr: any[]) {
+  getSvg(arr) {
     if (!this.isValidCard(arr)) {
       throw new Error(`Invalid cards: ${arr}`);
     }

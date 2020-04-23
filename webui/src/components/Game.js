@@ -7,7 +7,7 @@ const path = '../cardsSvg/';
 function Game() {
   const Cards = new Card();
 
-  const [myCards, setCards] = useState([] as any);
+  const [myCards, setCards] = useState([]);
 
   // useEffect(() => {
   //   const tmpCards : any[][] = [[1, 'S'], [3, 'C'], [5, 'D'], ['K', 'S']];
