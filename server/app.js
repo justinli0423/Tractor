@@ -35,6 +35,8 @@ const getCard = socket => {
 io.on('connection', (socket) => {
     console.log('newClient ' + i);
     i += 1;
+    console.log('newClient');
+
     if (interval) {
         clearInterval(interval);
     }
@@ -60,3 +62,4 @@ io.on('connection', (socket) => {
 server.listen(port, () => {
     console.log(`Listening on port: ${port}`);
 })
+
