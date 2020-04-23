@@ -13,11 +13,9 @@ const app = express();
 app.use(index);
 const server = http.createServer(app);
 const io = socketIo(server);
-<<<<<<< HEAD
-const sockets = {};
-
 // io.sockets.connected[socketId] to get ID
 // io.to(socketid).emit(); to send to specific client
+const sockets = [];
 let interval;
 
 const getSocketID = socket => {
@@ -26,9 +24,6 @@ const getSocketID = socket => {
         console.log(socket.username);
         return socket;
     });
-=======
-const sockets = [];
-let interval;
 
 var users = 0;
 var curuser = 0;
@@ -49,7 +44,6 @@ const getCard = socket => {
     }
     const card = deck.deal();
     socket.emit('DealCard', [card.value, card.suit]);
->>>>>>> origin/master
 }
 
 const getConnectionStatus = socket => {
@@ -61,9 +55,7 @@ io.on('connection', (socket) => {
     users += 1;
     sockets.push(socket);
 
-<<<<<<< HEAD
     getConnectionStatus(socket);
-=======
     if (interval) {
         clearInterval(interval);
     }
@@ -79,7 +71,6 @@ io.on('connection', (socket) => {
         console.log(username)
         socket.username = username
     });
->>>>>>> origin/master
 
     socket.on('disconnect', () => {
         console.log(`socket ${socket.username} disconnected`);
