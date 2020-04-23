@@ -1,4 +1,4 @@
-import Card from './cards'
+const Card = require('./cards');
 
 const values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']
 const suits = ['S', 'D', 'C', 'H']
@@ -31,6 +31,10 @@ export default class Deck {
             self._cards[i] = self._cards[j];
             self._cards[j] = self._cards[i];
         }
+    }
+
+    get isEmpty() {
+        return self._cards.length == 0
     }
 
     deal() {

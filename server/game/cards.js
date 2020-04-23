@@ -16,6 +16,8 @@ const default_ranks = {
     'S': 200
 }
 
+const points = {'5': 5, '10': 10, 'K': 10}
+
 export default class Card {
     constructor(suit, value, trump_value = null, trump_suit = null) {
         this._suit = suit
@@ -35,5 +37,9 @@ export default class Card {
 
     get rank() {
         return this._rank
+    }
+
+    get points() {
+        return points[this._value] ? points[this._value] : 0
     }
 }
