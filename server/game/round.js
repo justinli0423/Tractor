@@ -1,6 +1,8 @@
+import Deck from './deck'
+
 class Round {
-    constructor(cards, declarers, opponents, trump_value) {
-        this._cards = cards
+    constructor(deck, declarers, opponents, trump_value) {
+        this._deck = deck
         this._declarers = declarers
         this._opponents = opponents
         this._declarer_points = 0
@@ -10,18 +12,13 @@ class Round {
         this._bottom = null
     }
 
-    get cards() {
-        let cards = this._cards.slice()
-        this._cards = []
-        return cards
+    deal() {
+        return this._deck.deal()
     }
 
-    deal(cards) {
-
-    }
-
-    set cards(cards) {
-        this._cards.push(...cards)
+    push_card(cards) {
+        for (let i = 0; i < cards.length; i++)
+        this._deck.push_card(cards[i])
     }
 
     get declarers() {
@@ -69,3 +66,5 @@ class Round {
     }
 
 }
+
+export default Round
