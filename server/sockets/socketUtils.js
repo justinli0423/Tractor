@@ -1,8 +1,13 @@
+const Game = require('../game/game');
+
 class SocketUtil {
     constructor(io) {
         this._io = io;
         this._sockets = {};
-        console.log('length', Object.keys(this._sockets).length)
+    }
+
+    get io() {
+        return this._io
     }
 
     get sockets() {
@@ -12,9 +17,10 @@ class SocketUtil {
     add_socket(socket) {
         socket.on('setSocketID', (clientID) => {
             this._sockets[socket.id] = clientID;
-            console.log('length', Object.keys(this._sockets).length)
+            console.log('length', Object.keys(this._sockets).length);
             console.log(`Client #${Object.keys(this._sockets).length} (${clientID}) has connected`);
             socket.emit('connectionStatus', socket.connected);
+            this.start();
         });
     }
 
@@ -32,6 +38,14 @@ class SocketUtil {
 
     getSocket(socketID) {
         return this._io.to(socketID)
+    }
+
+    start() {
+        console.log('start:', Object.keys(this._sockets).length)
+        if (Object.keys(this._sockets).length === 4) {
+            const game = new Game(this, this._io, Object.keys(this._sockets));
+            game.new_round()
+        }
     }
 
 }

@@ -1,9 +1,11 @@
 const Deck = require('./deck');
-const sh = require('../sockets/socketUtils')
 
 class Round {
-    constructor(deck, players = null, trump_value) {
+    constructor(su, io, deck, players = null, trump_value) {
+        this._su = su
+        this._io = io
         this._deck = deck
+        this._deck.shuffle()
         this._players = players
         this._declarer_points = 0
         this._opponent_points = 0
@@ -13,15 +15,21 @@ class Round {
         this._winner = null
     }
 
+    get deck() {
+        return this._deck
+    }
+
     deal() {
-        for (let i = 0; i < 100; i++) {
+        let i = 0
+        global.interval = setInterval(() => {
             let card = this._deck.deal()
-            sh.getSocket(this._players[i % 4]).emit('DealCard', [card.value, card.suit])
-            interval = setInterval(() => {
-                getCard(global.sockets[curuser]);
-                curuser = 1 - curuser;
-            }, 5);
-        }
+            this._su.getSocket(this._players[i % 4]).emit('DealCard', [card.value, card.suit])
+            console.log(`player ${i % 4}:`, [card.value, card.suit])
+            i++;
+            if (i === 100) {
+                clearInterval(global.interval);
+            }
+        }, 5);
     }
 
     push_card(cards) {
