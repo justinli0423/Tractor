@@ -3,10 +3,10 @@ const socketIo = require('socket.io');
 const http = require('http');
 
 const index = require('./routes/index');
-const Game = require('./game/game');
-const Round = require('./game/round');
-const Deck = require('./game/deck');
-const Card = require('./game/cards');
+// const Game = require('./game/game');
+// const Round = require('./game/round');
+// const Deck = require('./game/deck');
+// const Card = require('./game/cards');
 const SocketUtil = require('./sockets/socketUtils');
 const port = process.env.PORT || 8000;
 
@@ -18,10 +18,6 @@ const su = new SocketUtil(io);
 // io.global.sockets.connected[socketId] to get ID
 // io.to(socketid).emit(); to send to specific client
 global.interval = null;
-// const game = new Game();
-const deck = new Deck();
-deck.populate();
-deck.shuffle();
 
 io.on('connection', (socket) => {
     su.add_socket(socket)
@@ -30,14 +26,7 @@ io.on('connection', (socket) => {
     if (global.interval) {
         clearInterval(global.interval);
     }
-    // console.log(su.getNumClients())
-    if (su.getNumClients() === 4) {
-    //     interval = setInterval(() => {
-    //         getCard(global.sockets[curuser]);
-    //         curuser = 1 - curuser;
-    //     }, 5);
-        // console.log(su.sockets())
-    }
+
 })
 
 server.listen(port, () => {

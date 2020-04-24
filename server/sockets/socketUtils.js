@@ -1,9 +1,14 @@
 const _ = require('underscore');
+const Game = require('../game/game');
 
 class SocketUtil {
     constructor(io) {
         this._io = io;
         this._sockets = {};
+    }
+
+    get io() {
+        return this._io
     }
 
     get sockets() {
@@ -34,7 +39,8 @@ class SocketUtil {
             console.log(`Client ${clientID} has connected`);
             this._sockets[socket.id] = clientID;
             this.set_connection_status(socket, socket.connected);
-            this.set_connected_clients()
+            this.set_connected_clients();
+            this.start();
         });
     }
 
@@ -53,6 +59,14 @@ class SocketUtil {
 
     getSocket(socketID) {
         return this._io.to(socketID);
+    }
+
+    start() {
+        console.log('start:', Object.keys(this._sockets).length)
+        if (Object.keys(this._sockets).length === 4) {
+            const game = new Game(this, this._io, Object.keys(this._sockets));
+            game.new_round()
+        }
     }
 
 }
