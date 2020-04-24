@@ -20,7 +20,6 @@ const su = new SocketUtil(io);
 global.interval = null;
 
 io.on('connection', (socket) => {
-
     su.add_socket(socket)
     su.remove_socket(socket)
 

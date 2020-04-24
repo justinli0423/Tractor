@@ -3,13 +3,15 @@ import styled from 'styled-components';
 
 import Game from './components/Game';
 
-import { connectToSocket } from './socket/connect';
+import { connectToSocket, getConnectedClients } from './socket/connect';
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      socket: {connected: false},
+      clients: {},
+      clientIds: [],
+      socket: { connected: false },
       connectionStatus: false,
       name: '',
     };
@@ -17,9 +19,21 @@ class App extends Component {
 
   setConnectionStatus(connectionStatus) {
     this.setState({ connectionStatus });
+    if (connectionStatus) {
+      getConnectedClients(this.setConnectedClients.bind(this));
+    }
   }
 
-  connect() {
+  setConnectedClients(sockets) {
+    console.log('clients: ', sockets);
+    this.setState({
+      clients: sockets,
+      clientIds: Object.keys(sockets)
+    });
+  }
+
+  connect(ev) {
+    ev.preventDefault();
     const id = this.nameRef.value;
     if (!id) {
       console.log('enter a name');
@@ -29,31 +43,55 @@ class App extends Component {
     connectToSocket(this.setConnectionStatus.bind(this), id);
   }
 
+  // TODO: ENTER GAME ON KEYPRESS "ENTER" 
   renderPreConnection() {
     return (
       <Container>
         <Title>
           Tractor
       </Title>
-        <NameInput
-          ref={(nameRef) => { this.nameRef = nameRef }}
-        />
-        <Button
-          onClick={() => { this.connect() }}
+        <form
+          onSubmit = {(ev) => { this.connect(ev) }}
         >
-          Play
-      </Button>
+          <NameInput
+            autoFocus
+            ref={(nameRef) => { this.nameRef = nameRef }}
+          />
+          <Button>
+            Play  
+          </Button>
+        </form>
       </Container>
     );
   }
 
+
   renderPostConnection() {
     return (
       <Container>
+        <ClientsContainer>
+          <ClientsHeader>Connected Users:</ClientsHeader>
+          {this.renderConnectedClients()}
+        </ClientsContainer>
         <Game />
       </Container>
     );
   }
+
+  renderConnectedClients() {
+    const {
+      clientIds,
+      clients
+    } = this.state;
+    return clientIds.map((id, i) => {
+      return (
+        <ClientItem>
+          {i}: {clients[id]}
+        </ClientItem>
+      )
+    });
+  }
+
 
   render() {
     const { connectionStatus } = this.state;
@@ -70,6 +108,23 @@ const Container = styled.div`
   width: 100%;
   height: 100%;
   background-color: green;
+`;
+
+const ClientsContainer = styled.ul`
+  position: absolute;
+  top: 10px;
+  right: 0;
+  transform: translateX(-25%);
+  font-size: 24px;
+  list-style: none;
+`;
+
+const ClientsHeader = styled.div`
+
+`;
+
+const ClientItem = styled.li`
+  margin-left: 20px;
 `;
 
 const Title = styled.h1`
