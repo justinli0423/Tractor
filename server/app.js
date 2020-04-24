@@ -18,28 +18,25 @@ const su = new SocketUtil(io);
 // io.global.sockets.connected[socketId] to get ID
 // io.to(socketid).emit(); to send to specific client
 global.interval = null;
-var numClients = 0;
-var curuser = 0;
 // const game = new Game();
 const deck = new Deck();
 deck.populate();
 deck.shuffle();
 
 io.on('connection', (socket) => {
-
     su.add_socket(socket)
     su.remove_socket(socket)
 
     if (global.interval) {
         clearInterval(global.interval);
     }
-    console.log(su.getNumClients())
+    // console.log(su.getNumClients())
     if (su.getNumClients() === 4) {
     //     interval = setInterval(() => {
     //         getCard(global.sockets[curuser]);
     //         curuser = 1 - curuser;
     //     }, 5);
-        console.log(su.sockets())
+        // console.log(su.sockets())
     }
 })
 
