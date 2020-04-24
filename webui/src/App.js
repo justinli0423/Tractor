@@ -43,7 +43,6 @@ class App extends Component {
     connectToSocket(this.setConnectionStatus.bind(this), id);
   }
 
-  // TODO: ENTER GAME ON KEYPRESS "ENTER" 
   renderPreConnection() {
     return (
       <Container>
