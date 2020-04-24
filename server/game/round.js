@@ -1,10 +1,9 @@
 const Deck = require('./deck');
 
 class Round {
-    constructor(deck, declarers, opponents, trump_value) {
+    constructor(deck, players = null, trump_value) {
         this._deck = deck
-        this._declarers = declarers
-        this._opponents = opponents
+        this._players = players
         this._declarer_points = 0
         this._opponent_points = 0
         this._trump_value = trump_value
@@ -14,7 +13,14 @@ class Round {
     }
 
     deal() {
-        return this._deck.deal()
+        for (let i = 0; i < 100; i++) {
+            let card = this._deck.deal()
+            socket.emit('DealCard', [card.value, card.suit])
+            interval = setInterval(() => {
+                getCard(global.sockets[curuser]);
+                curuser = 1 - curuser;
+            }, 5);
+        }
     }
 
     push_card(cards) {
@@ -22,12 +28,8 @@ class Round {
         this._deck.push_card(cards[i])
     }
 
-    get declarers() {
-        return this._declarers
-    }
-
-    get opponents() {
-        return this._opponents
+    get players() {
+        return this._players
     }
 
     get declarer_points() {
