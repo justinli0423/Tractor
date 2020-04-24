@@ -22,9 +22,10 @@ class Trick {
         } else if (this._cards[0].length === 2 && this._cards[0][0] === this._cards[0][1]) {
             const lead = this._cards[0][0].suit
             for (let i = 0; i < 4; i++) {
-                ranks.push(this._cards[i][0].rank + (this._cards[i][0].suit === lead ? 13 : 0))
+                ranks.push(this._cards[i][0] === this._cards[i][1] ? this._cards[i][0].rank + (this._cards[i][0].suit === lead ? 13 : 0) : 0)
             }
         }
     }
-
 }
+
+module.exports = Trick;

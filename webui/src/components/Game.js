@@ -16,7 +16,7 @@ class Game extends Component {
   }
 
   componentDidMount() {
-    this.setFakeCards();
+    // this.setFakeCards();
   }
 
   setFakeCards() {
