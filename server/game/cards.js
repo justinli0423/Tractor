@@ -12,8 +12,8 @@ const default_ranks = {
     'Q': 11,
     'K': 12,
     'A': 13,
-    'B': 100,
-    'S': 200
+    'B': 250,
+    'S': 500
 }
 
 const points = {'5': 5, '10': 10, 'K': 10}
@@ -23,8 +23,8 @@ class Card {
         this._suit = suit
         this._value = value
         this._rank = default_ranks[this._value] +
-            (this._value === trump_value ? 26 : 0) +
-            (this._suit === trump_suit ? 13 : 0)
+            (this._value === trump_value ? 52 : 0) +
+            (this._suit === trump_suit ? 26 : 0)
     }
 
     get suit() {
