@@ -3,13 +3,14 @@ import styled from 'styled-components';
 
 import Game from './components/Game';
 
-import { connectToSocket } from './socket/connect';
+import { connectToSocket, getConnectedClients } from './socket/connect';
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      socket: {connected: false},
+      clients: {},
+      socket: { connected: false },
       connectionStatus: false,
       name: '',
     };
@@ -17,6 +18,16 @@ class App extends Component {
 
   setConnectionStatus(connectionStatus) {
     this.setState({ connectionStatus });
+    if (connectionStatus) {
+      getConnectedClients(this.setConnectedClients.bind(this));
+    }
+  }
+
+  setConnectedClients(sockets) {
+    console.log(sockets);
+    this.setState({
+      clients: sockets
+    });
   }
 
   connect() {
@@ -50,6 +61,9 @@ class App extends Component {
   renderPostConnection() {
     return (
       <Container>
+        <ClientsContainer>
+          abcdefg
+        </ClientsContainer>
         <Game />
       </Container>
     );
@@ -70,6 +84,12 @@ const Container = styled.div`
   width: 100%;
   height: 100%;
   background-color: green;
+`;
+
+const ClientsContainer = styled.div`
+  position: absolute;
+  top: 10px;
+  font-size: 12px;
 `;
 
 const Title = styled.h1`

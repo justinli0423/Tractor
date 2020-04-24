@@ -15,7 +15,7 @@ const server = http.createServer(app);
 const io = socketIo(server);
 // io.sockets.connected[socketId] to get ID
 // io.to(socketid).emit(); to send to specific client
-const sockets = {};
+var sockets = {};
 // socket
 var interval;
 var numClients = 0;
@@ -40,25 +40,34 @@ const getCard = socket => {
     socket.emit('DealCard', [card.value, card.suit]);
 }
 
-const getConnectionStatus = socket => {
-    socket.emit('connectionStatus', socket.connected);
+const setConnectionStatus = (socket, socketStatus = false) => {
+    socket.emit('connectionStatus', socketStatus);
+}
+
+const setConnectedClients = (sockets) => {
+    // console.log(sockets);
+    // TODO: DELETE NULL CLIENTS USING UNDERSCORE
+    console.log('Total clients:', Object.values(sockets));
+    io.emit('newClientConnection', sockets);
 }
 
 const trackClients = (socketId, userId) => {
-    console.log(`Client #${numClients} (${userId}) has connected`);
+    console.log(`Client ${userId} has connected`);
     numClients += 1;
     sockets[socketId] = userId;
+    setConnectedClients(sockets);
 }
 
 const removeClient = (socket) => {
     console.log(`Client ${sockets[socket.id]} has disconnected`);
+    setConnectionStatus(socket);
     sockets[socket.id] = null;
     numClients -= 1;
 }
 
 io.on('connection', (socket) => {
 
-    getConnectionStatus(socket);
+    setConnectionStatus(socket, socket.connected);
     getSocketID(socket);
 
     if (interval) {

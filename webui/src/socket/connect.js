@@ -10,6 +10,10 @@ export function connectToSocket(getStatusCb, id) {
   setSocketID(id);
 }
 
+export function getConnectedClients(setClientsCb) {
+  socket.on('newClientConnection', setClientsCb);
+}
+
 function setSocketID(id) {
   socket.emit('setSocketID', id);
 }

@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import styled from 'styled-components';
+
 import { Card } from '../utils/getCards';
+
 
 const path = '/cardsSVG/';
 
@@ -14,6 +16,10 @@ class Game extends Component {
   }
 
   componentDidMount() {
+    this.setFakeCards();
+  }
+
+  setFakeCards() {
     const Cards = new Card();
     const cards = [['A', 'S'], ['A', 'S'], [3, 'C'], [5, 'D'], ['K', 'S'],['A', 'S'], [3, 'C'], [5, 'D'], ['K', 'S']];
     const cardSvgs = [];
@@ -35,7 +41,6 @@ class Game extends Component {
       <Container>
         {/* <img src={cardSvgs[1]} /> */}
         {cardSvgs.map(card => {
-          console.log(card);
           return (
             <CardImg src={card} key={card} />
             // change the key prop to the name of card
@@ -67,5 +72,6 @@ const CardImg = styled.img`
   height: 336px;
   flex-shrink: 0;
 `;
+
 
 export default Game;
