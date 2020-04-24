@@ -13,9 +13,9 @@ const app = express();
 app.use(index);
 const server = http.createServer(app);
 const io = socketIo(server);
-// io.sockets.connected[socketId] to get ID
+// io.global.sockets.connected[socketId] to get ID
 // io.to(socketid).emit(); to send to specific client
-const sockets = {};
+global.sockets = {};
 // socket
 var interval;
 var numClients = 0;
@@ -31,28 +31,30 @@ const getSocketID = socket => {
     });
 }
 
-const getCard = socket => {
-    if (deck.isEmpty()) {
-        clearInterval(interval);
-        return;
-    }
-    const card = deck.deal();
-    socket.emit('DealCard', [card.value, card.suit]);
-}
+// const getCard = socket => {
+//     if (deck.isEmpty()) {
+//         clearInterval(interval);
+//         return;
+//     }
+//     const card = deck.deal();
+//     socket.emit('DealCard', [card.value, card.suit]);
+// }
 
 const getConnectionStatus = socket => {
     socket.emit('connectionStatus', socket.connected);
 }
 
 const trackClients = (socketId, userId) => {
-    console.log(`Client #${numClients} (${userId}) has connected`);
     numClients += 1;
-    sockets[socketId] = userId;
+    console.log(`Client #${numClients} (${userId}) has connected`);
+    console.log(0, global.sockets)
+    global.sockets[socketId] = userId;
+    console.log(1, global.sockets)
 }
 
 const removeClient = (socket) => {
-    console.log(`Client ${sockets[socket.id]} has disconnected`);
-    sockets[socket.id] = null;
+    console.log(`Client ${global.sockets[socket.id]} has disconnected`);
+    global.sockets[socket.id] = null;
     numClients -= 1;
 }
 
@@ -65,11 +67,12 @@ io.on('connection', (socket) => {
         clearInterval(interval);    
     }
 
-    if (numClients === 2) {
-        interval = setInterval(() => {
-            getCard(sockets[curuser]);
-            curuser = 1 - curuser;
-        }, 5);
+    if (numClients === 4) {
+    //     interval = setInterval(() => {
+    //         getCard(global.sockets[curuser]);
+    //         curuser = 1 - curuser;
+    //     }, 5);
+        console.log(global.sockets)
     }
 
     socket.on('setSocketID', (username) => {
