@@ -1,5 +1,5 @@
 const Deck = require('./deck');
-const SH = require('../socket/helpers')
+const sh = require('../sockets/socketUtils')
 
 class Round {
     constructor(deck, players = null, trump_value) {
@@ -16,7 +16,7 @@ class Round {
     deal() {
         for (let i = 0; i < 100; i++) {
             let card = this._deck.deal()
-            SH.getSocket(this._players[i % 4]).emit('DealCard', [card.value, card.suit])
+            sh.getSocket(this._players[i % 4]).emit('DealCard', [card.value, card.suit])
             interval = setInterval(() => {
                 getCard(global.sockets[curuser]);
                 curuser = 1 - curuser;

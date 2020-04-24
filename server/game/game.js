@@ -1,9 +1,9 @@
 const Round = require('./round');
 const Deck = require('./deck');
-const SH = require('../socket/helpers')
+const SH = require('../sockets/socketUtils')
 
 class Game {
-    constructor() {
+    constructor(SocketUtil) {
         this._team1 = null
         this._team2 = null
         this._order = [null, null, null, null]

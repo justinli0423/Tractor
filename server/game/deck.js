@@ -1,3 +1,4 @@
+const _ = require('underscore');
 const Card = require('./cards');
 
 const values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']
@@ -26,12 +27,7 @@ class Deck {
     }
 
     shuffle() {
-        for (let i = 0; i < this._cards.length; i++) {
-            let j = Math.floor(Math.random() * (this._cards.length - i)) + i;
-            let temp = this._cards[j];
-            this._cards[j] = this._cards[i];
-            this._cards[i] = temp;
-        }
+        this._cards = _.shuffle(this._cards)
     }
 
     isEmpty() {
