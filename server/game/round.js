@@ -2,17 +2,17 @@ const Deck = require('./deck');
 
 class Round {
     constructor(su, io, deck, players = null, trump_value) {
-        this._su = su
-        this._io = io
-        this._deck = deck
-        this._deck.shuffle()
-        this._players = players
-        this._declarer_points = 0
-        this._opponent_points = 0
-        this._trump_value = trump_value
-        this._trump_suit = null
-        this._bottom = null
-        this._winner = null
+        this._su = su;
+        this._io = io;
+        this._deck = deck;
+        this._deck.shuffle();
+        this._players = players;
+        this._declarer_points = 0;
+        this._opponent_points = 0;
+        this._trump_value = trump_value;
+        this._trump_suit = null;
+        this._bottom = null;
+        this._winner = null;
     }
 
     get deck() {
@@ -22,19 +22,19 @@ class Round {
     deal() {
         let i = 0
         global.interval = setInterval(() => {
-            let card = this._deck.deal()
-            this._su.getSocket(this._players[i % 4]).emit('DealCard', [card.value, card.suit])
-            console.log(`player ${i % 4}:`, [card.value, card.suit])
-            i++;
+            let card = this._deck.deal();
+            this._su.dealCards(this._players[i % 4], [card.value, card.suit]);
+            // console.log(`player ${i % 4}:`, [card.value, card.suit])
             if (i === 100) {
                 clearInterval(global.interval);
             }
-        }, 5);
+            i++;
+        }, 10);
     }
 
     push_card(cards) {
         for (let i = 0; i < cards.length; i++)
-        this._deck.push_card(cards[i])
+            this._deck.push_card(cards[i])
     }
 
     get players() {

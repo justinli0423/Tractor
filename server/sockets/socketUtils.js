@@ -7,6 +7,7 @@ class SocketUtil {
         this._sockets = {};
     }
 
+    // ------------ HELPERS ------------
     get io() {
         return this._io
     }
@@ -15,41 +16,9 @@ class SocketUtil {
         return this._sockets;
     }
 
-    clear_null_sockets() {
+    clearNullSockets() {
         this._sockets = _.omit(this._sockets, (value) => {
             return value === null;
-        });
-    }
-
-    set_connection_status(socket, socketStatus = false) {
-        socket.emit('connectionStatus', socketStatus);
-    }
-
-    set_connected_clients() {
-        this.clear_null_sockets();
-        console.log('Total clients:', Object.values(this._sockets));
-        this._io.emit('newClientConnection', this._sockets);
-    }
-
-    add_socket(socket) {
-        // once clientId is received:
-        // 1. send back connection status
-        // 2. send all connect clients
-        socket.on('setSocketID', (clientID) => {
-            console.log(`Client ${clientID} has connected`);
-            this._sockets[socket.id] = clientID;
-            this.set_connection_status(socket, socket.connected);
-            this.set_connected_clients();
-            this.start();
-        });
-    }
-
-    remove_socket(socket) {
-        socket.on('disconnect', () => {
-            clearInterval(global.interval);
-            console.log(`Client ${this._sockets[socket.id]} has disconnected`);
-            this._sockets[socket.id] = null;
-            this.set_connected_clients();
         });
     }
 
@@ -63,12 +32,49 @@ class SocketUtil {
 
     start() {
         console.log('start:', Object.keys(this._sockets).length)
-        if (Object.keys(this._sockets).length === 4) {
+        if (Object.keys(this._sockets).length === 1) {
             const game = new Game(this, this._io, Object.keys(this._sockets));
             game.new_round()
         }
     }
 
+    // ------------ SOCKET EMITTERS ------------
+    setConnectedClients() {
+        this.clearNullSockets();
+        console.log('Total clients:', Object.values(this._sockets));
+        this._io.emit('newClientConnection', this._sockets);
+    }
+
+    dealCards(playerNum, card) {
+        this.getSocket(playerNum).emit('dealCard', card)
+    }
+
+    // ------------ SOCKET LISTENERS ------------
+    setConnectionStatus(socket, socketStatus = false) {
+        socket.emit('connectionStatus', socketStatus);
+    }
+
+    addSocket(socket) {
+        // once clientId is received:
+        // 1. send back connection status
+        // 2. send all connect clients
+        socket.on('setSocketID', (clientID) => {
+            console.log(`Client ${clientID} has connected`);
+            this._sockets[socket.id] = clientID;
+            this.setConnectionStatus(socket, socket.connected);
+            this.setConnectedClients();
+            this.start();
+        });
+    }
+
+    removeSocket(socket) {
+        socket.on('disconnect', () => {
+            clearInterval(global.interval);
+            console.log(`Client ${this._sockets[socket.id]} has disconnected`);
+            this._sockets[socket.id] = null;
+            this.setConnectedClients();
+        });
+    }
 }
 
 module.exports = SocketUtil;

@@ -14,6 +14,10 @@ export function getConnectedClients(setClientsCb) {
   socket.on('newClientConnection', setClientsCb);
 }
 
+export function getCards(setCardsCb) {
+  socket.on('dealCard', setCardsCb);
+}
+
 function setSocketID(id) {
   socket.emit('setSocketID', id);
 }
