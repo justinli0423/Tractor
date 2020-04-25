@@ -80,8 +80,6 @@ class SocketUtil {
 
             // TODO: move somewhere where it make sense
             this.setBottomListener(socket);
-
-
         });
     }
 

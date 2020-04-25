@@ -19,7 +19,6 @@ export function getCards(setCardsCb) {
 }
 
 export function callBottom(id) {
-  console.log('id:' , id)
   socket.emit('callBottom', id);
 }
 

@@ -5,7 +5,7 @@ class Round {
         this._su = su;
         this._io = io;
         this._deck = deck;
-        // this._deck.shuffle();
+        this._deck.shuffle();
         this._players = players;
         this._declarer_points = 0;
         this._opponent_points = 0;
