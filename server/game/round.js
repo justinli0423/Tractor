@@ -34,51 +34,51 @@ class Round {
 
     push_card(cards) {
         for (let i = 0; i < cards.length; i++)
-            this._deck.push_card(cards[i])
+            this._deck.push_card(cards[i]);
     }
 
     get players() {
-        return this._players
+        return this._players;
     }
 
     get declarer_points() {
-        return this._declarer_points
+        return this._declarer_points;
     }
 
     set declarer_point(points) {
-        this._declarer_points += points
+        this._declarer_points += points;
     }
 
     get opponent_points() {
-        return this._opponent_points
+        return this._opponent_points;
     }
 
     set opponent_point(points) {
-        this._opponent_points += points
+        this._opponent_points += points;
     }
 
     get trump_value() {
-        return this._trump_value
+        return this._trump_value;
     }
 
     get trump_suit() {
-        return this._trump_suit
+        return this._trump_suit;
     }
 
     set trump_suit(suit) {
-        this._trump_suit = suit
+        this._trump_suit = suit;
     }
 
     get bottom() {
-        return this._bottom
+        return this._bottom;
     }
 
     set bottom(cards) {
-        this._bottom = cards
+        this._bottom = cards;
     }
 
     winner() {
-        self._winner = this._opponent_points >= 80 ? 'Opponents' : 'Declarers'
+        self._winner = this._opponent_points >= 80 ? 'Opponents' : 'Declarers';
     }
 
 }
