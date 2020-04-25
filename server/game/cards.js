@@ -20,27 +20,27 @@ const points = {'5': 5, '10': 10, 'K': 10}
 
 class Card {
     constructor(value, suit, trump_value = null, trump_suit = null) {
-        this._suit = suit
-        this._value = value
+        this._suit = suit;
+        this._value = value;
         this._rank = default_ranks[this._value] +
             (this._value === trump_value ? 52 : 0) +
-            (this._suit === trump_suit ? 26 : 0)
+            (this._suit === trump_suit ? 26 : 0);
     }
 
     get suit() {
-        return this._suit
+        return this._suit;
     }
 
     get value() {
-        return this._value
+        return this._value;
     }
 
     get rank() {
-        return this._rank
+        return this._rank;
     }
 
     get points() {
-        return points[this._value] ? points[this._value] : 0
+        return points[this._value] ? points[this._value] : 0;
     }
 }
 
