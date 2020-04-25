@@ -29,9 +29,12 @@ class Game extends Component {
       cards,
       numCards
     } = this.state;
+
+    let cardObj = Cards.insertAndSortCard(cards, newCard);
+    console.log(JSON.parse(JSON.stringify(cards)));
     
     this.setState({
-      cards: Cards.insertAndSortCard(cards, newCard),
+      cards: cardObj,
       numCards: numCards + 1
     });
   }
@@ -84,6 +87,7 @@ const CardImg = styled.img`
   width: ${prop => `${prop.width}px`};
   height: ${prop => `${prop.height}px`};
   flex-shrink: 0;
+  filter: greyscale(1);
 
   &:not(:first-child) {
     margin-left: ${prop => `-${prop.numCards * 2.2}px`};

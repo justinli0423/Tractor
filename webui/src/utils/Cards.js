@@ -53,7 +53,10 @@ export default class Cards {
 
   // TODO: remove fake trump suit/value
   insertAndSortCard(cards, newCard, trumpValue = '2', trumpSuit = 'H') {
-    let cardObject = {};
+    let cardObject = {
+      card: newCard,
+      svg: `${this.path}${this.getSvg(newCard)}`
+    }
     if (trumpSuit) {
       // diamonds are trump -> want diamonds first -> move spades to back
       if (trumpSuit === 'D') {
@@ -96,16 +99,8 @@ export default class Cards {
           i++;
         }
       }
-      cardObject = {
-        card: newCard,
-        svg: `${this.path}${this.getSvg(newCard)}`
-      }
       cards.splice(i, 0, cardObject);
     } else {
-      cardObject = {
-        card: newCard,
-        svg: `${this.path}${this.getSvg(newCard)}`
-      }
       cards.push(cardObject);
     }
     return cards;
