@@ -5,7 +5,7 @@ class Round {
         this._su = su;
         this._io = io;
         this._deck = deck;
-        this._deck.shuffle();
+        // this._deck.shuffle();
         this._players = players;
         this._declarer_points = 0;
         this._opponent_points = 0;
@@ -23,12 +23,12 @@ class Round {
         let i = 0
         global.interval = setInterval(() => {
             let card = this._deck.deal();
+            console.log([card.value, card.suit])
             this._su.dealCards(this._players[i % 4], [card.value, card.suit]);
-            // console.log(`player ${i % 4}:`, [card.value, card.suit])
+            i++;
             if (i === 100) {
                 clearInterval(global.interval);
             }
-            i++;
         }, 10);
     }
 
@@ -84,3 +84,6 @@ class Round {
 }
 
 module.exports = Round;
+
+
+
