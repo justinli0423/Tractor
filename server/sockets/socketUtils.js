@@ -32,7 +32,8 @@ class SocketUtil {
 
     start() {
         console.log('start:', Object.keys(this._sockets).length)
-        if (Object.keys(this._sockets).length === 1) {
+        // TODO: CHANGE SOCKE LENGTH BACK TO 4 
+        if (Object.keys(this._sockets).length === 2) {
             const game = new Game(this, this._io, Object.keys(this._sockets));
             game.new_round()
         }
@@ -49,9 +50,21 @@ class SocketUtil {
         this.getSocket(playerNum).emit('dealCard', card)
     }
 
-    // ------------ SOCKET LISTENERS ------------
     setConnectionStatus(socket, socketStatus = false) {
         socket.emit('connectionStatus', socketStatus);
+    }
+
+    broadcastNewBottom(socket, id) {
+        console.log(`${id} has called bottom`);
+        socket.broadcast.emit('setNewBottom', id);
+    }
+
+    // ------------ SOCKET LISTENERS ------------
+
+    setBottomListener(socket) {
+        socket.on('callBottom', (id) => {
+            this.broadcastNewBottom(socket, id);
+        })
     }
 
     addSocket(socket) {
@@ -64,6 +77,11 @@ class SocketUtil {
             this.setConnectionStatus(socket, socket.connected);
             this.setConnectedClients();
             this.start();
+
+            // TODO: move somewhere where it make sense
+            this.setBottomListener(socket);
+
+
         });
     }
 

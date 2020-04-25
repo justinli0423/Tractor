@@ -16,6 +16,7 @@ class App extends Component {
       socket: { connected: false },
       connectionStatus: false,
       name: '',
+      currentBottomClient: null
     };
   }
 
@@ -33,9 +34,23 @@ class App extends Component {
     });
   }
 
+  
+  setCurrentBottom(id) {
+    // for when another client calls bottom
+    this.setState({
+      currentBottomClient: id
+    });
+  }
+
   setBottom() {
-    const { id } = this.state;
-    callBottom(id);
+    // for this client to call bottom
+    const { name } = this.state;
+    // TODO: only allow call bottom when the correct trump is in hand
+    callBottom(name);
+
+    this.setState({
+      currentBottomClient: name
+    });
   }
 
   connect(ev) {
@@ -85,7 +100,9 @@ class App extends Component {
           label={'Call Bottom'}
           onClickCb={this.setBottom.bind(this)}
         />
-        <Game />
+        <Game
+          setCurrentBottomCb={this.setCurrentBottom.bind(this)}
+        />
       </Container>
     );
   }
@@ -93,14 +110,15 @@ class App extends Component {
   renderConnectedClients() {
     const {
       clientIds,
-      clients
+      clients,
+      currentBottomClient
     } = this.state;
     return clientIds.map((id, i) => {
       return (
         <ClientItem
           key={id}
         >
-          {i}: {clients[id]}
+          {i}: {clients[id] === currentBottomClient ? clients[id] + " - BOTTOM" : clients[id]}
         </ClientItem>
       )
     });

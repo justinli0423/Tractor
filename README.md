@@ -8,6 +8,7 @@
   - bid button
   - display other hands
   - display leftover card amount when dealing (broadcast) -> card back in the middle
+  - add in redux
 
 ### Backend:
   - factor socket helpers into different file (e.g. socketUtils.js & listeners.js)

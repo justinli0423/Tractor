@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import styled from 'styled-components';
 
 import PlayingCards from '../utils/Cards';
-import { getCards } from "../socket/connect";
+import { getCards, getCurrentBottom } from "../socket/connect";
 
 
 const path = '/cardsSVG/';
@@ -17,12 +17,13 @@ class Game extends Component {
     this.state = {
       cards: [],
       cardSvgs: [],
-      numCards: 0,
+      numCards: 0
     };
   }
 
   componentDidMount() {
     getCards(this.setCards.bind(this));
+    getCurrentBottom(this.props.setCurrentBottomCb);
     this.setCards();
   }
 

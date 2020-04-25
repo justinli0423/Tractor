@@ -19,7 +19,12 @@ export function getCards(setCardsCb) {
 }
 
 export function callBottom(id) {
+  console.log('id:' , id)
   socket.emit('callBottom', id);
+}
+
+export function getCurrentBottom(setNewBottomCb) {
+  socket.on('setNewBottom', id => setNewBottomCb(id));
 }
 
 function setSocketID(id) {
