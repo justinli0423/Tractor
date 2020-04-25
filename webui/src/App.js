@@ -2,8 +2,10 @@ import React, { Component } from "react";
 import styled from 'styled-components';
 
 import Game from './components/Game';
+import GameButton from './components/GameButton';
 
-import { connectToSocket, getConnectedClients } from './socket/connect';
+
+import { connectToSocket, getConnectedClients, callBottom } from './socket/connect';
 
 class App extends Component {
   constructor(props) {
@@ -31,6 +33,11 @@ class App extends Component {
     });
   }
 
+  setBottom() {
+    const { id } = this.state;
+    callBottom(id);
+  }
+
   connect(ev) {
     ev.preventDefault();
     const id = this.nameRef.value;
@@ -40,6 +47,9 @@ class App extends Component {
     }
 
     connectToSocket(this.setConnectionStatus.bind(this), id);
+    this.setState({
+      name: id
+    });
   }
 
   renderPreConnection() {
@@ -49,7 +59,7 @@ class App extends Component {
           Tractor
       </Title>
         <form
-          onSubmit = {(ev) => { this.connect(ev) }}
+          onSubmit={(ev) => { this.connect(ev) }}
         >
           <NameInput
             autoFocus
@@ -71,6 +81,10 @@ class App extends Component {
           <ClientsHeader>Connected Users:</ClientsHeader>
           {this.renderConnectedClients()}
         </ClientsContainer>
+        <GameButton
+          label={'Call Bottom'}
+          onClickCb={this.setBottom.bind(this)}
+        />
         <Game />
       </Container>
     );

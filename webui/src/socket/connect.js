@@ -18,6 +18,10 @@ export function getCards(setCardsCb) {
   socket.on('dealCard', setCardsCb);
 }
 
+export function callBottom(id) {
+  socket.emit('callBottom', id);
+}
+
 function setSocketID(id) {
   socket.emit('setSocketID', id);
 }

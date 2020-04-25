@@ -1,11 +1,12 @@
 import React, { Component } from "react";
 import styled from 'styled-components';
 
-import CardSvgs from '../utils/CardSvgs';
+import PlayingCards from '../utils/Cards';
 import { getCards } from "../socket/connect";
 
+
 const path = '/cardsSVG/';
-const Cards = new CardSvgs();
+const Cards = new PlayingCards();
 const cardWidth = 120;
 const cardHeight = 168;
 
@@ -80,8 +81,7 @@ const Container = styled.div`
   justify-content: center;
   align-items: flex-end;
   width: 1800px;
-  height: ${prop => `${prop.height * 3}px`};
-  overflow-x: scroll;
+  height: ${prop => `${prop.height * 1.6}px`};
   overflow-y: scroll;
   scroll-behavior: smooth;
   ::-webkit-scrollbar {

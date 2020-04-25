@@ -1,7 +1,9 @@
-export default class CardSvgs {
+export default class Cards {
   suits = [];
   jokers = [];
   cards = [];
+  // fake trump;
+  trump = '2';
 
   constructor() {
     this.suits = new Set(['H', 'C', 'S', 'D']); //hearts, clubs, spades, diamonds
@@ -25,7 +27,10 @@ export default class CardSvgs {
     if (!this.isValidCard(arr)) {
       console.log(`Invalid card: ${arr}`);
     }
-
     return `${arr[0]}${arr[1]}.svg`;
+  }
+
+  isTrump(card) {
+    return card[0] === this.trump;
   }
 };
