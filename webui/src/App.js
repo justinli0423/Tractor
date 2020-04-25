@@ -25,7 +25,6 @@ class App extends Component {
   }
 
   setConnectedClients(sockets) {
-    console.log('clients: ', sockets);
     this.setState({
       clients: sockets,
       clientIds: Object.keys(sockets)
@@ -84,7 +83,9 @@ class App extends Component {
     } = this.state;
     return clientIds.map((id, i) => {
       return (
-        <ClientItem>
+        <ClientItem
+          key={id}
+        >
           {i}: {clients[id]}
         </ClientItem>
       )
