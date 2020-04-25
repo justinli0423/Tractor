@@ -101,3 +101,39 @@ function insertCard(cards, newCard, trumpValue, trumpSuit) {
     cards.push(newCard)
   }
 }
+
+function reSortCards(cards, trumpValue, newTrumpSuit) {
+  let suitOrder;
+  switch (newTrumpSuit) {
+    case 'NT':
+      suitOrder = ['J', 'STV', 'DTV', 'CTV', 'HTV', 'S', 'D', 'C', 'H'];
+      break;
+    case 'S':
+      suitOrder = ['J', 'STV', 'DTV', 'CTV', 'HTV', 'S', 'D', 'C', 'H'];
+      break;
+    case 'D':
+      suitOrder = ['J', 'DTV', 'CTV', 'HTV', 'STV', 'D', 'C', 'H', 'S'];
+      break;
+    case 'C':
+      suitOrder = ['J', 'CTV', 'DTV', 'STV', 'HTV', 'C', 'D', 'S', 'H'];
+      break;
+    case 'H':
+      suitOrder = ['J', 'HTV', 'STV', 'DTV', 'CTV', 'H', 'S', 'D', 'C'];
+      break;
+  }
+  let memo = {'J':[], 'STV':[], 'DTV':[], 'CTV':[], 'HTV':[], 'S':[], 'D':[], 'C':[], 'H':[]}
+  for (let i = 0; i < cards.length; i++) {
+    if (cards[i][0] === trumpValue) {
+      memo[cards[i][1] + 'TV'].push(cards[i])
+    } else {
+      memo[cards[i][1]].push(cards[i])
+    }
+  }
+  let newCards = [];
+  for (let i = 0; i < suitOrder.length; i++) {
+    for (let j = 0; j < memo[suitOrder[i]].length; j++) {
+      newCards.push(memo[suitOrder[i]][j])
+    }
+  }
+  return newCards
+}
