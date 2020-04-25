@@ -2,8 +2,10 @@ import React, { Component } from "react";
 import styled from 'styled-components';
 
 import Game from './components/Game';
+import GameButton from './components/GameButton';
 
-import { connectToSocket, getConnectedClients } from './socket/connect';
+
+import { connectToSocket, getConnectedClients, callBottom } from './socket/connect';
 
 class App extends Component {
   constructor(props) {
@@ -14,6 +16,7 @@ class App extends Component {
       socket: { connected: false },
       connectionStatus: false,
       name: '',
+      currentBottomClient: null
     };
   }
 
@@ -31,6 +34,25 @@ class App extends Component {
     });
   }
 
+  
+  setCurrentBottom(id) {
+    // for when another client calls bottom
+    this.setState({
+      currentBottomClient: id
+    });
+  }
+
+  setBottom() {
+    // for this client to call bottom
+    const { name } = this.state;
+    // TODO: only allow call bottom when the correct trump is in hand
+    callBottom(name);
+
+    this.setState({
+      currentBottomClient: name
+    });
+  }
+
   connect(ev) {
     ev.preventDefault();
     const id = this.nameRef.value;
@@ -40,6 +62,9 @@ class App extends Component {
     }
 
     connectToSocket(this.setConnectionStatus.bind(this), id);
+    this.setState({
+      name: id
+    });
   }
 
   renderPreConnection() {
@@ -49,7 +74,7 @@ class App extends Component {
           Tractor
       </Title>
         <form
-          onSubmit = {(ev) => { this.connect(ev) }}
+          onSubmit={(ev) => { this.connect(ev) }}
         >
           <NameInput
             autoFocus
@@ -71,7 +96,13 @@ class App extends Component {
           <ClientsHeader>Connected Users:</ClientsHeader>
           {this.renderConnectedClients()}
         </ClientsContainer>
-        <Game />
+        <GameButton
+          label={'Call Bottom'}
+          onClickCb={this.setBottom.bind(this)}
+        />
+        <Game
+          setCurrentBottomCb={this.setCurrentBottom.bind(this)}
+        />
       </Container>
     );
   }
@@ -79,14 +110,15 @@ class App extends Component {
   renderConnectedClients() {
     const {
       clientIds,
-      clients
+      clients,
+      currentBottomClient
     } = this.state;
     return clientIds.map((id, i) => {
       return (
         <ClientItem
           key={id}
         >
-          {i}: {clients[id]}
+          {i}: {clients[id] === currentBottomClient ? clients[id] + " - BOTTOM" : clients[id]}
         </ClientItem>
       )
     });
