@@ -1,11 +1,10 @@
 const Deck = require('./deck');
 
 class Round {
-    constructor(su, io, deck, players = null, trump_value) {
+    constructor(su, deck, players = null, trump_value) {
         this._su = su;
-        this._io = io;
+        this._io = this._su.io;
         this._deck = deck;
-        this._deck.shuffle();
         this._players = players;
         this._declarer_points = 0;
         this._opponent_points = 0;
@@ -15,13 +14,23 @@ class Round {
         this._winner = null;
     }
 
+    startRound() {
+        this._deck.shuffle();
+        this._su.emitTrumpValue(this._trump_value);
+        this.deal();
+        console.log('round', 'cards dealt')
+        this._players.forEach(this._su.subSetBid.bind(this))
+    }
+
     get deck() {
         return this._deck
     }
 
     deal() {
+        console.log('started to deal')
         let i = 0
         global.interval = setInterval(() => {
+            console.log('inside interval')
             let card = this._deck.deal();
             console.log([card.value, card.suit])
             this._su.emitDealCard(this._players[i % 4], [card.value, card.suit]);
