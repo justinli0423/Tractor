@@ -14,8 +14,8 @@ const app = express();
 app.use(index);
 
 const server = http.createServer(app);
-const io = socketIo(server);
-const su = new SocketUtil(io);
+global.io = socketIo(server);
+global.su = new SocketUtil(io);
 
 global.interval = null;
 

@@ -2,9 +2,7 @@ const Round = require('./round');
 const Deck = require('./deck');
 
 class Game {
-    constructor(su, players) {
-        this._su = su;
-        this._io = this._su.io;
+    constructor(players) {
         this._team1 = null;
         this._team2 = null;
         this._order = players;
@@ -46,7 +44,7 @@ class Game {
 
     new_round(level = null) {
         const trumpValue = 2;
-        this._round = new Round(this._su, this._deck, this._order, 2);
+        this._round = new Round(this._deck, this._order, 2);
         this._round.startRound();
         // this._round.play();
         // this._round.end();
