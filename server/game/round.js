@@ -26,13 +26,13 @@ class Round {
 
     deal() {
         let i = 0
-        global.interval = setInterval(() => {
+        interval = setInterval(() => {
             let card = this._deck.deal();
             console.log(su.sockets[this._players[i % 4]], [card.value, card.suit])
             su.emitDealCard(this._players[i % 4], [card.value, card.suit]);
             i++;
             if (i === 100) {
-                clearInterval(global.interval);
+                clearInterval(interval);
             }
         }, 20);
     }

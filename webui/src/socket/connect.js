@@ -19,7 +19,7 @@ export function getCardsIO(setCardsCb) {
 }
 
 export function makeBidIO(suit) {
-  socket.emit('newBid', socket.id, suit);
+  socket.emit('newBid', suit);
 }
 
 export function getNewBidIO(setNewBidCb) {
