@@ -27,7 +27,7 @@ export function getNewBidIO(setNewBidCb) {
 }
 
 function setSocketID(id) {
-  socket.emit('setSocketID', id);
+  socket.emit('setSocketId', id);
 }
 
 function getConnectionStatus(setStatusCb, name) {

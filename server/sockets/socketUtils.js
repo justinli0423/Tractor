@@ -1,5 +1,7 @@
 const _ = require('underscore');
 const Game = require('../game/game');
+const app = require('../app');
+const constants = require('../constants');
 
 class SocketUtil {
     constructor(io) {
@@ -22,8 +24,8 @@ class SocketUtil {
         return Object.keys(this._sockets).length;
     }
 
-    getSocket(socketID) {
-        return io.to(socketID);
+    getSocket(socketId) {
+        return constants.io.to(socketId);
     }
 
     start() {
@@ -39,28 +41,28 @@ class SocketUtil {
     emitConnectedClients() {
         this.clearNullSockets();
         console.log('Total clients:', Object.values(this._sockets));
-        io.emit('newClientConnection', this._sockets);
+        constants.io.emit('newClientConnection', this._sockets);
     }
 
-    emitDealCard(socketID, card) {
-        io.to(socketID).emit('dealCard', card)
+    emitDealCard(socketId, card) {
+        constants.io.to(socketId).emit('dealCard', card)
     }
 
-    emitConnectionStatus(socketID, socketStatus = false) {
-        io.to(socketID).emit('connectionStatus', socketStatus);
+    emitConnectionStatus(socketId, socketStatus = false) {
+        constants.io.to(socketId).emit('connectionStatus', socketStatus);
     }
 
     emitTrumpValue(trumpValue) {
         console.log(`A new round has started. ${trumpValue}'s are trump.`)
-        io.emit('trumpValue', trumpValue)
+        constants.io.emit('trumpValue', trumpValue)
     }
 
     // emitNewBid(socket, id, suit) {
     //     console.log(`${id} has made a bid of ${suit}.`);
     //     socket.broadcast.emit('setNewBid', id, suit);
-    emitNewBid(socketID, suit) {
-        console.log(`${this._sockets[socketID]} has made a bid of ${suit}.`);
-        io.to(socketID).broadcast.emit('setNewBid', socketID, suit);
+    emitNewBid(socketId, suit) {
+        console.log(`${this._sockets[socketId]} has made a bid of ${suit}.`);
+        constants.io.to(socketId).broadcast.emit('setNewBid', socketId, suit);
     }
 
 
@@ -68,12 +70,13 @@ class SocketUtil {
     // ------------ SOCKET SUBS ------------
 
     // setBottomListener(socket) {
-    //     socket.on('newBid', (socketID, suit) => {
+    //     socket.on('newBid', (socketId, suit) => {
     //         this.emitNewBid(socket, id, suit);
-    subSetBid(socketID) {
-        console.log('socketUtils', typeof this)
-        io.to(socketID).on('newBid', (suit) => {
-            this.emitNewBid(socketID, suit);
+    subSetBid(socketId) {
+        console.log('subsetbid')
+        constants.io.to(socketId).on('fucking magic', (suit) => {
+            console.log('su listener')
+            this.emitNewBid(socketId, suit);
         })
     }
 
@@ -81,11 +84,10 @@ class SocketUtil {
         // once clientId is received:
         // 1. send back connection status
         // 2. send all connect clients
-        socket.on('setSocketID', (clientID) => {
+        socket.on('setSocketId', (clientID) => {
             console.log(`Client ${clientID} has connected`);
             this._sockets[socket.id] = clientID;
             this.emitConnectionStatus(socket.id, socket.connected);
-            console.log(socket.connected, 'emit connected')
             this.emitConnectedClients();
             this.start();
         });
