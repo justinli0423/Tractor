@@ -32,9 +32,9 @@ class SocketUtil {
 
     start() {
         console.log('start:', Object.keys(this._sockets).length)
-        // TODO: CHANGE SOCKE LENGTH BACK TO 4 
-        if (Object.keys(this._sockets).length === 2) {
-            const game = new Game(this, this._io, Object.keys(this._sockets));
+        // TODO: CHANGE SOCKET LENGTH BACK TO 4
+        if (Object.keys(this._sockets).length === 1) {
+            const game = new Game(this, Object.keys(this._sockets));
             game.new_round()
         }
     }
@@ -59,18 +59,19 @@ class SocketUtil {
         this._io.emit('trumpValue', trumpValue)
     }
 
-    emitNewBid(socketID, id, suit) {
-        console.log(`${id} has made a bid of ${suit}.`);
-        this._io.to(socketID).broadcast.emit('setNewBid', id, suit);
+    emitNewBid(socketID, suit) {
+        console.log(`${this._sockets[socketID]} has made a bid of ${suit}.`);
+        this._io.to(socketID).broadcast.emit('setNewBid', socketID, suit);
     }
 
 
 
-    // ------------ SOCKET LISTENERS ------------
+    // ------------ SOCKET SUBS ------------
 
-    setBottomListener(socket) {
-        socket.on('callBottom', (id) => {
-            this.emitNewBid(socket, id);
+    subSetBid(socketID) {
+        console.log(this._io)
+        this._io.to(socketID).on('newBid', (id, suit) => {
+            this.emitNewBid(socketID, suit);
         })
     }
 
@@ -85,9 +86,6 @@ class SocketUtil {
             console.log(socket.connected, 'emit connected')
             this.emitConnectedClients();
             this.start();
-
-            // TODO: move somewhere where it make sense
-            this.setBottomListener(socket);
         });
     }
 

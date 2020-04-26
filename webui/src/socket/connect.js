@@ -24,8 +24,8 @@ export function makeBidIO(id, suit) {
 }
 
 // refactored from getNewBidIO
-export function getNewBidIO(setNewBottomCb) {
-  socket.on('setNewBid', id => setNewBottomCb(id));
+export function getNewBidIO(setNewBidCb) {
+  socket.on('setNewBid', id => setNewBidCb(id));
 }
 
 function setSocketID(id) {
