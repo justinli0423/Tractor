@@ -40,30 +40,37 @@ class SocketUtil {
     }
 
     // ------------ SOCKET EMITTERS ------------
-    setConnectedClients() {
+    emitConnectedClients() {
         this.clearNullSockets();
         console.log('Total clients:', Object.values(this._sockets));
         this._io.emit('newClientConnection', this._sockets);
     }
 
-    dealCards(playerNum, card) {
-        this.getSocket(playerNum).emit('dealCard', card)
+    emitDealCard(socketID, card) {
+        this._io.to(socketID).emit('dealCard', card)
     }
 
-    setConnectionStatus(socket, socketStatus = false) {
-        socket.emit('connectionStatus', socketStatus);
+    emitConnectionStatus(socketID, socketStatus = false) {
+        this._io.to(socketID).emit('connectionStatus', socketStatus);
     }
 
-    broadcastNewBottom(socket, id) {
-        console.log(`${id} has called bottom`);
-        socket.broadcast.emit('setNewBottom', id);
+    emitTrumpValue(trumpValue) {
+        console.log(`A new round has started. ${trumpValue}'s are trump.`)
+        this._io.emit('trumpValue', trumpValue)
     }
+
+    emitNewBid(socketID, id, suit) {
+        console.log(`${id} has made a bid of ${suit}.`);
+        this._io.to(socketID).broadcast.emit('setNewBid', id, suit);
+    }
+
+
 
     // ------------ SOCKET LISTENERS ------------
 
     setBottomListener(socket) {
         socket.on('callBottom', (id) => {
-            this.broadcastNewBottom(socket, id);
+            this.emitNewBid(socket, id);
         })
     }
 
@@ -74,8 +81,9 @@ class SocketUtil {
         socket.on('setSocketID', (clientID) => {
             console.log(`Client ${clientID} has connected`);
             this._sockets[socket.id] = clientID;
-            this.setConnectionStatus(socket, socket.connected);
-            this.setConnectedClients();
+            this.emitConnectionStatus(socket.id, socket.connected);
+            console.log(socket.connected, 'emit connected')
+            this.emitConnectedClients();
             this.start();
 
             // TODO: move somewhere where it make sense
@@ -88,7 +96,7 @@ class SocketUtil {
             clearInterval(global.interval);
             console.log(`Client ${this._sockets[socket.id]} has disconnected`);
             this._sockets[socket.id] = null;
-            this.setConnectedClients();
+            this.emitConnectedClients();
         });
     }
 }

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import styled from 'styled-components';
 
 import PlayingCards from '../utils/Cards';
-import { getCardsIO, getCurrentBottomIO } from "../socket/connect";
+import {getCardsIO, getNewBidIO} from "../socket/connect";
 
 const Cards = new PlayingCards();
 const cardWidth = 120;
@@ -19,7 +19,7 @@ class Game extends Component {
 
   componentDidMount() {
     getCardsIO(this.setCards.bind(this));
-    getCurrentBottomIO(this.props.setCurrentBottomCb);
+    getNewBidIO(this.props.setCurrentBottomCb);
     this.setCards();
   }
 

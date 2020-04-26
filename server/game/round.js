@@ -24,7 +24,7 @@ class Round {
         global.interval = setInterval(() => {
             let card = this._deck.deal();
             console.log([card.value, card.suit])
-            this._su.dealCards(this._players[i % 4], [card.value, card.suit]);
+            this._su.emitDealCard(this._players[i % 4], [card.value, card.suit]);
             i++;
             if (i === 100) {
                 clearInterval(global.interval);
