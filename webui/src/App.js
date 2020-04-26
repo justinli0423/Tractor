@@ -29,8 +29,7 @@ class App extends Component {
     };
   }
 
-  setConnectionStatus(connectionStatus, id) {
-    const { name } = this.props;
+  setConnectionStatus(connectionStatus, id, name) {
     this.setState({ connectionStatus });
     if (connectionStatus) {
       getConnectedClientsIO(this.setConnectedClients.bind(this));

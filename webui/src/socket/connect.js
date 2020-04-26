@@ -5,9 +5,8 @@ var socket = null;
 
 export function connectToSocketIO(getStatusCb, name) {
   socket = io(ENDPOINT);
-  getConnectionStatus(getStatusCb);
+  getConnectionStatus(getStatusCb, name);
   setSocketID(name);
-  console.log(socket);
 }
 
 export function getConnectedClientsIO(setClientsCb) {
@@ -19,6 +18,7 @@ export function getCardsIO(setCardsCb) {
 }
 
 export function makeBidIO(suit) {
+  console.log(socket);
   socket.emit('newBid', suit);
 }
 
@@ -30,6 +30,6 @@ function setSocketID(id) {
   socket.emit('setSocketID', id);
 }
 
-function getConnectionStatus(setStatusCb) {
-  socket.on('connectionStatus', status => setStatusCb(status, socket.id));
+function getConnectionStatus(setStatusCb, name) {
+  socket.on('connectionStatus', status => setStatusCb(status, socket.id, name));
 }
