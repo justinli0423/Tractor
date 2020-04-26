@@ -1,28 +1,27 @@
 import io from "socket.io-client";
-
 const ENDPOINT = "http://127.0.0.1:8000";
 
 var socket = null;
 
-export function connectToSocket(getStatusCb, id) {
+export function connectToSocketIO(getStatusCb, id) {
   socket = io(ENDPOINT);
   getConnectionStatus(getStatusCb);
   setSocketID(id);
 }
 
-export function getConnectedClients(setClientsCb) {
+export function getConnectedClientsIO(setClientsCb) {
   socket.on('newClientConnection', setClientsCb);
 }
 
-export function getCards(setCardsCb) {
+export function getCardsIO(setCardsCb) {
   socket.on('dealCard', setCardsCb);
 }
 
-export function callBottom(id) {
+export function callBottomIO(id) {
   socket.emit('callBottom', id);
 }
 
-export function getCurrentBottom(setNewBottomCb) {
+export function getCurrentBottomIO(setNewBottomCb) {
   socket.on('setNewBottom', id => setNewBottomCb(id));
 }
 

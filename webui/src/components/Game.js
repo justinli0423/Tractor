@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import styled from 'styled-components';
 
 import PlayingCards from '../utils/Cards';
-import { getCards, getCurrentBottom } from "../socket/connect";
+import { getCardsIO, getCurrentBottomIO } from "../socket/connect";
 
 const Cards = new PlayingCards();
 const cardWidth = 120;
@@ -18,8 +18,8 @@ class Game extends Component {
   }
 
   componentDidMount() {
-    getCards(this.setCards.bind(this));
-    getCurrentBottom(this.props.setCurrentBottomCb);
+    getCardsIO(this.setCards.bind(this));
+    getCurrentBottomIO(this.props.setCurrentBottomCb);
     this.setCards();
   }
 
@@ -31,7 +31,7 @@ class Game extends Component {
     } = this.state;
 
     let cardObj = Cards.insertAndSortCard(cards, newCard);
-    console.log(JSON.parse(JSON.stringify(cards)));
+    // console.log(JSON.parse(JSON.stringify(cards)));
     
     this.setState({
       cards: cardObj,

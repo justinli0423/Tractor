@@ -1,54 +1,61 @@
 import React, { Component } from "react";
+import { connect } from 'react-redux';
 import styled from 'styled-components';
 
 import Game from './components/Game';
 import GameButton from './components/GameButton';
 
-import { connectToSocket, getConnectedClients, callBottom } from './socket/connect';
+import {
+  connectToSocketIO,
+  getConnectedClientsIO,
+  callBottomIO
+} from './socket/connect';
+
+import {
+  getExistingClients,
+  getExistingClientIds,
+  getName,
+  updateState,
+  getBottomClient
+} from './redux/selectors';
+
+import {
+  updateClientList,
+  setBottomClient,
+  setName
+} from './redux/actions';
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      clients: {},
-      clientIds: [],
       connectionStatus: false,
-      name: '',
-      currentBottomClient: null
     };
   }
 
   setConnectionStatus(connectionStatus) {
     this.setState({ connectionStatus });
     if (connectionStatus) {
-      getConnectedClients(this.setConnectedClients.bind(this));
+      getConnectedClientsIO(this.setConnectedClients.bind(this));
     }
   }
 
   setConnectedClients(sockets) {
-    this.setState({
-      clients: sockets,
-      clientIds: Object.keys(sockets)
-    });
+    this.props.updateClientList(sockets);
   }
-
   
   setCurrentBottom(id) {
     // for when another client calls bottom
-    this.setState({
-      currentBottomClient: id
-    });
+    console.log(id);
+    this.props.setBottomClient(id);
   }
 
   setBottom() {
     // for this client to call bottom
-    const { name } = this.state;
+    const { name } = this.props;
     // TODO: only allow call bottom when the correct trump is in hand
-    callBottom(name);
-
-    this.setState({
-      currentBottomClient: name
-    });
+    callBottomIO(name);
+    this.props.setBottomClient(name);
   }
 
   connect(ev) {
@@ -59,10 +66,8 @@ class App extends Component {
       return;
     }
 
-    connectToSocket(this.setConnectionStatus.bind(this), id);
-    this.setState({
-      name: id
-    });
+    connectToSocketIO(this.setConnectionStatus.bind(this), id);
+    this.props.setName(id);
   }
 
   renderPreConnection() {
@@ -110,7 +115,8 @@ class App extends Component {
       clientIds,
       clients,
       currentBottomClient
-    } = this.state;
+    } = this.props;
+    // console.log(clients[id], currentBottomClient)
     return clientIds.map((id, i) => {
       return (
         <ClientItem
@@ -127,6 +133,22 @@ class App extends Component {
     const { connectionStatus } = this.state;
     return connectionStatus ? this.renderPostConnection() : this.renderPreConnection();
   }
+}
+
+const mapStateToProps = state => {
+  const clients = getExistingClients(state);
+  const clientIds = getExistingClientIds(state);
+  const numStateChanges = updateState(state);
+  const currentBottomClient = getBottomClient(state);
+  const name = getName(state);
+  console.log(currentBottomClient);
+  return {
+    name,
+    clients,
+    clientIds,
+    currentBottomClient,
+    numStateChanges
+  };
 }
 
 const Container = styled.div`
@@ -174,5 +196,9 @@ const Button = styled.button`
   cursor: pointer;
 `;
 
-export default App;
+export default connect(mapStateToProps, {
+  updateClientList,
+  setBottomClient,
+  setName
+})(App);
 
