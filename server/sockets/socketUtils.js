@@ -55,19 +55,25 @@ class SocketUtil {
         io.emit('trumpValue', trumpValue)
     }
 
-    emitNewBid(socketID, suit) {
-        console.log(`${this._sockets[socketID]} has made a bid of ${suit}.`);
-        io.to(socketID).broadcast.emit('setNewBid', socketID, suit);
+    emitNewBid(socket, id, suit) {
+        console.log(`${id} has made a bid of ${suit}.`);
+        socket.broadcast.emit('setNewBid', id, suit);
+    // emitNewBid(socketID, suit) {
+    //     console.log(`${this._sockets[socketID]} has made a bid of ${suit}.`);
+    //     io.to(socketID).broadcast.emit('setNewBid', socketID, suit);
     }
 
 
 
     // ------------ SOCKET SUBS ------------
 
-    subSetBid(socketID) {
-        console.log('socketUtils', typeof this)
-        io.to(socketID).on('newBid', (id, suit) => {
-            this.emitNewBid(socketID, suit);
+    setBottomListener(socket) {
+        socket.on('newBid', (id, suit) => {
+            this.emitNewBid(socket, id, suit);
+    // subSetBid(socketID) {
+    //     console.log('socketUtils', typeof this)
+    //     io.to(socketID).on('newBid', (id, suit) => {
+    //         this.emitNewBid(socketID, suit);
         })
     }
 
