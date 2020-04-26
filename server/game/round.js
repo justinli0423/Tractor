@@ -29,7 +29,7 @@ class Round {
             if (i === 100) {
                 clearInterval(global.interval);
             }
-        }, 10);
+        }, 20);
     }
 
     push_card(cards) {
@@ -84,6 +84,3 @@ class Round {
 }
 
 module.exports = Round;
-
-
-
