@@ -22,8 +22,8 @@ export function makeBidIO(suit) {
   socket.emit('newBid', socket.id, suit);
 }
 
-export function getNewBidIO(setNewBottomCb) {
-  socket.on('setNewBid', id => setNewBottomCb(id));
+export function getNewBidIO(setNewBidCb) {
+  socket.on('setNewBid', id => setNewBidCb(id));
 }
 
 function setSocketID(id) {
