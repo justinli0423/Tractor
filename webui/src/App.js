@@ -8,7 +8,7 @@ import GameButton from './components/GameButton';
 import {
   connectToSocketIO,
   getConnectedClientsIO,
-  callBottomIO
+  makeBidIO
 } from './socket/connect';
 
 import {
@@ -34,6 +34,7 @@ class App extends Component {
   }
 
   setConnectionStatus(connectionStatus) {
+    console.log('app', 2)
     this.setState({ connectionStatus });
     if (connectionStatus) {
       getConnectedClientsIO(this.setConnectedClients.bind(this));
@@ -41,6 +42,7 @@ class App extends Component {
   }
 
   setConnectedClients(sockets) {
+    console.log('app', 3)
     this.props.updateClientList(sockets);
   }
   
@@ -54,7 +56,7 @@ class App extends Component {
     // for this client to call bottom
     const { name } = this.props;
     // TODO: only allow call bottom when the correct trump is in hand
-    callBottomIO(name);
+    makeBidIO(name);
     this.props.setBottomClient(name);
   }
 
@@ -65,7 +67,7 @@ class App extends Component {
       console.log('enter a name');
       return;
     }
-
+    console.log('app', 1)
     connectToSocketIO(this.setConnectionStatus.bind(this), id);
     this.props.setName(id);
   }
