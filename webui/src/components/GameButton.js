@@ -14,7 +14,7 @@ const GameFunction = (props) => {
 const Button = styled.button`
   display: block;
   height: 30px;
-  width: 80px;
+  width: 100px;
 `;
 
 export default GameFunction;

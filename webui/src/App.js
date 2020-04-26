@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import Game from './components/Game';
 import GameButton from './components/GameButton';
 
-
 import { connectToSocket, getConnectedClients, callBottom } from './socket/connect';
 
 class App extends Component {
@@ -13,7 +12,6 @@ class App extends Component {
     this.state = {
       clients: {},
       clientIds: [],
-      socket: { connected: false },
       connectionStatus: false,
       name: '',
       currentBottomClient: null
