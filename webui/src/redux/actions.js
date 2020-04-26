@@ -15,3 +15,8 @@ export const setBottomClient = (name) => ({
   type: 'SET_BOTTOM',
   payload: name
 })
+
+export const updateCardsInHand = (cards) => ({
+  type: 'UPDATE_MY_HAND',
+  payload: cards
+})

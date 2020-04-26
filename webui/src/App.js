@@ -4,6 +4,7 @@ import styled from 'styled-components';
 
 import Game from './components/Game';
 import GameButton from './components/GameButton';
+import ConnectedClients from './components/ConnectClients';
 
 import {
   connectToSocketIO,
@@ -12,11 +13,8 @@ import {
 } from './socket/connect';
 
 import {
-  getExistingClients,
-  getExistingClientIds,
   getName,
-  updateState,
-  getBottomClient
+  updateState
 } from './redux/selectors';
 
 import {
@@ -95,10 +93,7 @@ class App extends Component {
   renderPostConnection() {
     return (
       <Container>
-        <ClientsContainer>
-          <ClientsHeader>Connected Users:</ClientsHeader>
-          {this.renderConnectedClients()}
-        </ClientsContainer>
+        <ConnectedClients />
         <GameButton
           label={'Call Bottom'}
           onClickCb={this.setBottom.bind(this)}
@@ -110,25 +105,6 @@ class App extends Component {
     );
   }
 
-  renderConnectedClients() {
-    const {
-      clientIds,
-      clients,
-      currentBottomClient
-    } = this.props;
-    // console.log(clients[id], currentBottomClient)
-    return clientIds.map((id, i) => {
-      return (
-        <ClientItem
-          key={id}
-        >
-          {i}: {clients[id] === currentBottomClient ? clients[id] + " - BOTTOM" : clients[id]}
-        </ClientItem>
-      )
-    });
-  }
-
-
   render() {
     const { connectionStatus } = this.state;
     return connectionStatus ? this.renderPostConnection() : this.renderPreConnection();
@@ -136,17 +112,10 @@ class App extends Component {
 }
 
 const mapStateToProps = state => {
-  const clients = getExistingClients(state);
-  const clientIds = getExistingClientIds(state);
-  const numStateChanges = updateState(state);
-  const currentBottomClient = getBottomClient(state);
   const name = getName(state);
-  console.log(currentBottomClient);
+  const numStateChanges = updateState(state);
   return {
     name,
-    clients,
-    clientIds,
-    currentBottomClient,
     numStateChanges
   };
 }
@@ -162,22 +131,7 @@ const Container = styled.div`
   background-color: green;
 `;
 
-const ClientsContainer = styled.ul`
-  position: absolute;
-  top: 10px;
-  right: 0;
-  transform: translateX(-25%);
-  font-size: 24px;
-  list-style: none;
-`;
 
-const ClientsHeader = styled.div`
-
-`;
-
-const ClientItem = styled.li`
-  margin-left: 20px;
-`;
 
 const Title = styled.h1`
   margin: 5px;

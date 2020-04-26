@@ -1,8 +1,9 @@
 const currState = {
+  socket: { connected: false },
   clients: {},
   clientIds: [],
-  socket: { connected: false },
   name: '',
+  cards: [],
   trump: ['2', 'H'],
   currentBottomClient: null,
   cardCallForBottom: null,
@@ -25,6 +26,10 @@ export default (state = currState, action) => {
     case 'SET_BOTTOM':
       return Object.assign({}, state, {
         currentBottomClient: action.payload
+      })
+    case 'UPDATE_MY_HAND':
+      return Object.assign({}, state, {
+        cards: action.payload
       })
     default: 
       return state;

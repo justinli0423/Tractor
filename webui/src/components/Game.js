@@ -1,8 +1,18 @@
 import React, { Component } from "react";
+import { connect } from 'react-redux';
 import styled from 'styled-components';
 
 import PlayingCards from '../utils/Cards';
 import { getCardsIO, getCurrentBottomIO } from "../socket/connect";
+
+import {
+  getMyCards,
+  updateState
+} from '../redux/selectors';
+
+import {
+  updateCardsInHand
+} from '../redux/actions';
 
 const Cards = new PlayingCards();
 const cardWidth = 120;
@@ -20,25 +30,14 @@ class Game extends Component {
   componentDidMount() {
     getCardsIO(this.setCards.bind(this));
     getCurrentBottomIO(this.props.setCurrentBottomCb);
-    this.setCards();
   }
 
   setCards(newCard) {
     if (!newCard || newCard.length !== 2) return;
-    const {
-      cards,
-      numCards
-    } = this.state;
+    const { cards } = this.props;
 
-    // let cardObj = Cards.insertAndSortCard(cards, newCard);
     Cards.insertAndSortCard(cards, newCard);
-    // console.log(JSON.parse(JSON.stringify(cards)));
-    
-    this.setState({
-      // cards: cardObj,
-      cards,
-      numCards: numCards + 1
-    });
+    this.props.updateCardsInHand(cards);
   }
 
   render() {
@@ -65,6 +64,17 @@ class Game extends Component {
         })}
       </Container>
     )
+  }
+}
+
+const mapStateToProps = (state) => {
+  const changeState = updateState(state);
+  const cards = getMyCards(state);
+  const numCards = cards.length;
+  return {
+    cards,
+    numCards,
+    changeState
   }
 }
 
@@ -104,5 +114,5 @@ const CardImg = styled.img`
   }
 `;
 
-export default Game;
+export default connect(mapStateToProps)(Game);
 
