@@ -3,13 +3,12 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 
 import Game from './components/Game';
-import GameButton from './components/GameButton';
 import ConnectedClients from './components/ConnectClients';
+import CallBottom from './components/CallBottom';
 
 import {
   connectToSocketIO,
   getConnectedClientsIO,
-  callBottomIO
 } from './socket/connect';
 
 import {
@@ -19,8 +18,7 @@ import {
 
 import {
   updateClientList,
-  setBottomClient,
-  setName
+  setUser
 } from './redux/actions';
 
 class App extends Component {
@@ -31,41 +29,27 @@ class App extends Component {
     };
   }
 
-  setConnectionStatus(connectionStatus) {
+  setConnectionStatus(connectionStatus, id) {
+    const { name } = this.props;
     this.setState({ connectionStatus });
     if (connectionStatus) {
       getConnectedClientsIO(this.setConnectedClients.bind(this));
+      this.props.setUser(name, id);
     }
   }
 
   setConnectedClients(sockets) {
     this.props.updateClientList(sockets);
   }
-  
-  setCurrentBottom(id) {
-    // for when another client calls bottom
-    console.log(id);
-    this.props.setBottomClient(id);
-  }
-
-  setBottom() {
-    // for this client to call bottom
-    const { name } = this.props;
-    // TODO: only allow call bottom when the correct trump is in hand
-    callBottomIO(name);
-    this.props.setBottomClient(name);
-  }
 
   connect(ev) {
     ev.preventDefault();
-    const id = this.nameRef.value;
-    if (!id) {
+    const name = this.nameRef.value;
+    if (!name) {
       console.log('enter a name');
       return;
     }
-
-    connectToSocketIO(this.setConnectionStatus.bind(this), id);
-    this.props.setName(id);
+    connectToSocketIO(this.setConnectionStatus.bind(this), name);
   }
 
   renderPreConnection() {
@@ -94,13 +78,8 @@ class App extends Component {
     return (
       <Container>
         <ConnectedClients />
-        <GameButton
-          label={'Call Bottom'}
-          onClickCb={this.setBottom.bind(this)}
-        />
-        <Game
-          setCurrentBottomCb={this.setCurrentBottom.bind(this)}
-        />
+        <CallBottom />
+        <Game />
       </Container>
     );
   }
@@ -131,8 +110,6 @@ const Container = styled.div`
   background-color: green;
 `;
 
-
-
 const Title = styled.h1`
   margin: 5px;
   padding: 0;
@@ -152,7 +129,6 @@ const Button = styled.button`
 
 export default connect(mapStateToProps, {
   updateClientList,
-  setBottomClient,
-  setName
+  setUser
 })(App);
 

@@ -3,15 +3,20 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 
 import PlayingCards from '../utils/Cards';
-import { getCardsIO, getCurrentBottomIO } from "../socket/connect";
+import {
+  getCardsIO,
+  getNewBidIO
+} from "../socket/connect";
 
 import {
   getMyCards,
-  updateState
+  updateState,
+  getExistingClients
 } from '../redux/selectors';
 
 import {
-  updateCardsInHand
+  updateCardsInHand,
+  setBottomClient,
 } from '../redux/actions';
 
 const Cards = new PlayingCards();
@@ -19,17 +24,9 @@ const cardWidth = 120;
 const cardHeight = 168;
 
 class Game extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      cards: [],
-      numCards: 0
-    };
-  }
-
   componentDidMount() {
     getCardsIO(this.setCards.bind(this));
-    getCurrentBottomIO(this.props.setCurrentBottomCb);
+    getNewBidIO(this.props.setBottomClient);
   }
 
   setCards(newCard) {
@@ -44,7 +41,7 @@ class Game extends Component {
     const {
       cards,
       numCards
-    } = this.state;
+    } = this.props;
     return(
       <Container 
         height={cardHeight}
@@ -68,12 +65,14 @@ class Game extends Component {
 }
 
 const mapStateToProps = (state) => {
-  const changeState = updateState(state);
   const cards = getMyCards(state);
+  const connectedClients = getExistingClients(state);
   const numCards = cards.length;
+  const changeState = updateState(state);
   return {
     cards,
     numCards,
+    connectedClients,
     changeState
   }
 }
@@ -114,5 +113,8 @@ const CardImg = styled.img`
   }
 `;
 
-export default connect(mapStateToProps)(Game);
+export default connect(mapStateToProps, {
+  updateCardsInHand,
+  setBottomClient
+})(Game);
 

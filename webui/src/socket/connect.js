@@ -3,10 +3,11 @@ const ENDPOINT = "http://127.0.0.1:8000";
 
 var socket = null;
 
-export function connectToSocketIO(getStatusCb, id) {
+export function connectToSocketIO(getStatusCb, name) {
   socket = io(ENDPOINT);
   getConnectionStatus(getStatusCb);
-  setSocketID(id);
+  setSocketID(name);
+  console.log(socket);
 }
 
 export function getConnectedClientsIO(setClientsCb) {
@@ -17,12 +18,12 @@ export function getCardsIO(setCardsCb) {
   socket.on('dealCard', setCardsCb);
 }
 
-export function callBottomIO(id) {
-  socket.emit('callBottom', id);
+export function makeBidIO(suit) {
+  socket.emit('newBid', socket.id, suit);
 }
 
-export function getCurrentBottomIO(setNewBottomCb) {
-  socket.on('setNewBottom', id => setNewBottomCb(id));
+export function getNewBidIO(setNewBottomCb) {
+  socket.on('setNewBid', id => setNewBottomCb(id));
 }
 
 function setSocketID(id) {
@@ -30,5 +31,5 @@ function setSocketID(id) {
 }
 
 function getConnectionStatus(setStatusCb) {
-  socket.on('connectionStatus', status => setStatusCb(status));
+  socket.on('connectionStatus', status => setStatusCb(status, socket.id));
 }

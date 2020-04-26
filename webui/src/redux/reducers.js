@@ -3,6 +3,7 @@ const currState = {
   clients: {},
   clientIds: [],
   name: '',
+  id: '',
   cards: [],
   trump: ['2', 'H'],
   currentBottomClient: null,
@@ -19,17 +20,21 @@ export default (state = currState, action) => {
         clientIds: action.payload.clientIds,
         numStateUpdated: state.numStateUpdated + 1
       })
-    case 'SET_NAME':
+    case 'SET_USER':
+      console.log(action.payload)
       return Object.assign({}, state, {
-        name: action.payload
+        name: action.payload.name,
+        id: action.payload.id
       })
     case 'SET_BOTTOM':
+      console.log(action.payload);
       return Object.assign({}, state, {
-        currentBottomClient: action.payload
+        currentBottomClient: state.clients[action.payload]
       })
     case 'UPDATE_MY_HAND':
       return Object.assign({}, state, {
-        cards: action.payload
+        cards: action.payload,
+        numStateUpdated: state.numStateUpdated + 1
       })
     default: 
       return state;

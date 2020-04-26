@@ -11,7 +11,7 @@ import {
 } from '../redux/selectors';
 
 
-const renderConnectedClients = (props) => {
+const ConnectedClients = (props) => {
   const {
     clientIds,
     clients,
@@ -40,7 +40,6 @@ const mapStateToProps = state => {
   const numStateChanges = updateState(state);
   const currentBottomClient = getBottomClient(state);
   const name = getName(state);
-  console.log(currentBottomClient);
   return {
     name,
     clients,
@@ -68,4 +67,4 @@ const ClientItem = styled.li`
 `;
 
 
-export default connect(mapStateToProps)(renderConnectedClients);
+export default connect(mapStateToProps)(ConnectedClients);

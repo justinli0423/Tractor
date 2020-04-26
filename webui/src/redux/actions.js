@@ -6,14 +6,17 @@ export const updateClientList = (clients) => ({
   }
 });
 
-export const setName = (name) => ({
-  type: 'SET_NAME',
-  payload: name
+export const setUser = (name, id) => ({
+  type: 'SET_USER',
+  payload: {
+    name,
+    id
+  }
 });
 
-export const setBottomClient = (name) => ({
+export const setBottomClient = (socketId) => ({
   type: 'SET_BOTTOM',
-  payload: name
+  payload: socketId
 })
 
 export const updateCardsInHand = (cards) => ({

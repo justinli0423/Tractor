@@ -47,7 +47,6 @@ class Game {
     new_round(level = null) {
         const trumpValue = 2;
         this._round = new Round(this._su, this._io, this._deck, this._order, 2);
-        this._io.emit('newTrumpValue', 2);
         this._round.deal();
         // this._round.play();
         // this._round.end();
