@@ -30,11 +30,13 @@ class Game extends Component {
       numCards
     } = this.state;
 
-    let cardObj = Cards.insertAndSortCard(cards, newCard);
+    // let cardObj = Cards.insertAndSortCard(cards, newCard);
+    Cards.insertAndSortCard(cards, newCard);
     // console.log(JSON.parse(JSON.stringify(cards)));
     
     this.setState({
-      cards: cardObj,
+      // cards: cardObj,
+      cards,
       numCards: numCards + 1
     });
   }

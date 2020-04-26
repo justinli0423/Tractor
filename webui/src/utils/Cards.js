@@ -70,32 +70,32 @@ export default class Cards {
         this.suitOrder['H'] = -1;
       }
     }
-    if (cards) {
+    if (cards.length > 0) {
       let i = 0;
       // card is a joker
       if (newCard[0] === 'S' || newCard[1] === 'J') {
-        while (i < cards.length && cards[i][0] === 'B' && cards[i][1] === 'J') {
+        while (i < cards.length && cards[i].card[0] === 'B' && cards[i].card[1] === 'J') {
           i++;
         }
         // card value is trump
       } else if (newCard[0] === trumpValue) {
         // Jokers come first
-        while (i < cards.length && cards[i][1] === 'J') {
+        while (i < cards.length && cards[i].card[1] === 'J') {
           i++;
         }
         // insert based on order
-        while (i < cards.length && cards[i][0] === trumpValue && this.suitOrder[cards[i][1]] < this.suitOrder[newCard[1]]) {
+        while (i < cards.length && cards[i].card[0] === trumpValue && this.suitOrder[cards[i].card[1]] < this.suitOrder[newCard[1]]) {
           i++;
         }
         // card is neither a joker nor a "trump value trump"
       } else {
-        while (i < cards.length && (cards[i][1] === 'J' || cards[i][0] === trumpValue)) {
+        while (i < cards.length && (cards[i].card[1] === 'J' || cards[i].card[0] === trumpValue)) {
           i++;
         }
-        while (i < cards.length && this.suitOrder[cards[i][1]] < this.suitOrder[newCard[1]]) {
+        while (i < cards.length && this.suitOrder[cards[i].card[1]] < this.suitOrder[newCard[1]]) {
           i++;
         }
-        while (i < cards.length && this.suitOrder[cards[i][1]] === this.suitOrder[newCard[1]] && this.valueOrder[cards[i][0]] < this.valueOrder[newCard[0]]) {
+        while (i < cards.length && this.suitOrder[cards[i].card[1]] === this.suitOrder[newCard[1]] && this.valueOrder[cards[i].card[0]] < this.valueOrder[newCard[0]]) {
           i++;
         }
       }
@@ -103,6 +103,5 @@ export default class Cards {
     } else {
       cards.push(cardObject);
     }
-    return cards;
   }
 };
