@@ -30,7 +30,7 @@ class SocketUtil {
 
     start() {
         // TODO: CHANGE SOCKET LENGTH BACK TO 4
-        if (Object.keys(this._sockets).length === 1) {
+        if (Object.keys(this._sockets).length === 2) {
             const game = new Game(Object.keys(this._sockets));
             game.new_round()
         }
