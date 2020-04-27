@@ -25,13 +25,12 @@ class SocketUtil {
     }
 
     getSocket(socketId) {
-        return constants.io.to(socketId);
+        return constants.io.sockets.sockets[socketId];
     }
 
     start() {
-        console.log('start:', Object.keys(this._sockets).length)
         // TODO: CHANGE SOCKET LENGTH BACK TO 4
-        if (Object.keys(this._sockets).length === 2) {
+        if (Object.keys(this._sockets).length === 1) {
             const game = new Game(Object.keys(this._sockets));
             game.new_round()
         }
@@ -45,11 +44,11 @@ class SocketUtil {
     }
 
     emitDealCard(socketId, card) {
-        constants.io.to(socketId).emit('dealCard', card)
+        this.getSocket(socketId).emit('dealCard', card)
     }
 
     emitConnectionStatus(socketId, socketStatus = false) {
-        constants.io.to(socketId).emit('connectionStatus', socketStatus);
+        this.getSocket(socketId).emit('connectionStatus', socketStatus);
     }
 
     emitTrumpValue(trumpValue) {
@@ -57,25 +56,15 @@ class SocketUtil {
         constants.io.emit('trumpValue', trumpValue)
     }
 
-    // emitNewBid(socket, id, suit) {
-    //     console.log(`${id} has made a bid of ${suit}.`);
-    //     socket.broadcast.emit('setNewBid', id, suit);
     emitNewBid(socketId, suit) {
         console.log(`${this._sockets[socketId]} has made a bid of ${suit}.`);
-        constants.io.to(socketId).broadcast.emit('setNewBid', socketId, suit);
+        this.getSocket(socketId).broadcast.emit('setNewBid', socketId, suit);
     }
-
-
 
     // ------------ SOCKET SUBS ------------
 
-    // setBottomListener(socket) {
-    //     socket.on('newBid', (socketId, suit) => {
-    //         this.emitNewBid(socket, id, suit);
     subSetBid(socketId) {
-        console.log('subsetbid')
-        constants.io.to(socketId).on('fucking magic', (suit) => {
-            console.log('su listener')
+        this.getSocket(socketId).on('newBid', (suit) => {
             this.emitNewBid(socketId, suit);
         })
     }
@@ -85,7 +74,6 @@ class SocketUtil {
         // 1. send back connection status
         // 2. send all connect clients
         socket.on('setSocketId', (clientID) => {
-            console.log(`Client ${clientID} has connected`);
             this._sockets[socket.id] = clientID;
             this.emitConnectionStatus(socket.id, socket.connected);
             this.emitConnectedClients();
