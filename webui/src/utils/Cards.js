@@ -52,8 +52,8 @@ export default class Cards {
   }
 
   // TODO: remove fake trump suit/value
-  insertAndSortCard(cards, newCard, trumpValue = '2', trumpSuit = 'H') {
-    let cardObject = {
+  insertCard(cards, newCard, trumpValue = '2', trumpSuit = 'H') {
+    const cardObject = {
       card: newCard,
       svg: `${this.path}${this.getSvg(newCard)}`
     }
@@ -105,3 +105,70 @@ export default class Cards {
     }
   }
 };
+
+
+// want to store trump value cards and jokers
+// trumpTracker = {'S':0, 'D':0, 'C':0, 'H':0, 'SJ': 0, 'BJ':0}
+
+// keep list of possible bids
+// validBids = [[1, 'S'], [2, 'S']]
+
+function newTrump(trumpTracker, validBids, newCard, trumpValue, currentBid) {
+  if (newCard[1] === 'J') {
+      trumpTracker[newCard[0] + 'J'] += 1
+      if (trumpTracker[newCard[0] + 'J'] === 2) {
+          validBids.push(newCard)
+      }
+  } else if (newCard[0] === trumpValue) {
+      trumpTracker[newCard[1]] += 1
+      validBids.push([trumpTracker[newCard[1]], newCard[1]])
+  }
+}
+
+// button -> check if its valid (if bid in validBids) -> sends bid -> newValidBids to update bidding client's own bids
+
+// this client bid
+function newValidBids(bid, trumpTracker, validBids) {
+  validBids.splice(0, validBids.length)
+  if (bid[0] === 1) {
+      if (trumpTracker[bid[1]] === 2) {
+          validBids.push([2, bid[1]])
+      }
+  }
+}
+
+// after receive a bid, update other clients valid bids
+
+// someone else called trump
+function updateValidBids(bid, trumpTracker, validBids) {
+  validBids.splice(0, validBids.length)
+  if (bid !== ['B', 'J']) {
+      if (trumpTracker['BJ'] === 2) {
+          validBids.push(['B', 'J'])
+      }
+  } else {
+      return
+  }
+  if (bid !== ['S', 'J']) {
+      if (trumpTracker['SJ'] === 2) {
+          validBids.push(['S', 'J'])
+      }
+  } else {
+      return
+  }
+  if (bid[0] !== 2) {
+      if (trumpTracker['S'] === 2) {
+          validBids.push([2, 'S'])
+      }
+      if (trumpTracker['D'] === 2) {
+          validBids.push([2, 'D'])
+      }
+      if (trumpTracker['C'] === 2) {
+          validBids.push([2, 'C'])
+      }
+      if (trumpTracker['H'] === 2) {
+          validBids.push([2, 'H'])
+      }
+  }
+}
+

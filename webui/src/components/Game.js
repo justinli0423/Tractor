@@ -11,7 +11,9 @@ import {
 import {
   getMyCards,
   updateState,
-  getExistingClients
+  getExistingClients,
+  getCurrentBid,
+  getTrumpValue
 } from '../redux/selectors';
 
 import {
@@ -34,8 +36,9 @@ class Game extends Component {
     if (!newCard || newCard.length !== 2) return;
     const { cards } = this.props;
 
-    Cards.insertAndSortCard(cards, newCard);
-    this.props.updateCardsInHand(cards);
+    Cards.insertCard(cards, trumpTracker, newCard);
+    Cards.newTrump(trumpTracker, validBids, newCard, trumpValue, currentBid);
+    this.props.updateCardsInHand(cards, trumpTracker);
   }
 
   render() {
@@ -68,12 +71,17 @@ class Game extends Component {
 const mapStateToProps = (state) => {
   const cards = getMyCards(state);
   const connectedClients = getExistingClients(state);
-  const numCards = cards.length;
+  const currentBid = getCurrentBid(state);
+  const trumpValue = getTrumpValue(state);
   const changeState = updateState(state);
+
+  const numCards = cards.length;
   return {
     cards,
     numCards,
     connectedClients,
+    currentBid,
+    trumpValue,
     changeState
   }
 }
