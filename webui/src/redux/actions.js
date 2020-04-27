@@ -15,11 +15,24 @@ export const setUser = (name, id) => ({
 });
 
 export const setBottomClient = (socketId) => ({
-  type: 'SET_BOTTOM',
+  type: 'SET_DECLARER',
   payload: socketId
 })
 
-export const updateCardsInHand = (cards) => ({
+export const updateCardsInHand = (cards, trumpTracker) => ({
   type: 'UPDATE_MY_HAND',
-  payload: cards
+  payload: {
+    trumpTracker,
+    cards
+  }
+})
+
+export const setValidBids = (validBids) => ({
+  type: 'SET_VALID_BIDS',
+  payload: validBids
+})
+
+export const setCurrentBid = (bid) => ({
+  type: 'SET_CURRENT_BID',
+  payload: bid
 })

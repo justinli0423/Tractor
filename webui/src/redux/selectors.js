@@ -11,3 +11,9 @@ export const getId = store => store.id;
 export const getBottomClient = store => store.currentBottomClient;
 
 export const getMyCards = store => store.cards;
+
+export const getValidBids = store => store.validBids;
+
+export const getCurrentBid = store => store.currentBid;
+
+export const getTrumpValue = store => store.trump;
