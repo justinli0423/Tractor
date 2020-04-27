@@ -24,6 +24,13 @@ global.interval = null;
 
 io.on('connection', (socket) => {
     su.addSocket(socket)
+
+    // emit tester
+    var event = null;
+    socket.on(event, () => {
+        console.log("event emits")
+    })
+
     su.removeSocket(socket)
 
     if (global.interval) {

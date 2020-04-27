@@ -17,8 +17,7 @@ class Round {
         this._deck.shuffle();
         constants.su.emitTrumpValue(this._trump_value);
         this.deal();
-        console.log('round', typeof this);
-        this._players.forEach(constants.su.subSetBid);
+        this._players.forEach(constants.su.subSetBid.bind(constants.su));
     }
 
     get deck() {
@@ -29,10 +28,11 @@ class Round {
         let i = 0
         interval = setInterval(() => {
             let card = this._deck.deal();
+            // TODO: CHANGE mod back to 4, i === 100
             // console.log(constants.su.sockets[this._players[i % 4]], [card.value, card.suit])
-            constants.su.emitDealCard(this._players[i % 4], [card.value, card.suit]);
+            constants.su.emitDealCard(this._players[i % 1], [card.value, card.suit]);
             i++;
-            if (i === 100) {
+            if (i === 25) {
                 clearInterval(interval);
             }
         }, 20);
