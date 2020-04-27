@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import Game from './components/Game';
 import ConnectedClients from './components/ConnectClients';
-import CallBottom from './components/CallBottom';
+import Bidding from './components/Bidding';
 
 import {
   connectToSocketIO,
@@ -78,7 +78,7 @@ class App extends Component {
     return (
       <Container>
         <ConnectedClients />
-        <CallBottom />
+        <Bidding />
         <Game />
       </Container>
     );

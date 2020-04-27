@@ -30,9 +30,9 @@ class Round {
             let card = this._deck.deal();
             // TODO: CHANGE mod back to 4, i === 100
             // console.log(constants.su.sockets[this._players[i % 4]], [card.value, card.suit])
-            constants.su.emitDealCard(this._players[i % 1], [card.value, card.suit]);
+            constants.su.emitDealCard(this._players[i % 2], [card.value, card.suit]);
             i++;
-            if (i === 25) {
+            if (i === 50) {
                 clearInterval(interval);
             }
         }, 20);
