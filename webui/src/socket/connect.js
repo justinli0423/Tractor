@@ -19,7 +19,8 @@ export function getCardsIO(setCardsCb) {
 }
 
 export function makeBidIO(suit) {
-  socket.emit('newBid', socket.id, suit);
+  console.log('newBid', suit);
+  socket.emit('newBid', suit);
 }
 
 export function getNewBidIO(setNewBidCb) {
@@ -27,7 +28,7 @@ export function getNewBidIO(setNewBidCb) {
 }
 
 function setSocketID(id) {
-  socket.emit('setSocketID', id);
+  socket.emit('setSocketId', id);
 }
 
 function getConnectionStatus(setStatusCb) {

@@ -30,6 +30,7 @@ class Game extends Component {
   }
 
   setCards(newCard) {
+    console.log(newCard)
     if (!newCard || newCard.length !== 2) return;
     const { cards } = this.props;
 
