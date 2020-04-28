@@ -5,9 +5,8 @@ var socket = null;
 
 export function connectToSocketIO(getStatusCb, name) {
   socket = io(ENDPOINT);
-  getConnectionStatus(getStatusCb);
+  getConnectionStatus(getStatusCb, name);
   setSocketID(name);
-  console.log(socket);
 }
 
 export function getConnectedClientsIO(setClientsCb) {
@@ -24,13 +23,13 @@ export function makeBidIO(suit) {
 }
 
 export function getNewBidIO(setNewBidCb) {
-  socket.on('setNewBid', id => setNewBidCb(id));
+  socket.on('setNewBid', (socketId, bid) => setNewBidCb(socketId, bid));
 }
 
 function setSocketID(id) {
   socket.emit('setSocketId', id);
 }
 
-function getConnectionStatus(setStatusCb) {
-  socket.on('connectionStatus', status => setStatusCb(status, socket.id));
+function getConnectionStatus(setStatusCb, name) {
+  socket.on('connectionStatus', status => setStatusCb(status, socket.id, name));
 }

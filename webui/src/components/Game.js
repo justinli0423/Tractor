@@ -11,12 +11,15 @@ import {
 import {
   getMyCards,
   updateState,
-  getExistingClients
+  getExistingClients,
+  getCurrentBid,
+  getTrumpValue, 
+  getTrumpTracker, 
+  getValidBids
 } from '../redux/selectors';
-
 import {
   updateCardsInHand,
-  setBottomClient,
+  setCurrentBid,
 } from '../redux/actions';
 
 const Cards = new PlayingCards();
@@ -26,16 +29,22 @@ const cardHeight = 168;
 class Game extends Component {
   componentDidMount() {
     getCardsIO(this.setCards.bind(this));
-    getNewBidIO(this.props.setBottomClient);
+    getNewBidIO(this.props.setCurrentBid);
   }
 
   setCards(newCard) {
-    console.log(newCard)
+    const {
+      trumpTracker,
+      validBids,
+      currentBid,
+      cards
+    } = this.props;
     if (!newCard || newCard.length !== 2) return;
-    const { cards } = this.props;
-
-    Cards.insertAndSortCard(cards, newCard);
-    this.props.updateCardsInHand(cards);
+    // TODO undo hardcoding
+    console.log('setCards', trumpTracker)
+    Cards.insertCard(cards, newCard, '2', 'H');
+    Cards.newTrump(trumpTracker, validBids, newCard, currentBid, '2');
+    this.props.updateCardsInHand(cards, trumpTracker);
   }
 
   render() {
@@ -68,13 +77,22 @@ class Game extends Component {
 const mapStateToProps = (state) => {
   const cards = getMyCards(state);
   const connectedClients = getExistingClients(state);
-  const numCards = cards.length;
+  const currentBid = getCurrentBid(state);
+  const trumpValue = getTrumpValue(state);
+  const trumpTracker = getTrumpTracker(state);
+  const validBids = getValidBids(state);
   const changeState = updateState(state);
+
+  const numCards = cards.length;
   return {
     cards,
     numCards,
     connectedClients,
-    changeState
+    currentBid,
+    trumpValue,
+    trumpTracker,
+    validBids,
+    changeState,
   }
 }
 
@@ -116,6 +134,6 @@ const CardImg = styled.img`
 
 export default connect(mapStateToProps, {
   updateCardsInHand,
-  setBottomClient
+  setCurrentBid
 })(Game);
 

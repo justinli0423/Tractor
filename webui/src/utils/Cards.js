@@ -51,9 +51,8 @@ export default class Cards {
     return card[0] === this.trump;
   }
 
-  // TODO: remove fake trump suit/value
-  insertAndSortCard(cards, newCard, trumpValue = '2', trumpSuit = 'H') {
-    let cardObject = {
+  insertCard(cards, newCard, trumpValue, trumpSuit) {
+    const cardObject = {
       card: newCard,
       svg: `${this.path}${this.getSvg(newCard)}`
     }
@@ -102,6 +101,64 @@ export default class Cards {
       cards.splice(i, 0, cardObject);
     } else {
       cards.push(cardObject);
+    }
+  }
+  // TODO
+  newTrump(trumpTracker, validBids, newCard, currentBid, trumpValue) {
+    console.log('newTrump', trumpTracker)
+    if (newCard[1] === 'J') {
+      trumpTracker[newCard[0] + 'J'] += 1
+      if (trumpTracker[newCard[0] + 'J'] === 2) {
+        if (!currentBid || currentBid[1] !== 'J' || (currentBid[0] === 'S' && newCard[0] === 'B')) {
+          validBids.push(newCard)
+        }
+      }
+    } else if (newCard[0] === trumpValue) {
+      trumpTracker[newCard[1]] += 1
+      if (!currentBid || (currentBid[0] === 1 && trumpTracker[newCard[1]] === 2)) {
+        validBids.push([trumpTracker[newCard[1]], newCard[1]])
+      }
+    }
+  }
+
+  updateBid(bid, trumpTracker, validBids) {
+    validBids.splice(0, validBids.length)
+    if (bid[0] === 1) {
+      if (trumpTracker[bid[1]] === 2) {
+        validBids.push([2, bid[1]])
+      }
+    }
+  }
+
+  receiveBid(bid, trumpTracker, validBids) {
+    validBids.splice(0, validBids.length)
+    if (bid !== ['B', 'J']) {
+      if (trumpTracker['BJ'] === 2) {
+        validBids.push(['B', 'J'])
+      }
+    } else {
+      return
+    }
+    if (bid !== ['S', 'J']) {
+      if (trumpTracker['SJ'] === 2) {
+        validBids.push(['S', 'J'])
+      }
+    } else {
+      return
+    }
+    if (bid[0] !== 2) {
+      if (trumpTracker['S'] === 2) {
+        validBids.push([2, 'S'])
+      }
+      if (trumpTracker['D'] === 2) {
+        validBids.push([2, 'D'])
+      }
+      if (trumpTracker['C'] === 2) {
+        validBids.push([2, 'C'])
+      }
+      if (trumpTracker['H'] === 2) {
+        validBids.push([2, 'H'])
+      }
     }
   }
 };
