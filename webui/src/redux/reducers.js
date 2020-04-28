@@ -6,10 +6,10 @@ const currState = {
   id: '',
   cards: [],
   trump: '2',
-  currentBid: null, // TODO: REMOVE LATER
+  currentBid: null,
   currentBottomClient: null,
-  trumpTracker = {'S': 0, 'D': 0, 'C': 0, 'H': 0, 'SJ':  0, 'BJ': 0},
-  validBids = [],
+  trumpTracker: { 'S': 0, 'D': 0, 'C': 0, 'H': 0, 'SJ': 0, 'BJ': 0 },
+  validBids: [[2, 'S'], [1, 'C'], ['S', 'J'], ['B', 'J']],
   numStateUpdated: 0
 }
 
@@ -48,7 +48,7 @@ export default (state = currState, action) => {
         currentBid: action.payload,
         numStateUpdated: state.numStateUpdated + 1
       })
-    default: 
+    default:
       return state;
   }
 }

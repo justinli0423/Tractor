@@ -36,9 +36,9 @@ class Game extends Component {
     if (!newCard || newCard.length !== 2) return;
     const { cards } = this.props;
 
-    Cards.insertCard(cards, trumpTracker, newCard);
-    Cards.newTrump(trumpTracker, validBids, newCard, trumpValue, currentBid);
-    this.props.updateCardsInHand(cards, trumpTracker);
+    Cards.insertCard(cards, this.props.trumpTracker, newCard);
+    Cards.newTrump(this.props.trumpTracker, this.props.validBids, newCard, this.props.trumpValue, this.props.currentBid);
+    this.props.updateCardsInHand(cards, this.props.trumpTracker);
   }
 
   render() {

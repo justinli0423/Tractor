@@ -17,7 +17,7 @@ const ConnectedClients = (props) => {
     clients,
     currentBottomClient
   } = props;
-
+    // TODO: CHECK AGAINST ID FOR BOTTOM CALLS INSTEAD OF JUST THE NAME 
     return (
       <ClientsContainer>
         <ClientsHeader>Connected Users:</ClientsHeader>
