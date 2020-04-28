@@ -56,16 +56,17 @@ class SocketUtil {
         constants.io.emit('trumpValue', trumpValue)
     }
 
-    emitNewBid(socketId, suit) {
-        console.log(`${this._sockets[socketId]} has made a bid of ${suit}.`);
-        this.getSocket(socketId).broadcast.emit('setNewBid', socketId, suit);
+    emitNewBid(socketId, bid) {
+        console.log(`${this._sockets[socketId]} has made a bid of ${bid}.`);
+        this.getSocket(socketId).broadcast.emit('setNewBid', socketId, bid);
     }
 
     // ------------ SOCKET SUBS ------------
 
     subSetBid(socketId) {
-        this.getSocket(socketId).on('newBid', (suit) => {
-            this.emitNewBid(socketId, suit);
+        this.getSocket(socketId).on('newBid', (bid) => {
+            // console.log("received bid")
+            this.emitNewBid(socketId, bid);
         })
     }
 

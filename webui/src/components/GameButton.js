@@ -4,7 +4,7 @@ import styled from 'styled-components';
 const GameFunction = (props) => {
   return(
     <Button
-      onClick={() => props.onClickCb()}
+      onClick={() => props.onClickCb(props.bid)}
     >
       {props.label}
       <Icon

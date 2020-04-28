@@ -9,7 +9,7 @@ const currState = {
   currentBid: null,
   currentBottomClient: null,
   trumpTracker: { 'S': 0, 'D': 0, 'C': 0, 'H': 0, 'SJ': 0, 'BJ': 0 },
-  validBids: [[2, 'S'], [1, 'C'], ['S', 'J'], ['B', 'J']],
+  validBids: [],
   numStateUpdated: 0
 }
 
@@ -45,7 +45,8 @@ export default (state = currState, action) => {
       })
     case 'SET_CURRENT_BID':
       return Object.assign({}, state, {
-        currentBid: action.payload,
+        currentBid: action.payload.bid,
+        currentBottomClient: action.payload.socketId,
         numStateUpdated: state.numStateUpdated + 1
       })
     default:

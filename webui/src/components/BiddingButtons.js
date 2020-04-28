@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 
 import GameButton from './GameButton';
 import Unicodes from '../utils/Unicodes';
+import PlayingCards from '../utils/Cards';
 
 import {
     makeBidIO
@@ -10,7 +11,7 @@ import {
 
 // TODO: remove setvalidbids from here
 import {
-    setBottomClient,
+    setCurrentBid,
     setValidBids
 } from '../redux/actions';
 
@@ -19,18 +20,29 @@ import {
     getId,
     getValidBids,
     getTrumpValue,
+    getTrumpTracker,
     updateState
 } from '../redux/selectors';
 
+const Cards = new PlayingCards();
 
 const CallBottomButtons = (props) => {
-    const setBottom = () => {
-        // for this client to call bottom
-        const { id } = props;
-        // TODO: only allow call bottom when the correct trump is in hand
-        // FAKED HEARTS AS SUIT FOR NOW
-        makeBidIO('H');
-        props.setBottomClient(id);
+    // TODO: 1. pass correct value
+    // TODO: 2. remove invalid bids
+
+    // e.g. if I have 2 (2 of spades) -> [2, 'S'];
+    // e.g. no trump: ['S', 'J'] or ['B', 'J']
+    const setBottom = (bid) => {
+        const {
+            id,
+            trumpTracker,
+            validBids,
+        } = props;
+        const bidString = `${bid[0]}${bid[1]}`;
+        makeBidIO(bidString);
+        props.setCurrentBid(id, bidString);
+        console.log(Cards)
+        Cards.updateBid(bid, trumpTracker, validBids);
     }
 
     // returns the array of buttons to be rendered
@@ -41,45 +53,44 @@ const CallBottomButtons = (props) => {
         // e.g. if I have 2 (2 of spades) -> [2, 'S'];
         // e.g. no trump: ['S', 'J'] or ['B', 'J']
         let bidArray = [];
-        let hasNoTrump = false;
         validBids.forEach(bid => {
-            if (bid[1] === 'J' && !hasNoTrump) { // have 2 jokers to call no trump
-                bidArray.push(['No Trump', '']);
-                hasNoTrump = true;
+            let buttonObject = {
+                rawData: bid
+            };
+            if (bid[1] === 'J') { // have 2 jokers to call no trump
+                bidArray.push(Object.assign({}, buttonObject, {
+                    renderData: bid[0] === 'S' ? ['SJ No Trump', ''] : ['BJ No Trump', ''],
+                }));
             } else {
                 for (let i = 0; i < bid[0]; i++) {
-                    bidArray.push([i + 1, bid[1]]);
+                    bidArray.push(Object.assign({}, buttonObject, {
+                        renderData: [i + 1, bid[1]],
+                    }));
                 }
             }
         })
         return bidArray;
     }
 
+
     return (
         <>
             {
-                getAvailableBidButtons().map((bidButton) => {
+                getAvailableBidButtons().map((buttonObject) => {
                     return (
                         <GameButton
-                            label={bidButton[0]}
-                            icon={Unicodes[bidButton[1]] || ''}
+                            bid={buttonObject.rawData}
+                            label={buttonObject.renderData[0]}
+                            icon={Unicodes[buttonObject.renderData[1]] || ''}
                             onClickCb={setBottom}
                         />
                     )
                 })
             }
-            {/* <GameButton
-                label={'Bid'}
-                icon={Unicodes.hearts}
-                onClickCb={setBottom}
-            />
-            <GameButton
-                label={'2'}
-                onClickCb={setBottom}
-            /> */}
         </>
     );
 }
+
 
 const mapStateToProps = (state) => {
     const name = getName(state);
@@ -87,16 +98,18 @@ const mapStateToProps = (state) => {
     const validBids = getValidBids(state);
     const numUpdateStates = updateState(state);
     const trumpValue = getTrumpValue(state);
+    const trumpTracker = getTrumpTracker(state);
     return {
         id,
         name,
         validBids,
         trumpValue,
+        trumpTracker,
         numUpdateStates
     };
 }
 
 export default connect(mapStateToProps, {
-    setBottomClient,
+    setCurrentBid,
     setValidBids
 })(CallBottomButtons);

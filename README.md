@@ -11,7 +11,7 @@
   - display leftover card amount when dealing (broadcast) -> card back in the middle
   - organize the socket receivers into stages (function stage1()... function stagen() etc)
   - switch feature to allow user to select how to sort cards in hand
-  - 
+  - allow custom dragndrop ordering of cards in hand?
 
 ### Backend:
   - factor socket helpers into different file (e.g. socketUtils.js & listeners.js)

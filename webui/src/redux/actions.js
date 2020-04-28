@@ -32,7 +32,10 @@ export const setValidBids = (validBids) => ({
   payload: validBids
 })
 
-export const setCurrentBid = (bid) => ({
+export const setCurrentBid = (socketId, bid) => ({
   type: 'SET_CURRENT_BID',
-  payload: bid
+  payload: {
+    socketId,
+    bid
+  }
 })

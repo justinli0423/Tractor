@@ -6,15 +6,16 @@ import {
   getExistingClients,
   getExistingClientIds,
   getName,
-  updateState,
-  getBottomClient
+  getCurrentBid,
+  getBottomClient,
+  updateState
 } from '../redux/selectors';
-
 
 const ConnectedClients = (props) => {
   const {
     clientIds,
     clients,
+    currentBid,
     currentBottomClient
   } = props;
     // TODO: CHECK AGAINST ID FOR BOTTOM CALLS INSTEAD OF JUST THE NAME 
@@ -26,7 +27,7 @@ const ConnectedClients = (props) => {
             <ClientItem
             key={id}
           >
-            {i}: {clients[id] === currentBottomClient ? clients[id] + " - BOTTOM" : clients[id]}
+            {i}: {id === currentBottomClient ? `${clients[id]}:${currentBid}` : clients[id]}
           </ClientItem>
           );
         })}
@@ -35,16 +36,19 @@ const ConnectedClients = (props) => {
 }
 
 const mapStateToProps = state => {
+  const name = getName(state);
   const clients = getExistingClients(state);
   const clientIds = getExistingClientIds(state);
-  const numStateChanges = updateState(state);
   const currentBottomClient = getBottomClient(state);
-  const name = getName(state);
+  const currentBid = getCurrentBid(state);
+
+  const numStateChanges = updateState(state);
   return {
     name,
     clients,
     clientIds,
     currentBottomClient,
+    currentBid,
     numStateChanges
   };
 }

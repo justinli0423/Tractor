@@ -13,11 +13,13 @@ import {
   updateState,
   getExistingClients,
   getCurrentBid,
-  getTrumpValue, getTrumpTracker, getValidBids
+  getTrumpValue, 
+  getTrumpTracker, 
+  getValidBids
 } from '../redux/selectors';
 import {
   updateCardsInHand,
-  setBottomClient,
+  setCurrentBid,
 } from '../redux/actions';
 
 const Cards = new PlayingCards();
@@ -27,7 +29,7 @@ const cardHeight = 168;
 class Game extends Component {
   componentDidMount() {
     getCardsIO(this.setCards.bind(this));
-    getNewBidIO(this.props.setBottomClient);
+    getNewBidIO(this.props.setCurrentBid);
   }
 
   setCards(newCard) {
@@ -132,6 +134,6 @@ const CardImg = styled.img`
 
 export default connect(mapStateToProps, {
   updateCardsInHand,
-  setBottomClient
+  setCurrentBid
 })(Game);
 

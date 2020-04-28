@@ -103,7 +103,7 @@ export default class Cards {
       cards.push(cardObject);
     }
   }
-  // todo
+  // TODO
   newTrump(trumpTracker, validBids, newCard, currentBid, trumpValue) {
     console.log('newTrump', trumpTracker)
     if (newCard[1] === 'J') {
@@ -162,6 +162,3 @@ export default class Cards {
     }
   }
 };
-
-
-
