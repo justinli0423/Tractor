@@ -11,6 +11,10 @@ class Deck {
         this._cards = [];
     }
 
+    get cards() {
+        return this._cards;
+    }
+
     populate(num_decks = 2) {
         for (let i = 0; i < num_decks; i++) {
             for (let v = 0; v < values.length; v++) {

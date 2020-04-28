@@ -57,23 +57,29 @@ class SocketUtil {
     }
 
     emitNewBid(socketId, bid) {
-        console.log(`${this._sockets[socketId]} has made a bid of ${bid}.`);
+        console.log('Sending', this._sockets[socketId], "'s bid of ", bid);
         this.getSocket(socketId).broadcast.emit('setNewBid', socketId, bid);
+    }
+
+    emitBottom(socketId, bottom) {
+        console.log('Sending', this._sockets[socketId], 'the bottom:', bottom);
+        this.getSocket(socketId).emit('originalBottom', bottom)
     }
 
     // ------------ SOCKET SUBS ------------
 
-    subSetBid(socketId) {
+    subSetBid(socketId, bidRound) {
         this.getSocket(socketId).on('newBid', (bid) => {
-            console.log("received bid of", bid);
+            console.log("Received bid of", bid, "from", this._sockets[socketId]);
+            bidRound.receiveBid(bid, socketId);
             this.emitNewBid(socketId, bid);
         })
     }
 
-    subDoneBid(socketId, round) {
+    subDoneBid(socketId, bidRound) {
         this.getSocket(socketId).on('doneBid', () => {
             console.log(`${this._sockets[socketId]} is done bidding.`);
-            round.doneBid(socketId);
+            bidRound.doneBid();
         })
     }
 

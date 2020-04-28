@@ -7,12 +7,13 @@ class Game {
         this._team1 = null;
         this._team2 = null;
         this._order = players;
-        this._team1_level = '2';
-        this._team2_level = '2';
+        this._team1Level = '2';
+        this._team2Level = '2';
         this._deck = new Deck();
         this._deck.populate();
         this._next_declarer = null;
         this._next_opponent = null;
+        this._roundNumber = 0;
         this._round = null;
     }
 
@@ -44,9 +45,10 @@ class Game {
     }
 
     new_round(level = null) {
-        const trumpValue = 'A';
-        this._round = new Round(this._deck, this._order, trumpValue);
-        this._round.startRound();
+        // TODO: update to dynamic trumpValue
+        const trumpValue = '2';
+        this._round = new Round(this._deck, this._order, trumpValue, this._roundNumber);
+        this._round.dealAndBid();
         // this._round.play();
         // this._round.end();
         this._deck = this._round.deck;
