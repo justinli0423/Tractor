@@ -2,14 +2,28 @@ import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
+import RegularButton from './RegularButton';
+
+import {
+  returnBottomIO,
+  setDoneBidIO
+} from '../socket/connect';
+
 import {
   getExistingClients,
   getExistingClientIds,
+  getMyCards,
   getName,
   getCurrentBid,
   getBottomClient,
   updateState
 } from '../redux/selectors';
+
+import {
+  updateCardsInHand,
+  toggleBottomSelector
+} from '../redux/actions';
+
 
 const ConnectedClients = (props) => {
   const {
@@ -18,21 +32,54 @@ const ConnectedClients = (props) => {
     currentBid,
     currentBottomClient
   } = props;
-    // TODO: CHECK AGAINST ID FOR BOTTOM CALLS INSTEAD OF JUST THE NAME 
-    return (
-      <ClientsContainer>
-        <ClientsHeader>Connected Users:</ClientsHeader>
-        {clientIds.map((id, i) => {
-          return (
-            <ClientItem
+
+  const emitDoneBid = () => {
+    const buttonEl = document.querySelector('#finishBidBtn');
+    buttonEl.style.display = 'none';
+    setDoneBidIO();
+  }
+
+  const emitReturnBottom = () => {
+    const { cards } = props;
+    let bottomCards = [];
+    let cardsInHand = [];
+    cards.forEach(card => {
+      if (card.isSelectedForBottom) {
+        bottomCards.push(card.card);
+      } else {
+        cardsInHand.push(card);
+      }
+    })
+
+    props.updateCardsInHand(cardsInHand);
+    props.toggleBottomSelector(false);
+    returnBottomIO(bottomCards);
+  }
+
+  return (
+    <ClientsContainer>
+      <ClientsHeader>Connected Users:</ClientsHeader>
+      {clientIds.map(id => {
+        return (
+          <ClientItem
             key={id}
           >
             {id === currentBottomClient ? `${clients[id]}:${currentBid}` : clients[id]}
           </ClientItem>
-          );
-        })}
-      </ClientsContainer>
-    )
+        );
+      })}
+      <RegularButton
+        id="finishBidBtn"
+        label="Finish Bid"
+        onClickCb={emitDoneBid}
+      />
+      <RegularButton
+        id="finishBottomBtn"
+        label="Finish Bottom"
+        onClickCb={emitReturnBottom}
+      />
+    </ClientsContainer>
+  )
 }
 
 const mapStateToProps = state => {
@@ -41,10 +88,12 @@ const mapStateToProps = state => {
   const clientIds = getExistingClientIds(state);
   const currentBottomClient = getBottomClient(state);
   const currentBid = getCurrentBid(state);
+  const cards = getMyCards(state);
 
   const numStateChanges = updateState(state);
   return {
     name,
+    cards,
     clients,
     clientIds,
     currentBottomClient,
@@ -71,4 +120,7 @@ const ClientItem = styled.li`
 `;
 
 
-export default connect(mapStateToProps)(ConnectedClients);
+export default connect(mapStateToProps, {
+  updateCardsInHand,
+  toggleBottomSelector
+})(ConnectedClients);

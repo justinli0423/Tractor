@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 
-const GameFunction = (props) => {
+const BidButton = (props) => {
   return(
     <Button
       onClick={() => props.onClickCb(props.bid)}
@@ -33,4 +33,4 @@ const Icon = styled.span`
   filter: ${props => props.color === 'black' && 'grayscale(1)'};
 `;
 
-export default GameFunction;
+export default BidButton;

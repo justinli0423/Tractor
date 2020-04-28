@@ -44,3 +44,8 @@ export const setTrumpValue = (trump) => ({
   type: 'SET_TRUMP_VALUE',
   payload: trump
 })
+
+export const toggleBottomSelector = (canSelectBottom) => ({
+  type: 'TOGGLE_BOTTOM_SELECTION',
+  payload: canSelectBottom
+})

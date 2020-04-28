@@ -7,6 +7,7 @@ import {
   getCardsIO,
   getNewBidIO,
   getTrumpValueIO,
+  getBottom
 } from "../socket/connect";
 
 import {
@@ -14,8 +15,9 @@ import {
   updateState,
   getExistingClients,
   getCurrentBid,
-  getTrumpValue, 
-  getTrumpTracker, 
+  getTrumpValue,
+  getTrumpTracker,
+  getCanSelectCardsForBottom,
   getValidBids
 } from '../redux/selectors';
 
@@ -23,6 +25,7 @@ import {
   updateCardsInHand,
   setCurrentBid,
   setTrumpValue,
+  toggleBottomSelector,
   setValidBids
 } from '../redux/actions';
 
@@ -31,10 +34,18 @@ const cardWidth = 120;
 const cardHeight = 168;
 
 class Game extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      numCardsForBottom: 0
+    };
+  }
+  // all listeners required pre-game goes here
   componentDidMount() {
     getTrumpValueIO(this.props.setTrumpValue.bind(this));
     getCardsIO(this.setCards.bind(this));
     getNewBidIO(this.updateBidStatus.bind(this));
+    getBottom(this.receiveBottomCards.bind(this));
   }
 
   setCards(newCard) {
@@ -53,6 +64,48 @@ class Game extends Component {
     this.props.updateCardsInHand(cards, trumpTracker);
   }
 
+  receiveBottomCards(bottomCards) {
+    bottomCards.forEach(bottomCard => {
+      this.setCards(bottomCard);
+    });
+    this.props.toggleBottomSelector(true);
+  }
+
+  toggleCardForBottom(cardIndex) {
+    const {
+      cards,
+      trumpTracker,
+      canSelectCardsForBottom
+    } = this.props;
+    const {
+      numCardsForBottom,
+    } = this.state;
+    const isSelected = cards[cardIndex].isSelectedForBottom;
+
+    if (!canSelectCardsForBottom) {
+      return;
+    }
+
+    if (!isSelected && numCardsForBottom === 8) {
+      // TODO: DISPLAY NICER DIALOG FOR USER THAT THEY HAVE 8 SELECTED ALREADY
+      window.alert('Maximum cards for bottom selected');
+      return;
+    }
+
+    if (!isSelected) {
+      this.setState({
+        numCardsForBottom: numCardsForBottom + 1
+      })
+    } else {
+      this.setState({
+        numCardsForBottom: numCardsForBottom - 1
+      })
+    }
+
+    cards[cardIndex].isSelectedForBottom = !isSelected;
+    this.props.updateCardsInHand(cards, trumpTracker);
+  }
+
   updateBidStatus(socketId, bid) {
     const {
       trumpTracker,
@@ -68,20 +121,25 @@ class Game extends Component {
       cards,
       numCards
     } = this.props;
-    return(
-      <Container 
+    return (
+      <Container
         height={cardHeight}
       >
-        {/* <img src={cardSvgs[1]} /> */}
         {cards.map((card, i) => {
           return (
-            <CardImg
-              width={cardWidth}
-              height={cardHeight}
-              numCards={numCards}
-              src={card.svg}
-              key={i}
-            />
+            <>
+              <CardImg
+                // TODO: enable drag and drop custom sorting later?
+                draggable={false}
+                onClick={() => { this.toggleCardForBottom(i) }}
+                width={cardWidth}
+                height={cardHeight}
+                numCards={numCards}
+                isSelectedForBottom={card.isSelectedForBottom}
+                src={card.svg}
+                key={i}
+              />
+            </>
             // change the key prop to the name of card
           )
         })}
@@ -98,12 +156,14 @@ const mapStateToProps = (state) => {
   const trumpTracker = getTrumpTracker(state);
   const validBids = getValidBids(state);
   const changeState = updateState(state);
+  const canSelectCardsForBottom = getCanSelectCardsForBottom(state);
 
   const numCards = cards.length;
   return {
     cards,
     numCards,
     connectedClients,
+    canSelectCardsForBottom,
     currentBid,
     trumpValue,
     trumpTracker,
@@ -130,9 +190,11 @@ const Container = styled.div`
 `;
 
 const CardImg = styled.img`
+  flex-shrink: 0;
+  z-index: ${prop => prop.isSelectedForBottom ? 10 : 15};
   width: ${prop => `${prop.width}px`};
   height: ${prop => `${prop.height}px`};
-  flex-shrink: 0;
+  transform: ${prop => prop.isSelectedForBottom && 'translateY(-30px);'};
   filter: greyscale(1);
 
   &:not(:first-child) {
@@ -141,7 +203,7 @@ const CardImg = styled.img`
 
   &:hover {
     z-index: 100;
-    transform: scale(1.5) translateY(-28px);
+    transform: translateY(-50px);
     /* width: ${prop => `${prop.width * 1.5}px`};
     height: ${prop => `${prop.height * 1.5}px`}; */
     /* margin-left: ${prop => `-${prop.numCards}px`}; */
@@ -152,6 +214,7 @@ export default connect(mapStateToProps, {
   updateCardsInHand,
   setValidBids,
   setTrumpValue,
+  toggleBottomSelector,
   setCurrentBid
 })(Game);
 
