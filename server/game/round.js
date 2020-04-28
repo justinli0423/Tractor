@@ -14,7 +14,7 @@ class Round {
     }
 
     startRound() {
-        this._deck.shuffle();
+        // this._deck.shuffle();
         constants.su.emitTrumpValue(this._trump_value);
         this.deal();
         this._players.forEach(constants.su.subSetBid.bind(constants.su));
@@ -32,7 +32,7 @@ class Round {
             // console.log(constants.su.sockets[this._players[i % 4]], [card.value, card.suit])
             constants.su.emitDealCard(this._players[i % 2], [card.value, card.suit]);
             i++;
-            if (i === 50) {
+            if (i === 28) {
                 clearInterval(interval);
             }
         }, 20);

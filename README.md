@@ -12,6 +12,7 @@
   - organize the socket receivers into stages (function stage1()... function stagen() etc)
   - switch feature to allow user to select how to sort cards in hand
   - allow custom dragndrop ordering of cards in hand?
+  - create pre-config file for all the constants that change by device sizes/types (e.g. card sizes)
 
 ### Backend:
   - factor socket helpers into different file (e.g. socketUtils.js & listeners.js)

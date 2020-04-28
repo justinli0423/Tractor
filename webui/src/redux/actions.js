@@ -39,3 +39,8 @@ export const setCurrentBid = (socketId, bid) => ({
     bid
   }
 })
+
+export const setTrumpValue = (trump) => ({
+  type: 'SET_TRUMP_VALUE',
+  payload: trump
+})

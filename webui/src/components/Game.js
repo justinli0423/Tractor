@@ -5,7 +5,8 @@ import styled from 'styled-components';
 import PlayingCards from '../utils/Cards';
 import {
   getCardsIO,
-  getNewBidIO
+  getNewBidIO,
+  getTrumpValueIO,
 } from "../socket/connect";
 
 import {
@@ -17,9 +18,12 @@ import {
   getTrumpTracker, 
   getValidBids
 } from '../redux/selectors';
+
 import {
   updateCardsInHand,
   setCurrentBid,
+  setTrumpValue,
+  setValidBids
 } from '../redux/actions';
 
 const Cards = new PlayingCards();
@@ -28,23 +32,35 @@ const cardHeight = 168;
 
 class Game extends Component {
   componentDidMount() {
+    getTrumpValueIO(this.props.setTrumpValue.bind(this));
     getCardsIO(this.setCards.bind(this));
-    getNewBidIO(this.props.setCurrentBid);
+    getNewBidIO(this.updateBidStatus.bind(this));
   }
 
   setCards(newCard) {
     const {
+      trumpValue,
       trumpTracker,
       validBids,
       currentBid,
       cards
     } = this.props;
     if (!newCard || newCard.length !== 2) return;
-    // TODO undo hardcoding
-    console.log('setCards', trumpTracker)
-    Cards.insertCard(cards, newCard, '2', 'H');
-    Cards.newTrump(trumpTracker, validBids, newCard, currentBid, '2');
+    // TODO: undo hardcoding
+    Cards.insertCard(cards, newCard, trumpValue, currentBid);
+    Cards.newTrump(trumpTracker, validBids, newCard, currentBid, trumpValue);
+    this.props.setValidBids(validBids);
     this.props.updateCardsInHand(cards, trumpTracker);
+  }
+
+  updateBidStatus(socketId, bid) {
+    const {
+      trumpTracker,
+      validBids,
+    } = this.props;
+    Cards.receiveBid(bid, trumpTracker, validBids);
+    const bidString = `${bid[0]}${bid[1]}`;
+    this.props.setCurrentBid(socketId, bidString);
   }
 
   render() {
@@ -134,6 +150,8 @@ const CardImg = styled.img`
 
 export default connect(mapStateToProps, {
   updateCardsInHand,
+  setValidBids,
+  setTrumpValue,
   setCurrentBid
 })(Game);
 

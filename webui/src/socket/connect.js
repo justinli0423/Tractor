@@ -17,13 +17,16 @@ export function getCardsIO(setCardsCb) {
   socket.on('dealCard', setCardsCb);
 }
 
-export function makeBidIO(suit) {
-  console.log('newBid', suit);
-  socket.emit('newBid', suit);
+export function makeBidIO(bid) {
+  socket.emit('newBid', bid);
 }
 
 export function getNewBidIO(setNewBidCb) {
   socket.on('setNewBid', (socketId, bid) => setNewBidCb(socketId, bid));
+}
+
+export function getTrumpValueIO(setTrumpValueCb) {
+  socket.on('setTrumpValue', trump => setTrumpValueCb(trump));
 }
 
 function setSocketID(id) {

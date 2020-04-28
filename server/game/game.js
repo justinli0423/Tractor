@@ -43,8 +43,8 @@ class Game {
     }
 
     new_round(level = null) {
-        const trumpValue = 2;
-        this._round = new Round(this._deck, this._order, 2);
+        const trumpValue = 'A';
+        this._round = new Round(this._deck, this._order, trumpValue);
         this._round.startRound();
         // this._round.play();
         // this._round.end();

@@ -43,6 +43,10 @@ export default (state = currState, action) => {
         validBids: action.payload,
         numStateUpdated: state.numStateUpdated + 1
       })
+    case 'SET_TRUMP_VALUE':
+      return Object.assign({}, state, {
+        trump: action.payload
+      })
     case 'SET_CURRENT_BID':
       return Object.assign({}, state, {
         currentBid: action.payload.bid,

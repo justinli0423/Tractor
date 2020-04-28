@@ -53,7 +53,7 @@ class SocketUtil {
 
     emitTrumpValue(trumpValue) {
         console.log(`A new round has started. ${trumpValue}'s are trump.`)
-        constants.io.emit('trumpValue', trumpValue)
+        constants.io.emit('setTrumpValue', trumpValue)
     }
 
     emitNewBid(socketId, bid) {
@@ -65,7 +65,7 @@ class SocketUtil {
 
     subSetBid(socketId) {
         this.getSocket(socketId).on('newBid', (bid) => {
-            // console.log("received bid")
+            console.log("received bid of", bid);
             this.emitNewBid(socketId, bid);
         })
     }

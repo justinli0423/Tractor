@@ -27,7 +27,7 @@ const ConnectedClients = (props) => {
             <ClientItem
             key={id}
           >
-            {i}: {id === currentBottomClient ? `${clients[id]}:${currentBid}` : clients[id]}
+            {id === currentBottomClient ? `${clients[id]}:${currentBid}` : clients[id]}
           </ClientItem>
           );
         })}

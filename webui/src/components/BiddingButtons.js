@@ -19,6 +19,7 @@ import {
     getName,
     getId,
     getValidBids,
+    getCurrentBid,
     getTrumpValue,
     getTrumpTracker,
     updateState
@@ -39,9 +40,9 @@ const CallBottomButtons = (props) => {
             validBids,
         } = props;
         const bidString = `${bid[0]}${bid[1]}`;
-        makeBidIO(bidString);
+        makeBidIO(bid);
         props.setCurrentBid(id, bidString);
-        console.log(Cards)
+        // console.log(Cards)
         Cards.updateBid(bid, trumpTracker, validBids);
     }
 
@@ -49,6 +50,7 @@ const CallBottomButtons = (props) => {
     // TODO: keep track of previous bids before rendering
     const getAvailableBidButtons = () => {
         const { validBids } = props;
+        // console.log(validBids);
         // validBids: [numOfCards, valueOfCards]
         // e.g. if I have 2 (2 of spades) -> [2, 'S'];
         // e.g. no trump: ['S', 'J'] or ['B', 'J']
@@ -59,30 +61,39 @@ const CallBottomButtons = (props) => {
             };
             if (bid[1] === 'J') { // have 2 jokers to call no trump
                 bidArray.push(Object.assign({}, buttonObject, {
-                    renderData: bid[0] === 'S' ? ['SJ No Trump', ''] : ['BJ No Trump', ''],
+                    renderData: bid[0] === 'S' ? ['No Trump', 'SJ'] : ['No Trump', 'BJ'],
+                    color: bid[0] === 'S' ? 'black' : 'red'
                 }));
             } else {
-                for (let i = 0; i < bid[0]; i++) {
-                    bidArray.push(Object.assign({}, buttonObject, {
-                        renderData: [i + 1, bid[1]],
-                    }));
-                }
+                // for (let i = 0; i < bid[0]; i++) {
+                //     bidArray.push(Object.assign({}, buttonObject, {
+                //         renderData: [i + 1, bid[1]],
+                //         color: (bid[1] === 'S' || bid[1] === 'C') ? 'black' : 'red'
+                //     }));
+                // }
+                bidArray.push(Object.assign({}, buttonObject, {
+                    renderData: [bid[0], bid[1]],
+                    color: (bid[1] === 'S' || bid[1] === 'C') ? 'black' : 'red'
+                }));
             }
         })
-        return bidArray;
+        // console.log(bidArray);
+        return bidArray;    
     }
 
 
     return (
         <>
             {
-                getAvailableBidButtons().map((buttonObject) => {
+                getAvailableBidButtons().map((buttonObject, i) => {
                     return (
                         <GameButton
                             bid={buttonObject.rawData}
                             label={buttonObject.renderData[0]}
                             icon={Unicodes[buttonObject.renderData[1]] || ''}
+                            color={buttonObject.color}
                             onClickCb={setBottom}
+                            key={i}
                         />
                     )
                 })
@@ -96,13 +107,15 @@ const mapStateToProps = (state) => {
     const name = getName(state);
     const id = getId(state);
     const validBids = getValidBids(state);
-    const numUpdateStates = updateState(state);
     const trumpValue = getTrumpValue(state);
     const trumpTracker = getTrumpTracker(state);
+    const currentBid = getCurrentBid(state);
+    const numUpdateStates = updateState(state);
     return {
         id,
         name,
         validBids,
+        currentBid,
         trumpValue,
         trumpTracker,
         numUpdateStates
