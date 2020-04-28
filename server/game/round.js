@@ -1,8 +1,8 @@
-const Deck = require('./deck');
 const constants = require('../constants')
 
 class Round {
-    constructor(deck, players = null, trump_value) {
+    constructor(deck, players = null, trump_value, first) {
+        this._firstRound = first
         this._deck = deck;
         this._players = players;
         this._declarer_points = 0;
@@ -11,6 +11,10 @@ class Round {
         this._trump_suit = null;
         this._bottom = null;
         this._winner = null;
+        this._bids = {}
+        for (let i = 0; i < this._players.length; i++) {
+            this._bids[this._players[i]] = false
+        }
     }
 
     startRound() {
@@ -18,6 +22,9 @@ class Round {
         constants.su.emitTrumpValue(this._trump_value);
         this.deal();
         this._players.forEach(constants.su.subSetBid.bind(constants.su));
+        this._players.forEach(constants.su.subDoneBid.bind(constants.su)(this));
+
+
     }
 
     get deck() {
@@ -36,6 +43,25 @@ class Round {
                 clearInterval(interval);
             }
         }, 20);
+    }
+
+    setTrumpSuit(bid) {
+        this.trump_suit = bid[1] === 'J' ? 'NT' : bid[1]
+    }
+
+    doneBid(socketID) {
+        this._bids[socketID] = true
+        var start = true;
+        for (let i = 0; i < this._players.length; i++) {
+            start = start && this._bids[this._players[i]]
+        }
+        if (start) { }
+    }
+
+    sendBottom() {
+        if (this._firstRound) {
+            
+        }
     }
 
     push_card(cards) {

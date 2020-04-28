@@ -70,6 +70,13 @@ class SocketUtil {
         })
     }
 
+    subDoneBid(socketId, round) {
+        this.getSocket(socketId).on('doneBid', () => {
+            console.log(`${this._sockets[socketId]} is done bidding.`);
+            round.doneBid(socketId);
+        })
+    }
+
     addSocket(socket) {
         // once clientId is received:
         // 1. send back connection status

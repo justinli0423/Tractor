@@ -1,5 +1,6 @@
 const Round = require('./round');
 const Deck = require('./deck');
+const constants = require('../constants')
 
 class Game {
     constructor(players) {
