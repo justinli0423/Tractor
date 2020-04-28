@@ -17,3 +17,5 @@ export const getValidBids = store => store.validBids;
 export const getCurrentBid = store => store.currentBid;
 
 export const getTrumpValue = store => store.trump;
+
+export const getTrumpTracker = store => store.trumpTracker;

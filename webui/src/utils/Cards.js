@@ -105,6 +105,7 @@ export default class Cards {
   }
   // todo
   newTrump(trumpTracker, validBids, newCard, currentBid, trumpValue) {
+    console.log('newTrump', trumpTracker)
     if (newCard[1] === 'J') {
       trumpTracker[newCard[0] + 'J'] += 1
       if (trumpTracker[newCard[0] + 'J'] === 2) {

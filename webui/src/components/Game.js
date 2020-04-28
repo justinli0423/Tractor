@@ -13,7 +13,7 @@ import {
   updateState,
   getExistingClients,
   getCurrentBid,
-  getTrumpValue
+  getTrumpValue, getTrumpTracker, getValidBids
 } from '../redux/selectors';
 import {
   updateCardsInHand,
@@ -31,7 +31,6 @@ class Game extends Component {
   }
 
   setCards(newCard) {
-    console.log(newCard)
     const {
       trumpTracker,
       validBids,
@@ -39,8 +38,9 @@ class Game extends Component {
       cards
     } = this.props;
     if (!newCard || newCard.length !== 2) return;
-    // todo
-    Cards.insertCard(cards, trumpTracker, newCard, '2', 'H');
+    // TODO undo hardcoding
+    console.log('setCards', trumpTracker)
+    Cards.insertCard(cards, newCard, '2', 'H');
     Cards.newTrump(trumpTracker, validBids, newCard, currentBid, '2');
     this.props.updateCardsInHand(cards, trumpTracker);
   }
@@ -77,6 +77,8 @@ const mapStateToProps = (state) => {
   const connectedClients = getExistingClients(state);
   const currentBid = getCurrentBid(state);
   const trumpValue = getTrumpValue(state);
+  const trumpTracker = getTrumpTracker(state);
+  const validBids = getValidBids(state);
   const changeState = updateState(state);
 
   const numCards = cards.length;
@@ -86,7 +88,9 @@ const mapStateToProps = (state) => {
     connectedClients,
     currentBid,
     trumpValue,
-    changeState
+    trumpTracker,
+    validBids,
+    changeState,
   }
 }
 
