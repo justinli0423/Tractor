@@ -56,6 +56,7 @@ export default class Cards {
   insertCard(cards, newCard, trumpValue, trumpSuit) {
     const cardObject = {
       card: newCard,
+      isSelectedForBottom: false,
       svg: `${this.path}${this.getSvg(newCard)}`
     }
     if (trumpSuit) {

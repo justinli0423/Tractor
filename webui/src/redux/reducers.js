@@ -10,6 +10,7 @@ const currState = {
   currentBottomClient: null,
   trumpTracker: { 'S': 0, 'D': 0, 'C': 0, 'H': 0, 'SJ': 0, 'BJ': 0 },
   validBids: [],
+  canSelectCardsForBottom: false,
   numStateUpdated: 0
 }
 
@@ -52,6 +53,10 @@ export default (state = currState, action) => {
         currentBid: action.payload.bid,
         currentBottomClient: action.payload.socketId,
         numStateUpdated: state.numStateUpdated + 1
+      })
+    case 'TOGGLE_BOTTOM_SELECTION':
+      return Object.assign({}, state, {
+        canSelectCardsForBottom: action.payload
       })
     default:
       return state;

@@ -4,7 +4,8 @@ import styled from 'styled-components';
 
 import Game from './components/Game';
 import ConnectedClients from './components/ConnectClients';
-import BiddingButtons from './components/BiddingButtons';
+import BiddingButtons from './components/BidButton';
+import RegularButton from './components/RegularButton';
 
 import {
   connectToSocketIO,
@@ -64,9 +65,9 @@ class App extends Component {
             autoFocus
             ref={(nameRef) => { this.nameRef = nameRef }}
           />
-          <Button>
-            Play  
-          </Button>
+          <RegularButton 
+            label="Play"
+          />
         </form>
       </Container>
     );
@@ -118,12 +119,6 @@ const NameInput = styled.input`
   margin: 7px;
   padding: 4px;
   width: 7em;
-`;
-
-const Button = styled.button`
-  padding: 3px 7px;
-  height: auto;
-  cursor: pointer;
 `;
 
 export default connect(mapStateToProps, {

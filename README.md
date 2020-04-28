@@ -1,8 +1,6 @@
 # Tractor
 
 ## Features:
-  
-
 
 ## Todos:
 
@@ -17,6 +15,8 @@
   - switch feature to allow user to select how to sort cards in hand
   - allow custom dragndrop ordering of cards in hand?
   - create pre-config file for all the constants that change by device sizes/types (e.g. card sizes)
+  - check out material-ui for cleaner ui? (maybE)
+  - create rooms
 
   - bidding stuff:
     - receive bottom ('originalBottom')

@@ -9,10 +9,8 @@ import {
     makeBidIO
 } from '../socket/connect';
 
-// TODO: remove setvalidbids from here
 import {
     setCurrentBid,
-    setValidBids
 } from '../redux/actions';
 
 import {
@@ -47,10 +45,8 @@ const CallBottomButtons = (props) => {
     }
 
     // returns the array of buttons to be rendered
-    // TODO: keep track of previous bids before rendering
     const getAvailableBidButtons = () => {
         const { validBids } = props;
-        // console.log(validBids);
         // validBids: [numOfCards, valueOfCards]
         // e.g. if I have 2 (2 of spades) -> [2, 'S'];
         // e.g. no trump: ['S', 'J'] or ['B', 'J']
@@ -65,22 +61,14 @@ const CallBottomButtons = (props) => {
                     color: bid[0] === 'S' ? 'black' : 'red'
                 }));
             } else {
-                // for (let i = 0; i < bid[0]; i++) {
-                //     bidArray.push(Object.assign({}, buttonObject, {
-                //         renderData: [i + 1, bid[1]],
-                //         color: (bid[1] === 'S' || bid[1] === 'C') ? 'black' : 'red'
-                //     }));
-                // }
                 bidArray.push(Object.assign({}, buttonObject, {
                     renderData: [bid[0], bid[1]],
                     color: (bid[1] === 'S' || bid[1] === 'C') ? 'black' : 'red'
                 }));
             }
         })
-        // console.log(bidArray);
-        return bidArray;    
+        return bidArray;
     }
-
 
     return (
         <>
@@ -124,5 +112,4 @@ const mapStateToProps = (state) => {
 
 export default connect(mapStateToProps, {
     setCurrentBid,
-    setValidBids
 })(CallBottomButtons);
