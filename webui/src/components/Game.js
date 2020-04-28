@@ -15,7 +15,6 @@ import {
   getCurrentBid,
   getTrumpValue
 } from '../redux/selectors';
-
 import {
   updateCardsInHand,
   setBottomClient,
@@ -35,10 +34,10 @@ class Game extends Component {
     console.log(newCard)
     if (!newCard || newCard.length !== 2) return;
     const { cards } = this.props;
-
-    Cards.insertCard(cards, this.props.trumpTracker, newCard);
-    Cards.newTrump(this.props.trumpTracker, this.props.validBids, newCard, this.props.trumpValue, this.props.currentBid);
-    this.props.updateCardsInHand(cards, this.props.trumpTracker);
+    // todo
+    Cards.insertCard(cards, trumpTracker, newCard, '2', 'H');
+    Cards.newTrump(trumpTracker, validBids, newCard, currentBid, '2');
+    this.props.updateCardsInHand(cards, trumpTracker);
   }
 
   render() {
