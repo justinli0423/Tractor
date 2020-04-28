@@ -1,4 +1,5 @@
 const constants = require('../constants')
+const Card = require('./cards');
 
 class BidRound {
     constructor(deck, players = null, trumpValue, roundNumber) {
@@ -48,36 +49,23 @@ class BidRound {
             let card = this._deck.deal()
             bottom.push([card.value, card.suit])
         }
-        constants.su.emitBottom(this._bidWinner, bottom)
+        let declarer = this._roundNumber === 0 ? this._bidWinner : this._players[0];
+        constants.su.emitBottom(declarer, bottom);
+        constants.su.subNewBottom(declarer, this);
     }
 
-    push_card(cards) {
-        for (let i = 0; i < cards.length; i++)
-            this._deck.push_card(cards[i]);
+    set bottom(cards) {
+        for (let i = 0; i < cards.length; i++) {
+            this._deck.push_card(new Card(cards[i][0], cards[i][1], this._trumpValue, this._trumpSuit));
+        }
     }
 
     get players() {
         return this._players;
     }
 
-    get trumpValue() {
-        return this._trumpValue;
-    }
-
     get trumpSuit() {
         return this._trumpSuit;
-    }
-
-    set trumpSuit(suit) {
-        this._trumpSuit = suit;
-    }
-
-    get bottom() {
-        return this._bottom;
-    }
-
-    set bottom(cards) {
-        this._bottom = cards;
     }
 
 }

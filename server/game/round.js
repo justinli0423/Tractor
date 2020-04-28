@@ -29,9 +29,8 @@ class Round {
             constants.su.subSetBid(this._players[i], this._bidRound);
             constants.su.subDoneBid(this._players[i], this._bidRound);
         }
-
-
-
+        this._trumpSuit = this._bidRound.trumpSuit;
+        this._players = this._bidRound.players;
     }
 
     get deck() {
