@@ -13,13 +13,15 @@ import {
 
 const ConnectedClients = (props) => {
   const {
+    name,
     clientIds,
     clients,
     currentBid,
     currentBottomClient
   } = props;
 
-  // TODO: ADD STATE FOR NUM CARDS SELECTED FOR BOTTOM FOR BUTTON TOGGLE AFTER 8 CARDS ARE SELECTED
+  document.title = name;
+  // TODO: show player levels instead of current bottom
   return (
     <ClientsContainer>
       <ClientsHeader>PLAYERS</ClientsHeader>
@@ -28,7 +30,7 @@ const ConnectedClients = (props) => {
           <ClientItem
             key={id}
           >
-            {id === currentBottomClient ? `${clients[id]}:${currentBid}` : clients[id]}
+            {id === currentBottomClient ? `${clients[id]}: ${currentBid}` : clients[id]}
           </ClientItem>
         );
       })}
@@ -55,7 +57,7 @@ const mapStateToProps = state => {
 }
 
 const ClientsContainer = styled.ul`
-  position: absolute;
+  position: fixed;
   transform: translateX(-25%);
   top: 10px;
   right: 0;
