@@ -1,12 +1,12 @@
+const constants = require('../constants')
 const Round = require('./round');
 const Deck = require('./deck');
-const constants = require('../constants')
 
 class Game {
     constructor(players) {
         this._team1 = null;
         this._team2 = null;
-        this._order = players;
+        this._players = players;
         this._team1Level = '2';
         this._team2Level = '2';
         this._deck = new Deck();
@@ -19,14 +19,14 @@ class Game {
 
     set team1([players]) {
         this._team1 = players;
-        this._order[0] = players[0];
-        this._order[2] = players[1];
+        this._players[0] = players[0];
+        this._players[2] = players[1];
     }
 
     set team2([players]) {
         this._team2 = players;
-        this._order[1] = players[0];
-        this._order[3] = players[1];
+        this._players[1] = players[0];
+        this._players[3] = players[1];
     }
 
     get team1_level() {
@@ -47,7 +47,8 @@ class Game {
     new_round(level = null) {
         // TODO: update to dynamic trumpValue
         const trumpValue = '2';
-        this._round = new Round(this._deck, this._order, trumpValue, this._roundNumber);
+        constants.game.round = new Round(this._deck, this._players, trumpValue, this._roundNumber);
+        this._round = constants.game.round;
         this._round.dealAndBid();
         // this._round.play();
         // this._round.end();

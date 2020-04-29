@@ -30,9 +30,9 @@ class SocketUtil {
 
     start() {
         // TODO: CHANGE SOCKET LENGTH BACK TO 4
-        if (Object.keys(this._sockets).length === 2) {
-            const game = new Game(Object.keys(this._sockets));
-            game.new_round()
+        if (Object.keys(this._sockets).length === constants.numPlayers) {
+            constants.game = new Game(Object.keys(this._sockets));
+            constants.game.new_round()
         }
     }
 
@@ -82,50 +82,53 @@ class SocketUtil {
 
     removeSocket(socket) {
         socket.on('disconnect', () => {
-            clearInterval(global.interval);
+            clearInterval(constants.interval);
             console.log(`Client ${this._sockets[socket.id]} has disconnected`);
             this._sockets[socket.id] = null;
             this.emitConnectedClients();
         });
     }
 
-    // subSetBid(socketId, cb) {
-    subSetBid(socketId, bidRound) {
-        console.log('subSetBid', bidRound);
+    subSetBid(socketId) {
+        // subSetBid(socketId, bidRound) {
         this.getSocket(socketId).on('newBid', (bid) => {
             console.log("Received bid of", bid, "from", this._sockets[socketId]);
             // cb(bid, socketId);
-            bidRound.receiveBid(bid, socketId);
+            constants.game.round.bidRound.receiveBid(bid, socketId);
             this.emitNewBid(socketId, bid);
         })
     }
 
-    // subDoneBid(socketId, cb1, cb2) {
-    subDoneBid(socketId, bidRound, round) {
-        // console.log('subDoneBid', round);
+    subDoneBid(socketId) {
+        // subDoneBid(socketId, bidRound) {
         this.getSocket(socketId).on('doneBid', () => {
             console.log(`${this._sockets[socketId]} is done bidding.`);
-            // cb1();
-            // cb2();
-            bidRound.doneBid();
-            // round.setTrumpAndOrder();
+            this.closeBidSubs(socketId)
+            constants.game.round.bidRound.doneBid();
         })
     }
 
-    subNewBottom(socketId, bidRound) {
+    // subNewBottom(socketId, bidRound) {
+    subNewBottom(socketId) {
         console.log('Waiting for bottom from', socketId)
-        console.log(bidRound);
+        // console.log(bidRound);
         this.getSocket(socketId).on('newBottom', (bottom) => {
-            bidRound.setBottom(bottom);
+            this.closeBottomSub(socketId);
+            constants.game.round.bidRound.bottom = bottom;
+            constants.game.round.play();
         })
     }
 
     // ------------ SOCKET CLOSERS ------------
 
-    closeDealBidSubs() {
-
+    closeBidSubs(socketId) {
+        this.getSocket(socketId).removeAllListeners('newBid');
+        this.getSocket(socketId).removeAllListeners('doneBid');
     }
 
+    closeBottomSub(socketId) {
+        this.getSocket(socketId).removeAllListeners('newBottom');
+    }
 
 }
 

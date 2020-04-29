@@ -19,7 +19,7 @@ const default_ranks = {
 const points = {'5': 5, '10': 10, 'K': 10}
 
 class Card {
-    constructor(value, suit, trump_value = null, trump_suit = null) {
+    constructor(value, suit) {
         this._suit = suit;
         this._value = value;
     }

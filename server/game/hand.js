@@ -16,7 +16,7 @@ class Hand {
     sortHand() {
         for (let i = 0; i < this._rawCards.length; i++) {
             let card = this._rawCards[i]
-            if (card.suit === 'J' || card.value === this._trumpValue || this.suit === this._trumpSuit) {
+            if (card.suit === 'J' || card.value === this._trumpValue || card.suit === this._trumpSuit) {
                 if (_.contains(this._singles['T'], card)) {
                     this._doubles['T'].push(card);
                 }

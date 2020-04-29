@@ -1,4 +1,9 @@
 module.exports = {
+    interval: null,
     io: null,
-    su: null
+    su: null,
+    game: null,
+    round: null,
+    numPlayers: 2
 }
+
