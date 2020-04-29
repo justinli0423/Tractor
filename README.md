@@ -1,5 +1,7 @@
 # Tractor
 
+## Features:
+
 ## Todos:
 
 ### Frontend:
@@ -12,8 +14,26 @@
   - organize the socket receivers into stages (function stage1()... function stagen() etc)
   - switch feature to allow user to select how to sort cards in hand
   - allow custom dragndrop ordering of cards in hand?
+  - create pre-config file for all the constants that change by device sizes/types (e.g. card sizes)
+  - check out material-ui for cleaner ui? (maybE)
+  - create rooms
+
+  - bidding stuff:
+    - receive bottom ('originalBottom')
+    - select return cards for bottom
+    - send bottom back to deck ('newBottom')
+
 
 ### Backend:
+  - seperate bidding and playing
+    - create bidding class
+      - determine finished bidding ('doneBid')
+      - receive winner
+      - set play order
+    - playing round class
+      - send bottom cards ('originalBottom')
+      - receive bottom cards ('newBottom')
+  
   - factor socket helpers into different file (e.g. socketUtils.js & listeners.js)
   - factor socket listeners into stages
     - stage 1: setup

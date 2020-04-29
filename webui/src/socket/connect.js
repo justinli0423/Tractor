@@ -9,6 +9,30 @@ export function connectToSocketIO(getStatusCb, name) {
   setSocketID(name);
 }
 
+// ------------------ EVENT EMITTERS ------------------
+export function makeBidIO(bid) {
+  socket.emit('newBid', bid);
+}
+
+export function setDoneBidIO() {
+  socket.emit('doneBid');
+}
+
+// returning the 8 cards you don't want
+export function returnBottomIO(bottom) {
+  console.log(socket.id, 'returning bottom', bottom);
+  socket.emit('newBottom', bottom);
+}
+
+function setSocketID(id) {
+  socket.emit('setSocketId', id);
+}
+
+// ------------------ EVENT LISTENERS ------------------
+export function getBottom(setBottomCardsCb) {
+  socket.on('originalBottom', (cards) => setBottomCardsCb(cards));
+}
+
 export function getConnectedClientsIO(setClientsCb) {
   socket.on('newClientConnection', setClientsCb);
 }
@@ -17,17 +41,12 @@ export function getCardsIO(setCardsCb) {
   socket.on('dealCard', setCardsCb);
 }
 
-export function makeBidIO(suit) {
-  console.log('newBid', suit);
-  socket.emit('newBid', suit);
-}
-
 export function getNewBidIO(setNewBidCb) {
   socket.on('setNewBid', (socketId, bid) => setNewBidCb(socketId, bid));
 }
 
-function setSocketID(id) {
-  socket.emit('setSocketId', id);
+export function getTrumpValueIO(setTrumpValueCb) {
+  socket.on('setTrumpValue', trump => setTrumpValueCb(trump));
 }
 
 function getConnectionStatus(setStatusCb, name) {

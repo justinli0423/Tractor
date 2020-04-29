@@ -39,3 +39,23 @@ export const setCurrentBid = (socketId, bid) => ({
     bid
   }
 })
+
+export const setTrumpValue = (trump) => ({
+  type: 'SET_TRUMP_VALUE',
+  payload: trump
+})
+
+export const toggleBottomSelector = (canSelectBottom) => ({
+  type: 'TOGGLE_BOTTOM_SELECTION',
+  payload: canSelectBottom
+})
+
+export const updateNumCardsForBottom = (num) => ({
+  type: 'UPDATE_NUM_BOTTOM_CARDS',
+  payload: num
+})
+
+export const toggleBidButtons = (canBid) => ({
+  type: 'TOGGLE_BID_BUTTONS',
+  payload: canBid
+})

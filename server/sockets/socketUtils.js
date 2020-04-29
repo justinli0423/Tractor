@@ -53,22 +53,20 @@ class SocketUtil {
 
     emitTrumpValue(trumpValue) {
         console.log(`A new round has started. ${trumpValue}'s are trump.`)
-        constants.io.emit('trumpValue', trumpValue)
+        constants.io.emit('setTrumpValue', trumpValue)
     }
 
     emitNewBid(socketId, bid) {
-        console.log(`${this._sockets[socketId]} has made a bid of ${bid}.`);
+        console.log('Sending', this._sockets[socketId], "'s bid of ", bid);
         this.getSocket(socketId).broadcast.emit('setNewBid', socketId, bid);
     }
 
-    // ------------ SOCKET SUBS ------------
-
-    subSetBid(socketId) {
-        this.getSocket(socketId).on('newBid', (bid) => {
-            // console.log("received bid")
-            this.emitNewBid(socketId, bid);
-        })
+    emitBottom(socketId, bottom) {
+        console.log('Sending', this._sockets[socketId], 'the bottom:', bottom);
+        this.getSocket(socketId).emit('originalBottom', bottom)
     }
+
+    // ------------ SOCKET SUBS ------------
 
     addSocket(socket) {
         // once clientId is received:
@@ -90,6 +88,37 @@ class SocketUtil {
             this.emitConnectedClients();
         });
     }
+
+    subSetBid(socketId, bidRound) {
+        this.getSocket(socketId).on('newBid', (bid) => {
+            console.log("Received bid of", bid, "from", this._sockets[socketId]);
+            bidRound.receiveBid(bid, socketId);
+            this.emitNewBid(socketId, bid);
+        })
+    }
+
+    subDoneBid(socketId, bidRound) {
+        this.getSocket(socketId).on('doneBid', () => {
+            console.log(`${this._sockets[socketId]} is done bidding.`);
+            bidRound.doneBid();
+        })
+    }
+
+    subNewBottom(socketId, bidRound) {
+        console.log('Waiting for bottom from', socketId)
+        this.getSocket(socketId).on('newBottom', (bottom) => {
+            console.log(`${this._sockets[socketId]} returned the bottom:`, bottom);
+            bidRound.setBottom(bottom);
+        })
+    }
+
+    // ------------ SOCKET CLOSERS ------------
+
+    closeDealBidSubs() {
+
+    }
+
+
 }
 
 module.exports = SocketUtil;

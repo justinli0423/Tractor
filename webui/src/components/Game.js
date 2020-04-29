@@ -5,7 +5,9 @@ import styled from 'styled-components';
 import PlayingCards from '../utils/Cards';
 import {
   getCardsIO,
-  getNewBidIO
+  getNewBidIO,
+  getTrumpValueIO,
+  getBottom
 } from "../socket/connect";
 
 import {
@@ -13,13 +15,21 @@ import {
   updateState,
   getExistingClients,
   getCurrentBid,
-  getTrumpValue, 
-  getTrumpTracker, 
+  getTrumpValue,
+  getTrumpTracker,
+  getCanSelectCardsForBottom,
+  getNumCardsSelectedForBottom,
   getValidBids
 } from '../redux/selectors';
+
 import {
   updateCardsInHand,
   setCurrentBid,
+  setTrumpValue,
+  updateNumCardsForBottom,
+  toggleBottomSelector,
+  toggleBidButtons,
+  setValidBids
 } from '../redux/actions';
 
 const Cards = new PlayingCards();
@@ -27,24 +37,81 @@ const cardWidth = 120;
 const cardHeight = 168;
 
 class Game extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      numCardsForBottom: 0
+    };
+  }
+  // all listeners required pre-game goes here
   componentDidMount() {
+    getTrumpValueIO(this.props.setTrumpValue.bind(this));
     getCardsIO(this.setCards.bind(this));
-    getNewBidIO(this.props.setCurrentBid);
+    getNewBidIO(this.updateBidStatus.bind(this));
+    getBottom(this.receiveBottomCards.bind(this));
   }
 
   setCards(newCard) {
     const {
+      trumpValue,
       trumpTracker,
       validBids,
       currentBid,
       cards
     } = this.props;
     if (!newCard || newCard.length !== 2) return;
-    // TODO undo hardcoding
-    console.log('setCards', trumpTracker)
-    Cards.insertCard(cards, newCard, '2', 'H');
-    Cards.newTrump(trumpTracker, validBids, newCard, currentBid, '2');
+    // TODO: undo hardcoding
+    Cards.insertCard(cards, newCard, trumpValue, currentBid);
+    Cards.newTrump(trumpTracker, validBids, newCard, currentBid, trumpValue);
+    this.props.setValidBids(validBids);
     this.props.updateCardsInHand(cards, trumpTracker);
+  }
+
+  receiveBottomCards(bottomCards) {
+    bottomCards.forEach(bottomCard => {
+      this.setCards(bottomCard);
+    });
+    this.props.toggleBottomSelector(true);
+    this.props.toggleBidButtons(false);
+  }
+
+  toggleCardForBottom(cardIndex) {
+    const {
+      cards,
+      trumpTracker,
+      canSelectCardsForBottom,
+      numCardsSelectedForBottom
+    } = this.props;
+    const isSelected = cards[cardIndex].isSelectedForBottom;
+
+    if (!canSelectCardsForBottom) {
+      return;
+    }
+
+    if (!isSelected && numCardsSelectedForBottom === 4) {
+      // TODO: DISPLAY NICER DIALOG FOR USER THAT THEY HAVE 8 SELECTED ALREADY
+      window.alert('Maximum cards for bottom selected');
+      return;
+    }
+
+    if (!isSelected) {
+      this.props.updateNumCardsForBottom(numCardsSelectedForBottom + 1);
+    } else {
+      this.props.updateNumCardsForBottom(numCardsSelectedForBottom - 1);
+    }
+
+    cards[cardIndex].isSelectedForBottom = !isSelected;
+    this.props.updateCardsInHand(cards, trumpTracker);
+  }
+
+  updateBidStatus(socketId, bid) {
+    const {
+      trumpTracker,
+      validBids,
+    } = this.props;
+    Cards.receiveBid(bid, trumpTracker, validBids);
+    const bidString = `${bid[0]}${bid[1]}`;
+    this.props.setCurrentBid(socketId, bidString);
   }
 
   render() {
@@ -52,20 +119,26 @@ class Game extends Component {
       cards,
       numCards
     } = this.props;
-    return(
-      <Container 
+    return (
+      <Container
         height={cardHeight}
       >
-        {/* <img src={cardSvgs[1]} /> */}
         {cards.map((card, i) => {
           return (
-            <CardImg
-              width={cardWidth}
-              height={cardHeight}
-              numCards={numCards}
-              src={card.svg}
-              key={i}
-            />
+            <>
+              <CardImg
+                // TODO: enable drag and drop custom sorting later?
+                draggable={false}
+                onClick={() => { this.toggleCardForBottom(i) }}
+                width={cardWidth}
+                height={cardHeight}
+                numCards={numCards}
+                isSelectedForBottom={card.isSelectedForBottom}
+                src={card.svg}
+                zIndex={i}
+                key={i}
+              />
+            </>
             // change the key prop to the name of card
           )
         })}
@@ -82,12 +155,16 @@ const mapStateToProps = (state) => {
   const trumpTracker = getTrumpTracker(state);
   const validBids = getValidBids(state);
   const changeState = updateState(state);
+  const canSelectCardsForBottom = getCanSelectCardsForBottom(state);
+  const numCardsSelectedForBottom = getNumCardsSelectedForBottom(state);
 
   const numCards = cards.length;
   return {
     cards,
     numCards,
     connectedClients,
+    canSelectCardsForBottom,
+    numCardsSelectedForBottom,
     currentBid,
     trumpValue,
     trumpTracker,
@@ -114,9 +191,11 @@ const Container = styled.div`
 `;
 
 const CardImg = styled.img`
+  flex-shrink: 0;
+  z-index: ${prop => prop.zIndex};
   width: ${prop => `${prop.width}px`};
   height: ${prop => `${prop.height}px`};
-  flex-shrink: 0;
+  transform: ${prop => prop.isSelectedForBottom && 'translateY(-30px);'};
   filter: greyscale(1);
 
   &:not(:first-child) {
@@ -125,7 +204,7 @@ const CardImg = styled.img`
 
   &:hover {
     z-index: 100;
-    transform: scale(1.5) translateY(-28px);
+    transform: translateY(-50px);
     /* width: ${prop => `${prop.width * 1.5}px`};
     height: ${prop => `${prop.height * 1.5}px`}; */
     /* margin-left: ${prop => `-${prop.numCards}px`}; */
@@ -134,6 +213,11 @@ const CardImg = styled.img`
 
 export default connect(mapStateToProps, {
   updateCardsInHand,
+  setValidBids,
+  setTrumpValue,
+  updateNumCardsForBottom,
+  toggleBottomSelector,
+  toggleBidButtons,
   setCurrentBid
 })(Game);
 

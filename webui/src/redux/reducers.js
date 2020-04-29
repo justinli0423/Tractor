@@ -10,6 +10,9 @@ const currState = {
   currentBottomClient: null,
   trumpTracker: { 'S': 0, 'D': 0, 'C': 0, 'H': 0, 'SJ': 0, 'BJ': 0 },
   validBids: [],
+  canSelectCardsForBottom: false,
+  numCardsSelectedForBottom: 0,
+  canBidForBottom: true,
   numStateUpdated: 0
 }
 
@@ -43,11 +46,27 @@ export default (state = currState, action) => {
         validBids: action.payload,
         numStateUpdated: state.numStateUpdated + 1
       })
+    case 'SET_TRUMP_VALUE':
+      return Object.assign({}, state, {
+        trump: action.payload
+      })
     case 'SET_CURRENT_BID':
       return Object.assign({}, state, {
         currentBid: action.payload.bid,
         currentBottomClient: action.payload.socketId,
         numStateUpdated: state.numStateUpdated + 1
+      })
+    case 'TOGGLE_BOTTOM_SELECTION':
+      return Object.assign({}, state, {
+        canSelectCardsForBottom: action.payload
+      })
+    case 'UPDATE_NUM_BOTTOM_CARDS':
+      return Object.assign({}, state, {
+        numCardsSelectedForBottom: action.payload
+      })
+    case 'TOGGLE_BID_BUTTONS':
+      return Object.assign({}, state, {
+        canBidForBottom: action.payload
       })
     default:
       return state;

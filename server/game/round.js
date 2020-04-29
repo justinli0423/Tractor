@@ -1,66 +1,63 @@
-const Deck = require('./deck');
 const constants = require('../constants')
+const BidRound = require('./bidRound')
+const PlayRound = require('./playRound')
 
 class Round {
-    constructor(deck, players = null, trump_value) {
+    constructor(deck, players = null, trumpValue, roundNumber) {
+        this._roundNumber = roundNumber
         this._deck = deck;
         this._players = players;
-        this._declarer_points = 0;
-        this._opponent_points = 0;
-        this._trump_value = trump_value;
-        this._trump_suit = null;
+        this._declarerPoints = 0;
+        this._opponentPoints = 0;
+        this._trumpValue = trumpValue;
+        this._trumpSuit = null;
         this._bottom = null;
         this._winner = null;
+        this._bidRound = null;
+        this._playRound = null;
+        this._bids = {}
+        for (let i = 0; i < this._players.length; i++) {
+            this._bids[this._players[i]] = false
+        }
     }
 
-    startRound() {
-        this._deck.shuffle();
-        constants.su.emitTrumpValue(this._trump_value);
-        this.deal();
-        this._players.forEach(constants.su.subSetBid.bind(constants.su));
+    dealAndBid() {
+        constants.su.emitTrumpValue(this._trumpValue);
+        this._bidRound = new BidRound(this._deck, this._players, this._trumpValue, this._roundNumber);
+        this._bidRound.deal();
+        for (let i = 0; i < this._players.length; i++) {
+            constants.su.subSetBid(this._players[i], this._bidRound);
+            constants.su.subDoneBid(this._players[i], this._bidRound);
+        }
+        this._trumpSuit = this._bidRound.trumpSuit;
+        console.log(this._trumpSuit)
+        this._players = this._bidRound.players;
     }
 
     get deck() {
-        return this._deck
+        return this._deck;
     }
 
-    deal() {
-        let i = 0
-        interval = setInterval(() => {
-            let card = this._deck.deal();
-            // TODO: CHANGE mod back to 4, i === 100
-            // console.log(constants.su.sockets[this._players[i % 4]], [card.value, card.suit])
-            constants.su.emitDealCard(this._players[i % 2], [card.value, card.suit]);
-            i++;
-            if (i === 50) {
-                clearInterval(interval);
-            }
-        }, 20);
-    }
 
-    push_card(cards) {
-        for (let i = 0; i < cards.length; i++)
-            this._deck.push_card(cards[i]);
-    }
 
     get players() {
         return this._players;
     }
 
     get declarer_points() {
-        return this._declarer_points;
+        return this._declarerPoints;
     }
 
     set declarer_point(points) {
-        this._declarer_points += points;
+        this._declarerPoints += points;
     }
 
     get opponent_points() {
-        return this._opponent_points;
+        return this._opponentPoints;
     }
 
     set opponent_point(points) {
-        this._opponent_points += points;
+        this._opponentPoints += points;
     }
 
     get trump_value() {
@@ -84,7 +81,7 @@ class Round {
     }
 
     winner() {
-        self._winner = this._opponent_points >= 80 ? 'Opponents' : 'Declarers';
+        self._winner = this._opponentPoints >= 80 ? 'Opponents' : 'Declarers';
     }
 
 }
