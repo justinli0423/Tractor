@@ -68,21 +68,6 @@ class SocketUtil {
 
     // ------------ SOCKET SUBS ------------
 
-    subSetBid(socketId, bidRound) {
-        this.getSocket(socketId).on('newBid', (bid) => {
-            console.log("Received bid of", bid, "from", this._sockets[socketId]);
-            bidRound.receiveBid(bid, socketId);
-            this.emitNewBid(socketId, bid);
-        })
-    }
-
-    subDoneBid(socketId, bidRound) {
-        this.getSocket(socketId).on('doneBid', () => {
-            console.log(`${this._sockets[socketId]} is done bidding.`);
-            bidRound.doneBid();
-        })
-    }
-
     addSocket(socket) {
         // once clientId is received:
         // 1. send back connection status
@@ -103,6 +88,36 @@ class SocketUtil {
             this.emitConnectedClients();
         });
     }
+
+    subSetBid(socketId, bidRound) {
+        this.getSocket(socketId).on('newBid', (bid) => {
+            console.log("Received bid of", bid, "from", this._sockets[socketId]);
+            bidRound.receiveBid(bid, socketId);
+            this.emitNewBid(socketId, bid);
+        })
+    }
+
+    subDoneBid(socketId, bidRound) {
+        this.getSocket(socketId).on('doneBid', () => {
+            console.log(`${this._sockets[socketId]} is done bidding.`);
+            bidRound.doneBid();
+        })
+    }
+
+    subNewBottom(socketId, bidRound) {
+        this.getSocket(socketId).on('newBottom', (bottom) => {
+            console.log(`${this._sockets[socketId]} returned the bottom:`, bottom);
+            bidRound.setBottom(bottom);
+        })
+    }
+
+    // ------------ SOCKET CLOSERS ------------
+
+    closeDealBidSubs() {
+
+    }
+
+
 }
 
 module.exports = SocketUtil;

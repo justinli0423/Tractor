@@ -29,13 +29,13 @@ class Round {
             constants.su.subSetBid(this._players[i], this._bidRound);
             constants.su.subDoneBid(this._players[i], this._bidRound);
         }
-
-
-
+        this._trumpSuit = this._bidRound.trumpSuit;
+        console.log(this._trumpSuit)
+        this._players = this._bidRound.players;
     }
 
     get deck() {
-        return this._deck
+        return this._deck;
     }
 
 
