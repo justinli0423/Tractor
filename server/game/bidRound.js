@@ -54,6 +54,7 @@ class BidRound {
         }
         let declarer = this._roundNumber === 0 ? this._bidWinner : this._players[0];
         constants.su.emitBottom(declarer, bottom);
+        console.log('sendBottom', declarer);
         constants.su.subNewBottom(declarer, this);
     }
 
@@ -61,6 +62,7 @@ class BidRound {
         for (let i = 0; i < cards.length; i++) {
             this._deck.push_card(new Card(cards[i][0], cards[i][1], this._trumpValue, this._trumpSuit));
         }
+        console.log('bidRound:setBottom - Bottom sent by declarer:', this._deck)
     }
 
     get players() {

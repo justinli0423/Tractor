@@ -20,7 +20,7 @@ export function setDoneBidIO() {
 
 // returning the 8 cards you don't want
 export function returnBottomIO(bottom) {
-  console.log(bottom);
+  console.log(socket.id, 'returning bottom', bottom);
   socket.emit('newBottom', bottom);
 }
 
