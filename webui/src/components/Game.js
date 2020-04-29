@@ -135,6 +135,7 @@ class Game extends Component {
                 numCards={numCards}
                 isSelectedForBottom={card.isSelectedForBottom}
                 src={card.svg}
+                zIndex={i}
                 key={i}
               />
             </>
@@ -191,7 +192,7 @@ const Container = styled.div`
 
 const CardImg = styled.img`
   flex-shrink: 0;
-  z-index: ${prop => prop.isSelectedForBottom ? 10 : 15};
+  z-index: ${prop => prop.zIndex};
   width: ${prop => `${prop.width}px`};
   height: ${prop => `${prop.height}px`};
   transform: ${prop => prop.isSelectedForBottom && 'translateY(-30px);'};

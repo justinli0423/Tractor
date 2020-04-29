@@ -18,12 +18,14 @@ import {
   getBottomClient,
   getCanSelectCardsForBottom,
   getNumCardsSelectedForBottom,
+  getCanBidForBottom,
   updateState
 } from '../redux/selectors';
 
 import {
   updateCardsInHand,
-  toggleBottomSelector
+  toggleBottomSelector,
+  toggleBidButtons
 } from '../redux/actions';
 
 
@@ -35,10 +37,9 @@ const ConnectedClients = (props) => {
     currentBottomClient
   } = props;
 
-  const emitDoneBid = () => {
-    const buttonEl = document.querySelector('#finishBidBtn');
-    buttonEl.style.display = 'none';
+  const setDoneBid = () => {
     setDoneBidIO();
+    props.toggleBidButtons(false);
   }
 
   const emitReturnBottom = () => {
@@ -70,11 +71,11 @@ const ConnectedClients = (props) => {
           </ClientItem>
         );
       })}
-      <RegularButton
-        id="finishBidBtn"
-        label="Finish Bid"
-        onClickCb={emitDoneBid}
-      />
+      {props.canBidForBottom && <RegularButton
+          id="finishBidBtn"
+          label="Finish Bid"
+          onClickCb={setDoneBid}
+        />}
       {props.canSelectCardsForBottom && props.numCardsSelectedForBottom === 4 &&
         <RegularButton
           id="finishBottomBtn"
@@ -92,6 +93,7 @@ const mapStateToProps = state => {
   const currentBottomClient = getBottomClient(state);
   const currentBid = getCurrentBid(state);
   const cards = getMyCards(state);
+  const canBidForBottom = getCanBidForBottom(state);
   const canSelectCardsForBottom = getCanSelectCardsForBottom(state);
   const numCardsSelectedForBottom = getNumCardsSelectedForBottom(state);
 
@@ -101,6 +103,7 @@ const mapStateToProps = state => {
     cards,
     clients,
     clientIds,
+    canBidForBottom,
     canSelectCardsForBottom,
     numCardsSelectedForBottom,
     currentBottomClient,
@@ -129,5 +132,6 @@ const ClientItem = styled.li`
 
 export default connect(mapStateToProps, {
   updateCardsInHand,
+  toggleBidButtons,
   toggleBottomSelector
 })(ConnectedClients);
