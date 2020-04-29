@@ -88,7 +88,7 @@ class Game extends Component {
       return;
     }
 
-    if (!isSelected && numCardsSelectedForBottom === 8) {
+    if (!isSelected && numCardsSelectedForBottom === 4) {
       // TODO: DISPLAY NICER DIALOG FOR USER THAT THEY HAVE 8 SELECTED ALREADY
       window.alert('Maximum cards for bottom selected');
       return;
