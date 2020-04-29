@@ -49,3 +49,13 @@ export const toggleBottomSelector = (canSelectBottom) => ({
   type: 'TOGGLE_BOTTOM_SELECTION',
   payload: canSelectBottom
 })
+
+export const updateNumCardsForBottom = (num) => ({
+  type: 'UPDATE_NUM_BOTTOM_CARDS',
+  payload: num
+})
+
+export const toggleBidButtons = (canBid) => ({
+  type: 'TOGGLE_BID_BUTTONS',
+  payload: canBid
+})

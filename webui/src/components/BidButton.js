@@ -20,6 +20,7 @@ import {
     getCurrentBid,
     getTrumpValue,
     getTrumpTracker,
+    getCanBidForBottom,
     updateState
 } from '../redux/selectors';
 
@@ -73,7 +74,7 @@ const CallBottomButtons = (props) => {
     return (
         <>
             {
-                getAvailableBidButtons().map((buttonObject, i) => {
+                props.canBidForBottom && getAvailableBidButtons().map((buttonObject, i) => {
                     return (
                         <GameButton
                             bid={buttonObject.rawData}
@@ -98,6 +99,7 @@ const mapStateToProps = (state) => {
     const trumpValue = getTrumpValue(state);
     const trumpTracker = getTrumpTracker(state);
     const currentBid = getCurrentBid(state);
+    const canBidForBottom = getCanBidForBottom(state);
     const numUpdateStates = updateState(state);
     return {
         id,
@@ -105,6 +107,7 @@ const mapStateToProps = (state) => {
         validBids,
         currentBid,
         trumpValue,
+        canBidForBottom,
         trumpTracker,
         numUpdateStates
     };
