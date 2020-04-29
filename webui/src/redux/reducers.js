@@ -11,6 +11,8 @@ const currState = {
   trumpTracker: { 'S': 0, 'D': 0, 'C': 0, 'H': 0, 'SJ': 0, 'BJ': 0 },
   validBids: [],
   canSelectCardsForBottom: false,
+  numCardsSelectedForBottom: 0,
+  canBidForBottom: true,
   numStateUpdated: 0
 }
 
@@ -57,6 +59,14 @@ export default (state = currState, action) => {
     case 'TOGGLE_BOTTOM_SELECTION':
       return Object.assign({}, state, {
         canSelectCardsForBottom: action.payload
+      })
+    case 'UPDATE_NUM_BOTTOM_CARDS':
+      return Object.assign({}, state, {
+        numCardsSelectedForBottom: action.payload
+      })
+    case 'TOGGLE_BID_BUTTONS':
+      return Object.assign({}, state, {
+        canBidForBottom: action.payload
       })
     default:
       return state;

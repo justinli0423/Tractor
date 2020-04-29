@@ -18,6 +18,7 @@ import {
   getTrumpValue,
   getTrumpTracker,
   getCanSelectCardsForBottom,
+  getNumCardsSelectedForBottom,
   getValidBids
 } from '../redux/selectors';
 
@@ -25,7 +26,9 @@ import {
   updateCardsInHand,
   setCurrentBid,
   setTrumpValue,
+  updateNumCardsForBottom,
   toggleBottomSelector,
+  toggleBidButtons,
   setValidBids
 } from '../redux/actions';
 
@@ -69,37 +72,32 @@ class Game extends Component {
       this.setCards(bottomCard);
     });
     this.props.toggleBottomSelector(true);
+    this.props.toggleBidButtons(false);
   }
 
   toggleCardForBottom(cardIndex) {
     const {
       cards,
       trumpTracker,
-      canSelectCardsForBottom
+      canSelectCardsForBottom,
+      numCardsSelectedForBottom
     } = this.props;
-    const {
-      numCardsForBottom,
-    } = this.state;
     const isSelected = cards[cardIndex].isSelectedForBottom;
 
     if (!canSelectCardsForBottom) {
       return;
     }
 
-    if (!isSelected && numCardsForBottom === 8) {
+    if (!isSelected && numCardsSelectedForBottom === 8) {
       // TODO: DISPLAY NICER DIALOG FOR USER THAT THEY HAVE 8 SELECTED ALREADY
       window.alert('Maximum cards for bottom selected');
       return;
     }
 
     if (!isSelected) {
-      this.setState({
-        numCardsForBottom: numCardsForBottom + 1
-      })
+      this.props.updateNumCardsForBottom(numCardsSelectedForBottom + 1);
     } else {
-      this.setState({
-        numCardsForBottom: numCardsForBottom - 1
-      })
+      this.props.updateNumCardsForBottom(numCardsSelectedForBottom - 1);
     }
 
     cards[cardIndex].isSelectedForBottom = !isSelected;
@@ -157,6 +155,7 @@ const mapStateToProps = (state) => {
   const validBids = getValidBids(state);
   const changeState = updateState(state);
   const canSelectCardsForBottom = getCanSelectCardsForBottom(state);
+  const numCardsSelectedForBottom = getNumCardsSelectedForBottom(state);
 
   const numCards = cards.length;
   return {
@@ -164,6 +163,7 @@ const mapStateToProps = (state) => {
     numCards,
     connectedClients,
     canSelectCardsForBottom,
+    numCardsSelectedForBottom,
     currentBid,
     trumpValue,
     trumpTracker,
@@ -214,7 +214,9 @@ export default connect(mapStateToProps, {
   updateCardsInHand,
   setValidBids,
   setTrumpValue,
+  updateNumCardsForBottom,
   toggleBottomSelector,
+  toggleBidButtons,
   setCurrentBid
 })(Game);
 

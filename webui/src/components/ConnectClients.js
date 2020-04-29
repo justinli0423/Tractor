@@ -17,6 +17,7 @@ import {
   getCurrentBid,
   getBottomClient,
   getCanSelectCardsForBottom,
+  getNumCardsSelectedForBottom,
   updateState
 } from '../redux/selectors';
 
@@ -74,7 +75,7 @@ const ConnectedClients = (props) => {
         label="Finish Bid"
         onClickCb={emitDoneBid}
       />
-      {props.canSelectCardsForBottom &&
+      {props.canSelectCardsForBottom && props.numCardsSelectedForBottom === 4 &&
         <RegularButton
           id="finishBottomBtn"
           label="Finish Bottom"
@@ -92,6 +93,7 @@ const mapStateToProps = state => {
   const currentBid = getCurrentBid(state);
   const cards = getMyCards(state);
   const canSelectCardsForBottom = getCanSelectCardsForBottom(state);
+  const numCardsSelectedForBottom = getNumCardsSelectedForBottom(state);
 
   const numStateChanges = updateState(state);
   return {
@@ -100,6 +102,7 @@ const mapStateToProps = state => {
     clients,
     clientIds,
     canSelectCardsForBottom,
+    numCardsSelectedForBottom,
     currentBottomClient,
     currentBid,
     numStateChanges
