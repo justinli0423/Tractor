@@ -107,7 +107,7 @@ class SocketUtil {
     subNewBottom(socketId, bidRound) {
         this.getSocket(socketId).on('newBottom', (bottom) => {
             console.log(`${this._sockets[socketId]} returned the bottom:`, bottom);
-            bidRound.bottom(bottom);
+            bidRound.setBottom(bottom);
         })
     }
 
