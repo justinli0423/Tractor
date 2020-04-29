@@ -4,8 +4,10 @@ import styled from 'styled-components';
 
 import Game from './components/Game';
 import ConnectedClients from './components/ConnectClients';
-import BiddingButtons from './components/BidButton';
+import ButtonsContainer from './components/ButtonsContainer';
 import RegularButton from './components/RegularButton';
+
+import TractorSvg from './tractor_logo.svg'
 
 import {
   connectToSocketIO,
@@ -52,23 +54,29 @@ class App extends Component {
     connectToSocketIO(this.setConnectionStatus.bind(this), name);
   }
 
+  // TODO: create popup on error to enter a name if no name is entered
   renderPreConnection() {
     return (
       <Container>
         <Title>
-          Tractor
+          {/* Tractor */}
+          <Logo
+            src={TractorSvg}
+            draggable={false}
+          />
       </Title>
-        <form
+        <Form
           onSubmit={(ev) => { this.connect(ev) }}
         >
           <NameInput
             autoFocus
+            placeholder="Enter a name!"
             ref={(nameRef) => { this.nameRef = nameRef }}
           />
           <RegularButton 
-            label="Play"
+            label="Join"
           />
-        </form>
+        </Form>
       </Container>
     );
   }
@@ -78,7 +86,7 @@ class App extends Component {
     return (
       <Container>
         <ConnectedClients />
-        <BiddingButtons />
+        <ButtonsContainer />
         <Game />
       </Container>
     );
@@ -115,10 +123,37 @@ const Title = styled.h1`
   padding: 0;
 `;
 
+const Form = styled.form`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`;
+
 const NameInput = styled.input`
-  margin: 7px;
-  padding: 4px;
-  width: 7em;
+  margin: 5px 15px;
+  padding: 7px 10px;
+  outline: none;
+  border: transparent 2px solid;
+  border-radius: 2px 2px 0 0;
+  width: 100px;
+  height: 15px;
+
+  background-color: darkgreen;
+  color: rgba(255, 255, 255, .9);
+
+  transition: all .3s cubic-bezier(0.65, 0, 0.35, 1);
+
+  &::placeholder {
+    color: rgba(255, 255, 255, .7);
+  }
+
+  &:focus, &:active {
+    border-bottom: rgba(255, 255, 255, .7) 2px solid;
+  }
+`;
+
+const Logo = styled.img`
+  width: 150px;
 `;
 
 export default connect(mapStateToProps, {

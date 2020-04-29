@@ -1,16 +1,18 @@
 import React from 'react';
 import styled from 'styled-components';
-
+import { Button as RegularButton } from './RegularButton';
 
 const BidButton = (props) => {
-  return(
+  return (
     <Button
       onClick={() => props.onClickCb(props.bid)}
     >
-      {props.label}
+      <span>
+        {props.label}
+      </span>
       <Icon
         color={props.color}
-        dangerouslySetInnerHTML={{__html: props.icon}}
+        dangerouslySetInnerHTML={{ __html: props.icon }}
       >
       </Icon>
     </Button>
@@ -18,12 +20,16 @@ const BidButton = (props) => {
 }
 
 // TODO: FIX BUTTON ALIGNMENT AND SIZE
-const Button = styled.button`
-  display: block;
-  padding: 10px;
+const Button = styled(RegularButton)`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
   margin: 5px;
-  height: 55px;
-  width: 130px;
+  padding: 0;
+  border-radius: 5px;
+  height: 40px;
+  width: 105px;
 `;
 
 const Icon = styled.span`

@@ -17,8 +17,8 @@ import {
   getCurrentBid,
   getTrumpValue,
   getTrumpTracker,
-  getCanSelectCardsForBottom,
-  getNumCardsSelectedForBottom,
+  getCanSelectCards,
+  getNumCardsSelected,
   getValidBids
 } from '../redux/selectors';
 
@@ -26,7 +26,7 @@ import {
   updateCardsInHand,
   setCurrentBid,
   setTrumpValue,
-  updateNumCardsForBottom,
+  updateNumCardsSelected,
   toggleBottomSelector,
   toggleBidButtons,
   setValidBids
@@ -79,25 +79,25 @@ class Game extends Component {
     const {
       cards,
       trumpTracker,
-      canSelectCardsForBottom,
-      numCardsSelectedForBottom
+      canSelectCards,
+      numCardsSelected
     } = this.props;
     const isSelected = cards[cardIndex].isSelectedForBottom;
 
-    if (!canSelectCardsForBottom) {
+    if (!canSelectCards) {
       return;
     }
 
-    if (!isSelected && numCardsSelectedForBottom === 4) {
+    if (!isSelected && numCardsSelected === 4) {
       // TODO: DISPLAY NICER DIALOG FOR USER THAT THEY HAVE 8 SELECTED ALREADY
       window.alert('Maximum cards for bottom selected');
       return;
     }
 
     if (!isSelected) {
-      this.props.updateNumCardsForBottom(numCardsSelectedForBottom + 1);
+      this.props.updateNumCardsSelected(numCardsSelected + 1);
     } else {
-      this.props.updateNumCardsForBottom(numCardsSelectedForBottom - 1);
+      this.props.updateNumCardsSelected(numCardsSelected - 1);
     }
 
     cards[cardIndex].isSelectedForBottom = !isSelected;
@@ -125,20 +125,22 @@ class Game extends Component {
       >
         {cards.map((card, i) => {
           return (
-            <>
+            <CardImgContainer
+              height={cardHeight}
+              onClick={() => { this.toggleCardForBottom(i) }}
+              numCards={numCards}
+              zIndex={i}
+            >
               <CardImg
                 // TODO: enable drag and drop custom sorting later?
                 draggable={false}
-                onClick={() => { this.toggleCardForBottom(i) }}
                 width={cardWidth}
                 height={cardHeight}
-                numCards={numCards}
                 isSelectedForBottom={card.isSelectedForBottom}
                 src={card.svg}
-                zIndex={i}
                 key={i}
               />
-            </>
+            </CardImgContainer>
             // change the key prop to the name of card
           )
         })}
@@ -155,16 +157,16 @@ const mapStateToProps = (state) => {
   const trumpTracker = getTrumpTracker(state);
   const validBids = getValidBids(state);
   const changeState = updateState(state);
-  const canSelectCardsForBottom = getCanSelectCardsForBottom(state);
-  const numCardsSelectedForBottom = getNumCardsSelectedForBottom(state);
+  const canSelectCards = getCanSelectCards(state);
+  const numCardsSelected = getNumCardsSelected(state);
 
   const numCards = cards.length;
   return {
     cards,
     numCards,
     connectedClients,
-    canSelectCardsForBottom,
-    numCardsSelectedForBottom,
+    canSelectCards,
+    numCardsSelected,
     currentBid,
     trumpValue,
     trumpTracker,
@@ -192,22 +194,24 @@ const Container = styled.div`
 
 const CardImg = styled.img`
   flex-shrink: 0;
-  z-index: ${prop => prop.zIndex};
   width: ${prop => `${prop.width}px`};
   height: ${prop => `${prop.height}px`};
   transform: ${prop => prop.isSelectedForBottom && 'translateY(-30px);'};
-  filter: greyscale(1);
+`;
+
+const CardImgContainer = styled.span`
+  z-index: ${prop => prop.zIndex};
+  display: flex;
+  align-items: flex-end;
+  height: ${prop => `${prop.height * 1.6}px`};
 
   &:not(:first-child) {
     margin-left: ${prop => `-${prop.numCards * 2.2}px`};
   }
 
-  &:hover {
+  &:hover ${CardImg} {
     z-index: 100;
     transform: translateY(-50px);
-    /* width: ${prop => `${prop.width * 1.5}px`};
-    height: ${prop => `${prop.height * 1.5}px`}; */
-    /* margin-left: ${prop => `-${prop.numCards}px`}; */
   }
 `;
 
@@ -215,7 +219,7 @@ export default connect(mapStateToProps, {
   updateCardsInHand,
   setValidBids,
   setTrumpValue,
-  updateNumCardsForBottom,
+  updateNumCardsSelected,
   toggleBottomSelector,
   toggleBidButtons,
   setCurrentBid

@@ -46,12 +46,12 @@ export const setTrumpValue = (trump) => ({
 })
 
 export const toggleBottomSelector = (canSelectBottom) => ({
-  type: 'TOGGLE_BOTTOM_SELECTION',
+  type: 'CAN_SELECT_CARDS',
   payload: canSelectBottom
 })
 
-export const updateNumCardsForBottom = (num) => ({
-  type: 'UPDATE_NUM_BOTTOM_CARDS',
+export const updateNumCardsSelected = (num) => ({
+  type: 'UPDATE_NUM_CARDS_SELECTED',
   payload: num
 })
 

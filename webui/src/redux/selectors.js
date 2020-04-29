@@ -20,9 +20,9 @@ export const getTrumpValue = store => store.trump;
 
 export const getTrumpTracker = store => store.trumpTracker;
 
-export const getCanSelectCardsForBottom = store => store.canSelectCardsForBottom;
+export const getCanSelectCards = store => store.canSelectCards;
 
-export const getNumCardsSelectedForBottom = store => store.numCardsSelectedForBottom;
+export const getNumCardsSelected = store => store.numCardsSelected;
 
 export const getCanBidForBottom = store => store.canBidForBottom;
 
