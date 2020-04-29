@@ -47,10 +47,13 @@ class App extends Component {
 
   connect(ev) {
     ev.preventDefault();
-    const name = this.nameRef.value;
+    let name = this.nameRef.value;
     if (!name) {
       console.log('enter a name');
       return;
+    }
+    if (name.length > 7) {
+      name = name.slice(0, 7);
     }
     connectToSocketIO(this.setConnectionStatus.bind(this), name);
   }
