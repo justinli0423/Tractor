@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 
 import Game from './components/Game';
-import ConnectedClients from './components/ConnectClients';
+import ConnectedClients from './components/ConnectedClients';
 import ButtonsContainer from './components/ButtonsContainer';
 import RegularButton from './components/RegularButton';
 
@@ -23,6 +23,7 @@ import {
   updateClientList,
   setUser
 } from './redux/actions';
+import PlayerInfo from "./components/PlayerInfo";
 
 class App extends Component {
   constructor(props) {
@@ -85,6 +86,7 @@ class App extends Component {
   renderPostConnection() {
     return (
       <Container>
+        <PlayerInfo />
         <ConnectedClients />
         <ButtonsContainer />
         <Game />
@@ -137,10 +139,8 @@ const NameInput = styled.input`
   border-radius: 2px 2px 0 0;
   width: 100px;
   height: 15px;
-
   background-color: darkgreen;
   color: rgba(255, 255, 255, .9);
-
   transition: all .3s cubic-bezier(0.65, 0, 0.35, 1);
 
   &::placeholder {
