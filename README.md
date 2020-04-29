@@ -23,6 +23,14 @@
     - select return cards for bottom
     - send bottom back to deck ('newBottom')
 
+  - playing:
+    - keep track of client cards
+    - keep track of total cards remaining
+    - allow singles, doubles, tractors
+    - check throws
+      - lowest
+
+
 
 ### Backend:
   - seperate bidding and playing
@@ -30,9 +38,18 @@
       - determine finished bidding ('doneBid')
       - receive winner
       - set play order
-    - playing round class
       - send bottom cards ('originalBottom')
+    - playing round class
       - receive bottom cards ('newBottom')
+  
+  - store player hands
+    - after dealing, split into singles and doubles?
+      - highest single function
+      - highest double function
+      - highest tractor of len n function
+      
+  
+  
   
   - factor socket helpers into different file (e.g. socketUtils.js & listeners.js)
   - factor socket listeners into stages

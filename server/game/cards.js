@@ -22,9 +22,6 @@ class Card {
     constructor(value, suit, trump_value = null, trump_suit = null) {
         this._suit = suit;
         this._value = value;
-        this._rank = default_ranks[this._value] +
-            (this._value === trump_value ? 52 : 0) +
-            (this._suit === trump_suit ? 26 : 0);
     }
 
     get suit() {
@@ -35,11 +32,11 @@ class Card {
         return this._value;
     }
 
-    get rank() {
-        return this._rank;
+    getRank(trumpValue, trumpSuit) {
+        return default_ranks[this._value] + (this._value === trumpValue ? 52 : 0) + (this._suit === trumpSuit ? 26 : 0);
     }
 
-    get points() {
+    getPoints() {
         return points[this._value] ? points[this._value] : 0;
     }
 }

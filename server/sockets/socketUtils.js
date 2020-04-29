@@ -89,25 +89,33 @@ class SocketUtil {
         });
     }
 
+    // subSetBid(socketId, cb) {
     subSetBid(socketId, bidRound) {
+        console.log('subSetBid', bidRound);
         this.getSocket(socketId).on('newBid', (bid) => {
             console.log("Received bid of", bid, "from", this._sockets[socketId]);
+            // cb(bid, socketId);
             bidRound.receiveBid(bid, socketId);
             this.emitNewBid(socketId, bid);
         })
     }
 
-    subDoneBid(socketId, bidRound) {
+    // subDoneBid(socketId, cb1, cb2) {
+    subDoneBid(socketId, bidRound, round) {
+        // console.log('subDoneBid', round);
         this.getSocket(socketId).on('doneBid', () => {
             console.log(`${this._sockets[socketId]} is done bidding.`);
+            // cb1();
+            // cb2();
             bidRound.doneBid();
+            // round.setTrumpAndOrder();
         })
     }
 
     subNewBottom(socketId, bidRound) {
         console.log('Waiting for bottom from', socketId)
+        console.log(bidRound);
         this.getSocket(socketId).on('newBottom', (bottom) => {
-            console.log(`${this._sockets[socketId]} returned the bottom:`, bottom);
             bidRound.setBottom(bottom);
         })
     }

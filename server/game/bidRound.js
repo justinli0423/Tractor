@@ -6,6 +6,7 @@ class BidRound {
         this._roundNumber = roundNumber;
         this._deck = deck;
         this._players = players;
+        this._hands = {};
         this._trumpValue = trumpValue;
         this._trumpSuit = null;
         this._bidWinner = null;
@@ -43,6 +44,7 @@ class BidRound {
             console.log('bidRound:doneBid - Done bidding', `bidWinner: ${constants.su._sockets[this._bidWinner]}, trumpSuit: ${this._trumpSuit}`);
             console.log('bidRound:doneBid - Bottom cards:', this._deck);
             this.sendBottom();
+
         }
     }
 
