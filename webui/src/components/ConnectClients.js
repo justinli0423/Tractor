@@ -16,6 +16,7 @@ import {
   getName,
   getCurrentBid,
   getBottomClient,
+  getCanSelectCardsForBottom,
   updateState
 } from '../redux/selectors';
 
@@ -55,7 +56,7 @@ const ConnectedClients = (props) => {
     props.toggleBottomSelector(false);
     returnBottomIO(bottomCards);
   }
-
+  // TODO: ADD STATE FOR NUM CARDS SELECTED FOR BOTTOM FOR BUTTON TOGGLE AFTER 8 CARDS ARE SELECTED
   return (
     <ClientsContainer>
       <ClientsHeader>Connected Users:</ClientsHeader>
@@ -73,11 +74,12 @@ const ConnectedClients = (props) => {
         label="Finish Bid"
         onClickCb={emitDoneBid}
       />
-      <RegularButton
-        id="finishBottomBtn"
-        label="Finish Bottom"
-        onClickCb={emitReturnBottom}
-      />
+      {props.canSelectCardsForBottom &&
+        <RegularButton
+          id="finishBottomBtn"
+          label="Finish Bottom"
+          onClickCb={emitReturnBottom}
+        />}
     </ClientsContainer>
   )
 }
@@ -89,6 +91,7 @@ const mapStateToProps = state => {
   const currentBottomClient = getBottomClient(state);
   const currentBid = getCurrentBid(state);
   const cards = getMyCards(state);
+  const canSelectCardsForBottom = getCanSelectCardsForBottom(state);
 
   const numStateChanges = updateState(state);
   return {
@@ -96,6 +99,7 @@ const mapStateToProps = state => {
     cards,
     clients,
     clientIds,
+    canSelectCardsForBottom,
     currentBottomClient,
     currentBid,
     numStateChanges
