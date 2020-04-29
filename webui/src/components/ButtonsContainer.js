@@ -48,9 +48,8 @@ const CallBottomButtons = (props) => {
       trumpTracker,
       validBids,
     } = props;
-    const bidString = `${bid[0]}${bid[1]}`;
     makeBidIO(bid);
-    props.setCurrentBid(id, bidString);
+    props.setCurrentBid(id, bid);
     Cards.updateBid(bid, trumpTracker, validBids);
   }
 

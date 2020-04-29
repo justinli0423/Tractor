@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import {
   getExistingClients,
   getExistingClientIds,
+  getId,
   getName,
   getCurrentBid,
   getBottomClient,
@@ -13,6 +14,7 @@ import {
 
 const ConnectedClients = (props) => {
   const {
+    myId,
     name,
     clientIds,
     clients,
@@ -20,8 +22,20 @@ const ConnectedClients = (props) => {
     currentBottomClient
   } = props;
 
+  const renderClientStatus = (id) => {
+    let outputString = clients[id];
+    if (id === myId) {
+      outputString = `(you) ${outputString}`;
+    }
+
+    if (id === currentBottomClient) {
+      outputString += `: ${currentBid}`;
+    }
+    return outputString;
+  }
+
   document.title = name;
-  // TODO: show player levels instead of current bottom
+  // TODO: show player levels as well
   return (
     <ClientsContainer>
       <ClientsHeader>PLAYERS</ClientsHeader>
@@ -30,7 +44,7 @@ const ConnectedClients = (props) => {
           <ClientItem
             key={id}
           >
-            {id === currentBottomClient ? `${clients[id]}: ${currentBid}` : clients[id]}
+          {renderClientStatus(id)}
           </ClientItem>
         );
       })}
@@ -39,6 +53,7 @@ const ConnectedClients = (props) => {
 }
 
 const mapStateToProps = state => {
+  const myId = getId(state);
   const name = getName(state);
   const clients = getExistingClients(state);
   const clientIds = getExistingClientIds(state);
@@ -47,6 +62,7 @@ const mapStateToProps = state => {
 
   const numStateChanges = updateState(state);
   return {
+    myId,
     name,
     clients,
     clientIds,
@@ -62,6 +78,7 @@ const ClientsContainer = styled.ul`
   top: 10px;
   right: 0;
   padding: 10px 30px 10px 10px;
+  width: 150px;
   border-radius: 5px;
   background-color: rgba(0,0,0, .20);
   color: rgba(255, 255, 255, .6);

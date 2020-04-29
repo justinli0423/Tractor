@@ -32,7 +32,7 @@ import {
   setValidBids
 } from '../redux/actions';
 
-const Cards = new PlayingCards();
+const Cards = new PlayingCards('/cardsSVG/');
 const cardWidth = 120;
 const cardHeight = 168;
 
@@ -110,8 +110,7 @@ class Game extends Component {
       validBids,
     } = this.props;
     Cards.receiveBid(bid, trumpTracker, validBids);
-    const bidString = `${bid[0]}${bid[1]}`;
-    this.props.setCurrentBid(socketId, bidString);
+    this.props.setCurrentBid(socketId, bid);
   }
 
   render() {
