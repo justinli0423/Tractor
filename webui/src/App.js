@@ -31,36 +31,45 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      connectionStatus: false
+      connectionStatus: false, 
+      iconWidth: 150,
+      inputWidth: 100
     };
 
-    window.addEventListener('resize', this.setAppSize.bind(this));
+    window.addEventListener('resize', this.setAppSizes.bind(this));
   }
 
   componentDidMount() {
-    this.setAppSize();
+    this.setAppSizes();
   }
 
-  setAppSize() {
+  setAppSizes() {
     let screenWidth = window.innerWidth;
     let screenHeight = window.innerHeight;
-    let appWidth, appHeight;
-
-    console.log('Browser size', screenWidth, screenHeight);
-
+    let appWidth, appHeight, iconWidth, inputWidth;
 
     if (screenWidth >= 2560 && screenHeight >= 1440) {
       appWidth = 2560;
       appHeight = 1440;
+      iconWidth = 250;
+      inputWidth = 100;
     } else if (screenWidth >= 1920 && screenHeight >= 1080) {
       appWidth = 1920;
       appHeight = 1080;
+      iconWidth = 150;
+      inputWidth = 100;
     } else {
       appWidth = 1280;
       appHeight = 720;
+      iconWidth = 150;
+      inputWidth = 100;
     }
 
     this.props.setScreenSize(appWidth, appHeight);
+    this.setState({
+      iconWidth,
+      inputWidth
+    })
   }
 
   setConnectionStatus(connectionStatus, id, name) {
@@ -94,6 +103,10 @@ class App extends Component {
       appHeight,
       appWidth
     } = this.props;
+    const {
+      iconWidth,
+      inputWidth
+    } = this.state;
     return (
       <Container
         width={appWidth}
@@ -102,6 +115,7 @@ class App extends Component {
         <Title>
           {/* Tractor */}
           <Logo
+            iconWidth={iconWidth}
             src={TractorSvg}
             draggable={false}
           />
@@ -112,6 +126,7 @@ class App extends Component {
           <NameInput
             autoFocus
             placeholder="Enter a name!"
+            inputWidth={inputWidth}
             ref={(nameRef) => { this.nameRef = nameRef }}
           />
           <RegularButton
@@ -188,7 +203,7 @@ const NameInput = styled.input`
   outline: none;
   border: transparent 2px solid;
   border-radius: 2px 2px 0 0;
-  width: 100px;
+  width: ${prop => `${prop.inputWidth}px`};
   height: 15px;
   background-color: darkgreen;
   color: rgba(255, 255, 255, .9);
@@ -204,7 +219,7 @@ const NameInput = styled.input`
 `;
 
 const Logo = styled.img`
-  width: 150px;
+  width: ${prop => `${prop.iconWidth}px`};
 `;
 
 export default connect(mapStateToProps, {
