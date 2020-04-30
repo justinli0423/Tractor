@@ -172,6 +172,7 @@ class Game extends Component {
               height={cardHeight}
               onClick={() => { this.toggleCardForBottom(i) }}
               numCards={numCards}
+              cardWidth={cardWidth}
               cardHoveredHeight={cardHoveredHeight}
               zIndex={i}
             >
@@ -249,7 +250,8 @@ const CardImgContainer = styled.span`
   height: ${prop => `${prop.height * 1.6}px`};
 
   &:not(:first-child) {
-    margin-left: ${prop => `-${prop.numCards * 5}px`};
+    /* margin-left: ${prop => `-${prop.numCards * 2.3}px`}; */
+    margin-left: ${prop => `-${prop.cardWidth * 0.65}px`};
   }
 
   &:hover ${CardImg} {
