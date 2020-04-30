@@ -4,8 +4,10 @@ import styled from 'styled-components';
 
 import Game from './components/Game';
 import ConnectedClients from './components/ConnectedClients';
+import DisplayTrump from "./components/DisplayTrump";
 import ButtonsContainer from './components/ButtonsContainer';
 import RegularButton from './components/RegularButton';
+import PlayerInfo from "./components/PlayerInfo";
 
 import TractorSvg from './tractor_logo.svg'
 
@@ -25,7 +27,6 @@ import {
   setScreenSize,
   setUser
 } from './redux/actions';
-import PlayerInfo from "./components/PlayerInfo";
 
 class App extends Component {
   constructor(props) {
@@ -149,6 +150,7 @@ class App extends Component {
         height={appHeight}
       >
         <PlayerInfo />
+        <DisplayTrump />
         <ConnectedClients />
         <ButtonsContainer />
         <Game />

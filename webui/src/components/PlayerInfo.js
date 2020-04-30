@@ -148,6 +148,7 @@ const Container = styled.div`
   flex-direction: row;
   align-items: center;
   width: auto;
+  min-width: 200px;
   height: 90px;
   padding: 10px 30px 10px 10px;
   border-radius: 5px;

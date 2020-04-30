@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
@@ -7,8 +7,6 @@ import {
   getExistingClientIds,
   getId,
   getName,
-  getCurrentBid,
-  getBottomClient,
   updateState
 } from '../redux/selectors';
 
@@ -18,23 +16,20 @@ const ConnectedClients = (props) => {
     name,
     clientIds,
     clients,
-    currentBid,
-    currentBottomClient
   } = props;
+
+  useEffect(() => {
+    document.title = name;
+  });
 
   const renderClientStatus = (id) => {
     let outputString = clients[id];
     if (id === myId) {
       outputString = `(you) ${outputString}`;
     }
-
-    if (id === currentBottomClient) {
-      outputString += `: ${currentBid}`;
-    }
-    return outputString;
+    return outputString + ' - Lv: 2';
   }
 
-  document.title = name;
   // TODO: show player levels as well
   return (
     <ClientsContainer>
@@ -57,8 +52,6 @@ const mapStateToProps = state => {
   const name = getName(state);
   const clients = getExistingClients(state);
   const clientIds = getExistingClientIds(state);
-  const currentBottomClient = getBottomClient(state);
-  const currentBid = getCurrentBid(state);
 
   const numStateChanges = updateState(state);
   return {
@@ -66,8 +59,6 @@ const mapStateToProps = state => {
     name,
     clients,
     clientIds,
-    currentBid,
-    currentBottomClient,
     numStateChanges
   };
 }

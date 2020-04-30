@@ -27,6 +27,10 @@
   - custom backgrounds? way way later
   - load svgs before game starts to avoid render delay
 
+  - auto emit done bid 
+    - when no cards can be used to bid
+    - when no cards can override the current bid
+
 ### Backend:
   - seperate bidding and playing
     - create bidding class
@@ -36,6 +40,11 @@
     - playing round class
       - send bottom cards ('originalBottom')
       - receive bottom cards ('newBottom')
+
+  - auto generate trump if not called
+    - if all 4 "finish bids" have been emitted and trump is undefined, random generate
+      - using random generator to between p1 and p4
+      - just redeal if no trump has been called? (should be almost no work)
   
   - factor socket helpers into different file (e.g. socketUtils.js & listeners.js)
   - factor socket listeners into stages
