@@ -1,4 +1,6 @@
 const currState = {
+  appWidth: 1920,
+  appHeight: 1080,
   socket: { connected: false },
   clients: {},
   clientIds: [],
@@ -24,6 +26,11 @@ const currState = {
 
 export default (state = currState, action) => {
   switch (action.type) {
+    case 'SET_SCREEN_SIZE':
+      return Object.assign({}, state, {
+        appWidth: action.payload.width,
+        appHeight: action.payload.height
+      })
     case 'UPDATE_CLIENT_LIST':
       return Object.assign({}, state, {
         clients: action.payload.clients,
