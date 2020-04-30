@@ -10,6 +10,7 @@ import {
   getExistingClientIds,
   getTrumpValue,
   getBottomClient,
+  getScreenSize,
   getCurrentBid,
   updateState
 } from '../redux/selectors';
@@ -22,6 +23,7 @@ const PlayerInfo = (props) => {
     clients,
     clientIds,
     bottomClient,
+    appWidth,
     trumpValue,
     currentBid,
   } = props;
@@ -32,7 +34,9 @@ const PlayerInfo = (props) => {
   const player1 = (clientName, playerId, cardSvg) => {
     if (bottomClient === playerId) {
       return (
-        <Container1>
+        <Container1
+          appWidth={appWidth}
+        >
           <Name> {clientName}: </Name>
           {cardSvg}
         </Container1>
@@ -123,11 +127,14 @@ const mapStateToProps = (state) => {
   const trumpValue = getTrumpValue(state);
   const currentBid = getCurrentBid(state);
   const updateNumState = updateState(state);
+  const { appWidth, appHeight } = getScreenSize(state);
 
   return {
     myId,
     clients,
     clientIds,
+    appWidth,
+    appHeight,
     bottomClient,
     trumpValue,
     currentBid,
@@ -140,11 +147,12 @@ const Container = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  margin: 30px;
   width: auto;
+  min-width: 200px;
+  height: 90px;
   padding: 10px 30px 10px 10px;
   border-radius: 5px;
-  font-size: 32px;
+  font-size: 24px;
   background-color: rgba(0,0,0, .20);
   color: rgba(255, 255, 255, .6);
 `;
@@ -167,18 +175,21 @@ const Container1 = styled(Container)`
   top: 50%;
   left: 0;
   transform: translateY(-50%);
+  margin-left: 30px;
 `;
 
 const Container2 = styled(Container)`
   top: 0;
   left: 50%;
   transform: translateX(-50%);
+  margin-top: 30px;
 `;
 
 const Container3 = styled(Container)`
   top: 50%;
   right: 0;
   transform: translateY(-50%);
+  margin-right: 30px;
 `;
 
 

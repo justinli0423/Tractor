@@ -41,8 +41,7 @@ class Round {
     }
 
     play() {
-        constants.su.closeDealBidSubs();
-        this._playRound = new PlayRound(this._deck, this._players, this._trumpValue, this._trumpSuit, this._bidRound.bottom)
+        this._playRound = new PlayRound(this._deck, this._players, this._bidRound.hands, this._trumpValue, this._trumpSuit, this._bidRound.bottom)
     }
 
 

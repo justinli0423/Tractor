@@ -225,7 +225,7 @@ const mapStateToProps = (state) => {
 }
 
 const Container = styled.div`
-  position: absolute;
+  position: fixed;
   display: flex;
   bottom: 25px;
   flex-direction: row;

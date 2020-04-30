@@ -4,8 +4,10 @@ import styled from 'styled-components';
 
 import Game from './components/Game';
 import ConnectedClients from './components/ConnectedClients';
+import DisplayTrump from "./components/DisplayTrump";
 import ButtonsContainer from './components/ButtonsContainer';
 import RegularButton from './components/RegularButton';
+import PlayerInfo from "./components/PlayerInfo";
 
 import TractorSvg from './tractor_logo.svg'
 
@@ -25,7 +27,6 @@ import {
   setScreenSize,
   setUser
 } from './redux/actions';
-import PlayerInfo from "./components/PlayerInfo";
 
 class App extends Component {
   constructor(props) {
@@ -52,7 +53,7 @@ class App extends Component {
       appWidth = 2560;
       appHeight = 1440;
       iconWidth = 250;
-      inputWidth = 100;
+      inputWidth = 170;
     } else if (screenWidth >= 1920 && screenHeight >= 1080) {
       appWidth = 1920;
       appHeight = 1080;
@@ -149,6 +150,7 @@ class App extends Component {
         height={appHeight}
       >
         <PlayerInfo />
+        <DisplayTrump />
         <ConnectedClients />
         <ButtonsContainer />
         <Game />
@@ -166,7 +168,6 @@ const mapStateToProps = state => {
   const name = getName(state);
   const numStateChanges = updateState(state);
   const { appWidth, appHeight } = getScreenSize(state);
-  console.log(appWidth, appHeight);
   return {
     name,
     appWidth,

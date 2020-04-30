@@ -4,6 +4,7 @@ module.exports = {
     su: null,
     game: null,
     round: null,
-    numPlayers: 2
+    numPlayers: 1,
+    numBottom: 4
 }
 

@@ -27,7 +27,7 @@ class Deck {
         }
     }
 
-    push_card(card) {
+    pushCard(card) {
         this._cards.push(card);
     }
 

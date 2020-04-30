@@ -1,24 +1,26 @@
 const constants = require('../constants')
 
 class PlayRound {
-    constructor(deck, players, trumpValue, trumpSuit, bottom) {
+    constructor(deck, players, hands, trumpValue, trumpSuit, bottom) {
         this._discard = deck;
         this._players = players;
+        this._hands = hands;
         this._declarer_points = 0;
         this._opponent_points = 0;
         this._trumpValue = trumpValue;
         this._trumpSuit = trumpSuit;
         this._bottom = bottom;
+        this._trick = null;
         this._winner = null;
     }
 
-    get deck() {
-        return this._deck
+    get discard() {
+        return this._discard;
     }
 
-    push_card(cards) {
+    pushCard(cards) {
         for (let i = 0; i < cards.length; i++)
-            this._deck.push_card(cards[i]);
+            this._discard.pushCard(cards[i]);
     }
 
     get players() {

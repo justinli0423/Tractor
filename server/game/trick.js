@@ -7,9 +7,8 @@ class Trick {
         this._points = 0;
     }
 
-    push_cards(cards) {
-        this._cards.push(cards)
-        return cards
+    pushCard(card) {
+        this._cards.push(card)
     }
 
     end() {
