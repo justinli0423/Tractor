@@ -16,11 +16,13 @@ import {
 
 import {
   getName,
+  getScreenSize,
   updateState
 } from './redux/selectors';
 
 import {
   updateClientList,
+  setScreenSize,
   setUser
 } from './redux/actions';
 import PlayerInfo from "./components/PlayerInfo";
@@ -29,8 +31,36 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      connectionStatus: false,
+      connectionStatus: false
     };
+
+    window.addEventListener('resize', this.setAppSize.bind(this));
+  }
+
+  componentDidMount() {
+    this.setAppSize();
+  }
+
+  setAppSize() {
+    let screenWidth = window.innerWidth;
+    let screenHeight = window.innerHeight;
+    let appWidth, appHeight;
+
+    console.log('Browser size', screenWidth, screenHeight);
+
+
+    if (screenWidth >= 2560 && screenHeight >= 1440) {
+      appWidth = 2560;
+      appHeight = 1440;
+    } else if (screenWidth >= 1920 && screenHeight >= 1080) {
+      appWidth = 1920;
+      appHeight = 1080;
+    } else {
+      appWidth = 1280;
+      appHeight = 720;
+    }
+
+    this.props.setScreenSize(appWidth, appHeight);
   }
 
   setConnectionStatus(connectionStatus, id, name) {
@@ -60,15 +90,22 @@ class App extends Component {
 
   // TODO: create popup on error to enter a name if no name is entered
   renderPreConnection() {
+    const {
+      appHeight,
+      appWidth
+    } = this.props;
     return (
-      <Container>
+      <Container
+        width={appWidth}
+        height={appHeight}
+      >
         <Title>
           {/* Tractor */}
           <Logo
             src={TractorSvg}
             draggable={false}
           />
-      </Title>
+        </Title>
         <Form
           onSubmit={(ev) => { this.connect(ev) }}
         >
@@ -77,7 +114,7 @@ class App extends Component {
             placeholder="Enter a name!"
             ref={(nameRef) => { this.nameRef = nameRef }}
           />
-          <RegularButton 
+          <RegularButton
             label="Join"
           />
         </Form>
@@ -87,8 +124,15 @@ class App extends Component {
 
 
   renderPostConnection() {
+    const {
+      appHeight,
+      appWidth
+    } = this.props;
     return (
-      <Container>
+      <Container
+        width={appWidth}
+        height={appHeight}
+      >
         <PlayerInfo />
         <ConnectedClients />
         <ButtonsContainer />
@@ -106,9 +150,13 @@ class App extends Component {
 const mapStateToProps = state => {
   const name = getName(state);
   const numStateChanges = updateState(state);
+  const { appWidth, appHeight } = getScreenSize(state);
+  console.log(appWidth, appHeight);
   return {
     name,
-    numStateChanges
+    appWidth,
+    appHeight,
+    numStateChanges,
   };
 }
 
@@ -118,8 +166,8 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 100%;
-  height: 100%;
+  width: ${props => `${props.width}px`};
+  height: ${props => `${props.height}px`};
   background-color: green;
 `;
 
@@ -161,6 +209,7 @@ const Logo = styled.img`
 
 export default connect(mapStateToProps, {
   updateClientList,
+  setScreenSize,
   setUser
 })(App);
 

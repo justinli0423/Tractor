@@ -1,3 +1,11 @@
+export const setScreenSize = (width, height) => ({
+  type: 'SET_SCREEN_SIZE',
+  payload: {
+    width,
+    height
+  }
+})
+
 export const updateClientList = (clients) => ({
   type: 'UPDATE_CLIENT_LIST',
   payload: {

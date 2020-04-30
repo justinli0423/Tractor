@@ -7,8 +7,16 @@ html, body, #root {
   font-size: 12px;
   font-family: 'Roboto';
   font-weight: 400;
+  background-color: green;
    /* 'Segoe UI', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif; */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow: hidden;
+}
+
+#root {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 }

@@ -19,6 +19,7 @@ import {
   getTrumpTracker,
   getCanSelectCards,
   getNumCardsSelected,
+  getScreenSize,
   getValidBids
 } from '../redux/selectors';
 
@@ -33,13 +34,15 @@ import {
 } from '../redux/actions';
 
 const Cards = new PlayingCards('/cardsSVG/');
-const cardWidth = 120;
-const cardHeight = 168;
 
 class Game extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      cardWidth: 120,
+      cardHeight: 168,
+      cardSelectedHeight: -30,
+      cardHoveredHeight: -50,
       numCardsForBottom: 0
     };
   }
@@ -49,6 +52,41 @@ class Game extends Component {
     getCardsIO(this.setCards.bind(this));
     getNewBidIO(this.updateBidStatus.bind(this));
     getBottom(this.receiveBottomCards.bind(this));
+    this.setCardSize();
+  }
+
+  // TODO: set card sizes accordingly
+  setCardSize() {
+    const {
+      appWidth
+    } = this.props;
+    let cardWidth, cardHeight, cardHoveredHeight, cardSelectedHeight;
+
+    if (appWidth === 2560) {
+      cardWidth = 204;
+      cardHeight = 286;
+      cardSelectedHeight = -70;
+      cardHoveredHeight = -90;
+    } 
+    if (appWidth === 1920) {
+      cardWidth = 120;
+      cardHeight = 168;
+      cardSelectedHeight = -30;
+      cardHoveredHeight = -50;
+    }
+    if (appWidth === 1280) {
+      cardWidth = 110;
+      cardHeight = 148;
+      cardSelectedHeight = -50;
+      cardHoveredHeight = -30;
+    }
+
+    this.setState({
+      cardWidth,
+      cardHeight,
+      cardHoveredHeight,
+      cardSelectedHeight
+    })
   }
 
   setCards(newCard) {
@@ -118,6 +156,12 @@ class Game extends Component {
       cards,
       numCards
     } = this.props;
+    const {
+      cardWidth,
+      cardHeight,
+      cardSelectedHeight,
+      cardHoveredHeight
+    } = this.state;
     return (
       <Container
         height={cardHeight}
@@ -128,6 +172,7 @@ class Game extends Component {
               height={cardHeight}
               onClick={() => { this.toggleCardForBottom(i) }}
               numCards={numCards}
+              cardHoveredHeight={cardHoveredHeight}
               zIndex={i}
             >
               <CardImg
@@ -136,6 +181,7 @@ class Game extends Component {
                 width={cardWidth}
                 height={cardHeight}
                 isSelectedForBottom={card.isSelectedForBottom}
+                cardSelectedHeight={cardSelectedHeight}
                 src={card.svg}
                 key={i}
               />
@@ -158,12 +204,15 @@ const mapStateToProps = (state) => {
   const changeState = updateState(state);
   const canSelectCards = getCanSelectCards(state);
   const numCardsSelected = getNumCardsSelected(state);
+  const { appWidth, appHeight } = getScreenSize(state);
 
   const numCards = cards.length;
   return {
     cards,
     numCards,
     connectedClients,
+    appWidth,
+    appHeight,
     canSelectCards,
     numCardsSelected,
     currentBid,
@@ -177,25 +226,20 @@ const mapStateToProps = (state) => {
 const Container = styled.div`
   position: absolute;
   display: flex;
-  bottom: 2em;
+  bottom: 25px;
   flex-direction: row;
   justify-content: center;
   align-items: flex-end;
-  width: 1800px;
+  /* width: 1800px; */
   height: ${prop => `${prop.height * 1.6}px`};
-  overflow-y: scroll;
-  scroll-behavior: smooth;
-  ::-webkit-scrollbar {
-    width: 0px;
-    background: transparent;
-}
+  overflow-y: hidden;
 `;
 
 const CardImg = styled.img`
   flex-shrink: 0;
   width: ${prop => `${prop.width}px`};
   height: ${prop => `${prop.height}px`};
-  transform: ${prop => prop.isSelectedForBottom && 'translateY(-30px);'};
+  transform: ${prop => prop.isSelectedForBottom && `translateY(${prop.cardSelectedHeight}px);`};
 `;
 
 const CardImgContainer = styled.span`
@@ -205,12 +249,12 @@ const CardImgContainer = styled.span`
   height: ${prop => `${prop.height * 1.6}px`};
 
   &:not(:first-child) {
-    margin-left: ${prop => `-${prop.numCards * 2.3}px`};
+    margin-left: ${prop => `-${prop.numCards * 5}px`};
   }
 
   &:hover ${CardImg} {
     z-index: 100;
-    transform: translateY(-50px);
+    transform: ${prop => `translateY(${prop.cardHoveredHeight}px);`}
   }
 `;
 

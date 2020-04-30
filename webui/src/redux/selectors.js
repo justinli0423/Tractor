@@ -1,3 +1,8 @@
+export const getScreenSize = store => ({
+  appWidth: store.appWidth,
+  appHeight: store.appHeight
+});
+
 export const getExistingClients = store => store.clients;
 
 export const getExistingClientIds = store => store.clientIds;
@@ -25,4 +30,5 @@ export const getCanSelectCards = store => store.canSelectCards;
 export const getNumCardsSelected = store => store.numCardsSelected;
 
 export const getCanBidForBottom = store => store.canBidForBottom;
+
 

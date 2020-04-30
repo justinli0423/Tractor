@@ -40,7 +40,7 @@ const PlayerInfo = (props) => {
     }
     return (
       <Container1>
-        {filteredClientIds[0] ? clientName : 'Waiting for PLAYER 1...'}
+        {filteredClientIds[0] ? clientName : 'Waiting for P1...'}
       </Container1>
     )
   }
@@ -56,7 +56,7 @@ const PlayerInfo = (props) => {
     }
     return (
       <Container2>
-        {filteredClientIds[1] ? clientName : 'Waiting for PLAYER 2...'}
+        {filteredClientIds[1] ? clientName : 'Waiting for P2...'}
       </Container2>
     )
   }
@@ -72,7 +72,7 @@ const PlayerInfo = (props) => {
     }
     return (
       <Container3>
-        {filteredClientIds[2] ? clientName : 'Waiting for PLAYER 3...'}
+        {filteredClientIds[2] ? clientName : 'Waiting for P3...'}
       </Container3>
     )
   }
@@ -85,6 +85,7 @@ const PlayerInfo = (props) => {
     let svg;
 
     // TODO: distinguish bottom bids vs regular tricks
+    // TODO: does not show regular tricks yet
     if (currentBid && currentBid.length) {
       if (currentBid[1] === 'J') {
         svg = Card.getSvg(currentBid);
@@ -150,12 +151,16 @@ const Container = styled.div`
 
 const SvgContainer = styled.img`
   margin: 0 5px;
-  width: 20px;
-  height: 30px;
+  width: 60px;
+  height: 90px;
+  
+  &:nth-child(n + 2) {
+    margin: 0 -20px;
+  }
 `;
 
 const Name = styled.span`
-  margin-right: 10px;
+  margin-right: 30px;
 `;
 
 const Container1 = styled(Container)`
