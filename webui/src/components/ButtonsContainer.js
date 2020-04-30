@@ -183,6 +183,7 @@ const BidButtonContainer = styled.div`
   align-items: center;
   justify-content: space-between;
   margin: 10px;
+  height: 40px;
 `;
 
 export default connect(mapStateToProps, {

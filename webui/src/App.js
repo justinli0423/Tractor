@@ -52,7 +52,7 @@ class App extends Component {
       appWidth = 2560;
       appHeight = 1440;
       iconWidth = 250;
-      inputWidth = 100;
+      inputWidth = 170;
     } else if (screenWidth >= 1920 && screenHeight >= 1080) {
       appWidth = 1920;
       appHeight = 1080;
@@ -166,7 +166,6 @@ const mapStateToProps = state => {
   const name = getName(state);
   const numStateChanges = updateState(state);
   const { appWidth, appHeight } = getScreenSize(state);
-  console.log(appWidth, appHeight);
   return {
     name,
     appWidth,
