@@ -34,10 +34,14 @@ class App extends Component {
     this.state = {
       connectionStatus: false, 
       iconWidth: 150,
-      inputWidth: 100
+      inputWidth: 100,
+      screenWidth: 1920,
+      screenHeight: 1080,
+      isSupported: true
     };
 
     window.addEventListener('resize', this.setAppSizes.bind(this));
+    // screen.orientation.lock('landscape');
   }
 
   componentDidMount() {
@@ -47,7 +51,9 @@ class App extends Component {
   setAppSizes() {
     let screenWidth = window.innerWidth;
     let screenHeight = window.innerHeight;
+    let isSupported = true;
     let appWidth, appHeight, iconWidth, inputWidth;
+
 
     if (screenWidth >= 2560 && screenHeight >= 1440) {
       appWidth = 2560;
@@ -59,17 +65,22 @@ class App extends Component {
       appHeight = 1080;
       iconWidth = 150;
       inputWidth = 100;
-    } else {
+    } else if (screenWidth >= 1194 && screenHeight >= 690) { // regular 720p and ipad pro
       appWidth = 1280;
       appHeight = 720;
       iconWidth = 150;
       inputWidth = 100;
+    } else {
+      isSupported = false;
     }
 
     this.props.setScreenSize(appWidth, appHeight);
     this.setState({
       iconWidth,
-      inputWidth
+      inputWidth,
+      screenWidth,
+      screenHeight,
+      isSupported
     })
   }
 
@@ -158,9 +169,26 @@ class App extends Component {
     );
   }
 
+  renderNotSupported() {
+    const { 
+      screenWidth,
+      screenHeight
+    } = this.state;
+    return (
+      <h2>Device ({screenWidth}x{screenHeight}) is currently unsupported.</h2>
+    )
+  }
+
   render() {
-    const { connectionStatus } = this.state;
-    return connectionStatus ? this.renderPostConnection() : this.renderPreConnection();
+    const {
+      connectionStatus,
+      isSupported
+    } = this.state;
+    if (isSupported) {
+      return connectionStatus ? this.renderPostConnection() : this.renderPreConnection();
+    } else {
+      return this.renderNotSupported();
+    }
   }
 }
 

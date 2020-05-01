@@ -1,10 +1,14 @@
 import io from "socket.io-client";
 const ENDPOINT = "http://127.0.0.1:8000";
+const JUSTINS_NETWORK = "http://192.168.0.126:8000";
 
 var socket = null;
 
 export function connectToSocketIO(getStatusCb, name) {
   socket = io(ENDPOINT);
+  if (socket.connected === false) {
+    socket = io(JUSTINS_NETWORK);
+  }
   getConnectionStatus(getStatusCb, name);
   setSocketID(name);
 }

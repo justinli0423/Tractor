@@ -38,13 +38,11 @@ export default (state = currState, action) => {
         numStateUpdated: state.numStateUpdated + 1
       })
     case 'SET_USER':
-      console.log(action.payload)
       return Object.assign({}, state, {
         name: action.payload.name,
         id: action.payload.id
       })
     case 'SET_DECLARER':
-      console.log(action.payload);
       return Object.assign({}, state, {
         currentBottomClient: state.clients[action.payload]
       })

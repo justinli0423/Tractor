@@ -48,11 +48,15 @@ class Game extends Component {
   }
   // all listeners required pre-game goes here
   componentDidMount() {
+    this.setCardSize();
+    this.attachStage1Listeners();
+  }
+
+  attachStage1Listeners() {
     getTrumpValueIO(this.props.setTrumpValue.bind(this));
     getCardsIO(this.setCards.bind(this));
     getNewBidIO(this.updateBidStatus.bind(this));
     getBottom(this.receiveBottomCards.bind(this));
-    this.setCardSize();
   }
 
   // TODO: set card sizes accordingly
