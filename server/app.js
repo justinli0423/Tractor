@@ -15,7 +15,7 @@ const app = express();
 app.use(index);
 
 const server = http.createServer(app);
-const io = socketIo(server);
+const io = socketIo(server, { reconnect: false });
 const su = new SocketUtil(io);
 constants.io = io;
 constants.su = su;
