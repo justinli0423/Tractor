@@ -21,7 +21,6 @@ class Hand {
 
     removeCard(card) {
         this._numCards--;
-        console.log(card)
         if (card.suit === 'J' || card.value === this._trumpValue || card.suit === this._trumpSuit) {
             // console.log('removeCard', _.findIndex(this._singles['T'], function (i) {
             //     return (i.value === card.value && i.suit === card.suit)
@@ -40,17 +39,19 @@ class Hand {
                 }), 1);
             }
         } else {
-            console.log('single index', _.findIndex(this._singles[card.suit], function (i) {
+            console.log(card, 'single index', _.findIndex(this._singles[card.suit], function (i) {
                 return (i.value === card.value && i.suit === card.suit)
             }))
-            console.log('double index', _.findIndex(this._doubles[card.suit], function (i) {
-                return (i.value === card.value && i.suit === card.suit)
-            }))
+
             console.log('before removing - single:', this._singles[card.suit])
-            console.log('before removing - double:', this._doubles[card.suit])
             this._singles[card.suit].splice(_.findIndex(this._singles[card.suit], function (i) {
                 return (i.value === card.value && i.suit === card.suit)
             }), 1);
+            console.log('after removing - single:', this._singles[card.suit])
+            console.log(card, 'double index', _.findIndex(this._doubles[card.suit], function (i) {
+                return (i.value === card.value && i.suit === card.suit)
+            }))
+            console.log('before removing - double:', this._doubles[card.suit])
             if (_.findIndex(this._doubles[card.suit], function (i) {
                 return (i.value === card.value && i.suit === card.suit)
             })) {
@@ -58,7 +59,6 @@ class Hand {
                     return (i.value === card.value && i.suit === card.suit)
                 }), 1);
             }
-            console.log('after removing - single:', this._singles[card.suit])
             console.log('after removing - double:', this._doubles[card.suit])
         }
     }
