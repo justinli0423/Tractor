@@ -21,7 +21,9 @@ constants.io = io;
 constants.su = su;
 
 io.on('connection', (socket) => {
-    su.addSocket(socket)
+    su.addSocket(socket);
+
+    console.log('CONNECTED');
 
     // emit tester
     var event = null;

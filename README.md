@@ -27,6 +27,8 @@
   - custom backgrounds? way way later
   - load svgs before game starts to avoid render delay
 
+  - refresh client when disconnected
+
   - auto emit done bid 
     - when no cards can be used to bid
     - when no cards can override the current bid

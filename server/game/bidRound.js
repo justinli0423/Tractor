@@ -44,13 +44,13 @@ class BidRound {
         this._trumpSuit = bid[1] === 'J' ? 'NT' : bid[1];
 
         this._declarer = this._roundNumber === 0 ? socketId : this._players[0];
-        console.log('bidRound:receiveBid - Received bid', `bidder: ${constants.su._sockets[this._bidWinner]}, trumpSuit: ${this._trumpSuit}`);
+        console.log('bidRound:receiveBid - Received bid', `bidder: ${constants.su._sockets[this._declarer]}, trumpSuit: ${this._trumpSuit}`);
     }
 
     doneBid() {
         this._ready += 1;
         if (this._ready === this._players.length) {
-            console.log('bidRound:doneBid - Done bidding', `bidWinner: ${constants.su._sockets[this._bidWinner]}, trumpSuit: ${this._trumpSuit}`);
+            console.log('bidRound:doneBid - Done bidding', `bidWinner: ${constants.su._sockets[this._declarer]}, trumpSuit: ${this._trumpSuit}`);
             // console.log('bidRound:doneBid - Bottom cards:', this._deck);
             for (let i = 0; i < this._players.length; i ++) {
                 this._hands[this._players[i]].trumpSuit = this._trumpSuit;
