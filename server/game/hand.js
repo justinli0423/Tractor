@@ -21,45 +21,10 @@ class Hand {
 
     removeCard(card) {
         this._numCards--;
-        if (card.suit === 'J' || card.value === this._trumpValue || card.suit === this._trumpSuit) {
-            // console.log('removeCard', _.findIndex(this._singles['T'], function (i) {
-            //     return (i.value === card.value && i.suit === card.suit)
-            // }), card)
-            // console.log('removeCard', this._singles['T'][_.findIndex(this._singles['T'], function (i) {
-            //     return (i.value === card.value && i.suit === card.suit)
-            // })])
-            this._singles['T'].splice(_.findIndex(this._singles['T'], function (i) {
-                return (i.value === card.value && i.suit === card.suit)
-            }), 1);
-            if (_.findIndex(this._doubles['T'], function (i) {
-                return (i.value === card.value && i.suit === card.suit)
-            })) {
-                this._doubles['T'].splice(_.findIndex(this._doubles['T'], function (i) {
-                    return (i.value === card.value && i.suit === card.suit)
-                }), 1);
-            }
-        } else {
-            console.log(card, 'single index', _.findIndex(this._singles[card.suit], function (i) {
-                return (i.value === card.value && i.suit === card.suit)
-            }))
-
-            console.log('before removing - single:', this._singles[card.suit])
-            this._singles[card.suit].splice(_.findIndex(this._singles[card.suit], function (i) {
-                return (i.value === card.value && i.suit === card.suit)
-            }), 1);
-            console.log('after removing - single:', this._singles[card.suit])
-            console.log(card, 'double index', _.findIndex(this._doubles[card.suit], function (i) {
-                return (i.value === card.value && i.suit === card.suit)
-            }))
-            console.log('before removing - double:', this._doubles[card.suit])
-            if (_.findIndex(this._doubles[card.suit], function (i) {
-                return (i.value === card.value && i.suit === card.suit)
-            })) {
-                this._doubles[card.suit].splice(_.findIndex(this._doubles['T'], function (i) {
-                    return (i.value === card.value && i.suit === card.suit)
-                }), 1);
-            }
-            console.log('after removing - double:', this._doubles[card.suit])
+        let suit = (card.suit === 'J' || card.value === this._trumpValue || card.suit === this._trumpSuit) ? 'T' : card.suit;
+        this._singles[suit].splice(_.findIndex(this._singles[suit], card.isEqual), 1);
+        if (_.findIndex(this._doubles[suit], card.isEqual) > -1) {
+            this._doubles[suit].splice(_.findIndex(this._doubles[suit], card.isEqual), 1);
         }
     }
 

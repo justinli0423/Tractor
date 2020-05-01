@@ -20,8 +20,8 @@ const points = {'5': 5, '10': 10, 'K': 10}
 
 class Card {
     constructor(value, suit) {
-        this._suit = suit;
         this._value = value;
+        this._suit = suit;
     }
 
     get suit() {
@@ -30,6 +30,11 @@ class Card {
 
     get value() {
         return this._value;
+    }
+
+    isEqual(card){
+        console.log(card)
+        return this._value.bind(this) === card.value && this._suit.bind(this) === card.suit
     }
 
     getRank(trumpValue, trumpSuit) {
