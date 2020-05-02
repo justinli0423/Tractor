@@ -131,13 +131,12 @@ class SocketUtil {
 
     subClientPlay(socketId, i) {
         console.log('Waiting for play from', this._sockets[socketId]);
-        this.getSocket(socketId).on('clientPlay', (play, other, fn) => {
+        this.getSocket(socketId).on('clientPlay', (play, other, callback) => {
             const Trick = constants.game.round.playRound.trick;
             console.log('New play sent by ', this._sockets[socketId], ':', play);
             const valid = Trick.isValid.call(Trick, socketId, play, i);
-            console.log('Is valid play?', typeof valid);
             console.log('Is valid play?', valid);
-            fn(valid, other);
+            callback(valid, other);
             if (valid) {
                 this.closeClientPlaySub(socketId);
                 this.emitCardsPlayed(Trick.cardsPlayed());

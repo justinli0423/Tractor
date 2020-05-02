@@ -8,6 +8,7 @@ import {
   getId,
   getExistingClients,
   getExistingClientIds,
+  getExistingTricks,
   getTrumpValue,
   getBottomClient,
   getScreenSize,
@@ -127,12 +128,14 @@ const mapStateToProps = (state) => {
   const trumpValue = getTrumpValue(state);
   const currentBid = getCurrentBid(state);
   const updateNumState = updateState(state);
+  const existingTricks = getExistingTricks(state);
   const { appWidth, appHeight } = getScreenSize(state);
 
   return {
     myId,
     clients,
     clientIds,
+    existingTricks,
     appWidth,
     appHeight,
     bottomClient,

@@ -110,7 +110,7 @@ const CallBottomButtons = (props) => {
   }
 
   const emitTrickValidator = (isValidPlay, cardsInHand) => {
-    const { 
+    const {
       updateCardsInHand,
       toggleCardSelector,
       updateNumCardsSelected
@@ -186,25 +186,26 @@ const CallBottomButtons = (props) => {
 
   const renderFinishButtons = () => (
     <span>
-      {props.canBidForBottom && <RegularButton
-        id="finishBidBtn"
-        label="Finish Bid"
-        onClickCb={setDoneBid}
-      />}
+      {props.canBidForBottom &&
+        <RegularButton
+          id="finishBidBtn"
+          label="Finish Bid"
+          onClickCb={setDoneBid}
+        />}
       {/* TODO: set num cards selected to 8 later */}
-      {props.numCardsSelected === 4 &&
+      {props.numCardsSelected === 4 && props.cards.length > 25 &&
         <RegularButton
           id="finishBottomBtn"
           label="Finish Bottom"
           onClickCb={emitReturnBottom}
         />}
-        {props.clientTurnId === props.myId && props.numCardsSelected &&
+      {props.clientTurnId === props.myId && !!props.numCardsSelected &&
         <RegularButton
           id="finishTrickBtn"
           label="Finish Trick"
           onClickCb={emitTrick}
         />
-        }
+      }
     </span>
   )
 

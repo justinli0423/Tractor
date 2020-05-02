@@ -11,7 +11,7 @@ const currState = {
   currentBid: null,
   currentBottomClient: null,
   currentClientTurn: null,
-  currentTricks: [],
+  existingTricks: [],
   trumpTracker: { 'S': 0, 'D': 0, 'C': 0, 'H': 0, 'SJ': 0, 'BJ': 0 },
   validBids: [],
   // canSelectCards & numCardsSelected is for 
@@ -89,7 +89,7 @@ export default (state = currState, action) => {
       })
     case 'SET_ALL_TRICKS':
       return Object.assign({}, state, {
-        currentTricks: action.payload,
+        existingTricks: action.payload,
         numStateUpdated: state.numStateUpdated + 1
       })
     default:

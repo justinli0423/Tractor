@@ -31,6 +31,6 @@ export const getNumCardsSelected = store => store.numCardsSelected;
 
 export const getCanBidForBottom = store => store.canBidForBottom;
 
-export const getCurrentTrick = store => store.currentTricks;
+export const getExistingTricks = store => store.existingTricks;
 
 export const getClientTurn = store => store.currentClientTurn;

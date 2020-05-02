@@ -41,7 +41,10 @@ export function getClientTurnIO(getClientTurnCb) {
 }
 
 export function getTricksPlayedIO(getTricksPlayedCb) {
- socket.on('cardsPlayed', (tricks) => getTricksPlayedCb(tricks));
+  socket.on('cardsPlayed', (tricks) => {
+    console.log('Received current tricks', tricks);
+    getTricksPlayedCb(tricks);
+  });
 }
 
 export function getBottomIO(setBottomCardsCb) {
