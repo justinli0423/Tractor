@@ -1,4 +1,6 @@
 const currState = {
+  appWidth: 1920,
+  appHeight: 1080,
   socket: { connected: false },
   clients: {},
   clientIds: [],
@@ -8,16 +10,29 @@ const currState = {
   trump: '2',
   currentBid: null,
   currentBottomClient: null,
+  currentClientTurn: null,
+  currentTricks: [],
   trumpTracker: { 'S': 0, 'D': 0, 'C': 0, 'H': 0, 'SJ': 0, 'BJ': 0 },
   validBids: [],
-  canSelectCardsForBottom: false,
-  numCardsSelectedForBottom: 0,
+  // canSelectCards & numCardsSelected is for 
+  // both returning bottom and playing cards on your turn
+  canSelectCards: false,
+  numCardsSelected: 0,
+  // canBidForBottom is only true beginning of each round
   canBidForBottom: true,
+  // TODO: add everyone elses play - should be by socketId index
+  // [[cards by player0], [cards by player1]]
+  cardsPlayed: [],
   numStateUpdated: 0
 }
 
 export default (state = currState, action) => {
   switch (action.type) {
+    case 'SET_SCREEN_SIZE':
+      return Object.assign({}, state, {
+        appWidth: action.payload.width,
+        appHeight: action.payload.height
+      })
     case 'UPDATE_CLIENT_LIST':
       return Object.assign({}, state, {
         clients: action.payload.clients,
@@ -56,17 +71,26 @@ export default (state = currState, action) => {
         currentBottomClient: action.payload.socketId,
         numStateUpdated: state.numStateUpdated + 1
       })
-    case 'TOGGLE_BOTTOM_SELECTION':
+    case 'CAN_SELECT_CARDS':
       return Object.assign({}, state, {
-        canSelectCardsForBottom: action.payload
+        canSelectCards: action.payload
       })
-    case 'UPDATE_NUM_BOTTOM_CARDS':
+    case 'UPDATE_NUM_CARDS_SELECTED':
       return Object.assign({}, state, {
-        numCardsSelectedForBottom: action.payload
+        numCardsSelected: action.payload
       })
     case 'TOGGLE_BID_BUTTONS':
       return Object.assign({}, state, {
         canBidForBottom: action.payload
+      })
+    case 'SET_CLIENT_TURN':
+      return Object.assign({}, state, {
+        currentClientTurn: action.payload
+      })
+    case 'SET_ALL_TRICKS':
+      return Object.assign({}, state, {
+        currentTricks: action.payload,
+        numStateUpdated: state.numStateUpdated + 1
       })
     default:
       return state;

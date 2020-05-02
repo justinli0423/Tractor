@@ -30,9 +30,9 @@ class SocketUtil {
 
     start() {
         // TODO: CHANGE SOCKET LENGTH BACK TO 4
-        if (Object.keys(this._sockets).length === 2) {
-            const game = new Game(Object.keys(this._sockets));
-            game.new_round()
+        if (Object.keys(this._sockets).length === constants.numPlayers) {
+            constants.game = new Game(Object.keys(this._sockets));
+            constants.game.new_round()
         }
     }
 
@@ -66,6 +66,18 @@ class SocketUtil {
         this.getSocket(socketId).emit('originalBottom', bottom)
     }
 
+    emitNextClient(socketId, i) {
+        console.log(`It's ${this._sockets[socketId]}'s turn.`);
+        constants.io.emit('nextClient', socketId);
+        this.subClientPlay(socketId, i);
+    }
+
+    emitCardsPlayed(cards) {
+        constants.io.emit('cardsPlayed', cards);
+    }
+
+
+
     // ------------ SOCKET SUBS ------------
 
     addSocket(socket) {
@@ -82,42 +94,77 @@ class SocketUtil {
 
     removeSocket(socket) {
         socket.on('disconnect', () => {
-            clearInterval(global.interval);
+            clearInterval(constants.interval);
             console.log(`Client ${this._sockets[socket.id]} has disconnected`);
             this._sockets[socket.id] = null;
             this.emitConnectedClients();
         });
     }
 
-    subSetBid(socketId, bidRound) {
+    subSetBid(socketId) {
+        // subSetBid(socketId, bidRound) {
         this.getSocket(socketId).on('newBid', (bid) => {
             console.log("Received bid of", bid, "from", this._sockets[socketId]);
-            bidRound.receiveBid(bid, socketId);
+            // cb(bid, socketId);
+            constants.game.round.bidRound.receiveBid(bid, socketId);
             this.emitNewBid(socketId, bid);
         })
     }
 
-    subDoneBid(socketId, bidRound) {
+    subDoneBid(socketId) {
+        // subDoneBid(socketId, bidRound) {
         this.getSocket(socketId).on('doneBid', () => {
             console.log(`${this._sockets[socketId]} is done bidding.`);
-            bidRound.doneBid();
+            this.closeBidSubs(socketId)
+            constants.game.round.bidRound.doneBid();
         })
     }
 
-    subNewBottom(socketId, bidRound) {
-        console.log('Waiting for bottom from', socketId)
+    subNewBottom(socketId) {
         this.getSocket(socketId).on('newBottom', (bottom) => {
-            console.log(`${this._sockets[socketId]} returned the bottom:`, bottom);
-            bidRound.setBottom(bottom);
+            console.log('New bottom sent by ', this._sockets[socketId], ':', bottom);
+            this.closeBottomSub(socketId);
+            constants.game.round.bidRound.bottom = bottom;
+            constants.game.round.play();
         })
     }
+
+    subClientPlay(socketId, i) {
+        console.log('Waiting for play from', this._sockets[socketId]);
+        this.getSocket(socketId).on('clientPlay', (play, other, fn) => {
+            const Trick = constants.game.round.playRound.trick;
+            console.log('New play sent by ', this._sockets[socketId], ':', play);
+            const valid = Trick.isValid.call(Trick, socketId, play, i);
+            console.log('Is valid play?', typeof valid);
+            console.log('Is valid play?', valid);
+            fn(valid, other);
+            if (valid) {
+                this.closeClientPlaySub(socketId);
+                this.emitCardsPlayed(Trick.cardsPlayed());
+                if (i === 3) {
+                    Trick.end();
+                } else {
+                    Trick.play(i + 1);
+                }
+            }
+        })
+    }
+
 
     // ------------ SOCKET CLOSERS ------------
 
-    closeDealBidSubs() {
-
+    closeBidSubs(socketId) {
+        this.getSocket(socketId).removeAllListeners('newBid');
+        this.getSocket(socketId).removeAllListeners('doneBid');
     }
 
+    closeBottomSub(socketId) {
+        this.getSocket(socketId).removeAllListeners('newBottom');
+    }
+
+    closeClientPlaySub(socketId) {
+        this.getSocket(socketId).removeAllListeners('clientPlay');
+    }
 
 }
 

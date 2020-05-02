@@ -1,3 +1,4 @@
+const _ = require('underscore');
 const constants = require('../constants')
 const BidRound = require('./bidRound')
 const PlayRound = require('./playRound')
@@ -15,61 +16,58 @@ class Round {
         this._winner = null;
         this._bidRound = null;
         this._playRound = null;
-        this._bids = {}
+        this._bids = {};
         for (let i = 0; i < this._players.length; i++) {
             this._bids[this._players[i]] = false
         }
     }
 
+    get bidRound() {
+        return this._bidRound;
+    }
+
+    set trumpSuit(trumpSuit) {
+        this._trumpSuit = trumpSuit;
+    }
+
     dealAndBid() {
         constants.su.emitTrumpValue(this._trumpValue);
-        this._bidRound = new BidRound(this._deck, this._players, this._trumpValue, this._roundNumber);
+        this._bidRound = new BidRound(this._deck, this._players, this._trumpValue, this._trumpSuit, this._roundNumber);
         this._bidRound.deal();
-        for (let i = 0; i < this._players.length; i++) {
-            constants.su.subSetBid(this._players[i], this._bidRound);
-            constants.su.subDoneBid(this._players[i], this._bidRound);
-        }
-        this._trumpSuit = this._bidRound.trumpSuit;
-        console.log(this._trumpSuit)
-        this._players = this._bidRound.players;
+        _.map(this._players, function(socketId) {
+            constants.su.subSetBid(socketId);
+            constants.su.subDoneBid(socketId);
+        })
     }
 
-    get deck() {
-        return this._deck;
+    get playRound() {
+        return this._playRound;
     }
 
+    play() {
+        this._playRound = new PlayRound(this._deck, this._players, this._bidRound.hands, this._trumpValue, this._trumpSuit, this._bidRound.bottom)
+        this._playRound.play()
+    }
 
 
     get players() {
         return this._players;
     }
 
-    get declarer_points() {
+    get declarerPoints() {
         return this._declarerPoints;
     }
 
-    set declarer_point(points) {
+    set declarerPoint(points) {
         this._declarerPoints += points;
     }
 
-    get opponent_points() {
+    get opponentPoints() {
         return this._opponentPoints;
     }
 
-    set opponent_point(points) {
+    set opponentPoint(points) {
         this._opponentPoints += points;
-    }
-
-    get trump_value() {
-        return this._trump_value;
-    }
-
-    get trump_suit() {
-        return this._trump_suit;
-    }
-
-    set trump_suit(suit) {
-        this._trump_suit = suit;
     }
 
     get bottom() {

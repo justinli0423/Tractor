@@ -19,8 +19,6 @@ const io = socketIo(server);
 const su = new SocketUtil(io);
 constants.io = io;
 constants.su = su;
-global.interval = null;
-
 
 io.on('connection', (socket) => {
     su.addSocket(socket)
@@ -33,8 +31,8 @@ io.on('connection', (socket) => {
 
     su.removeSocket(socket)
 
-    if (global.interval) {
-        clearInterval(global.interval);
+    if (constants.interval) {
+        clearInterval(constants.interval);
     }
 })
 

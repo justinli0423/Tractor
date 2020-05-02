@@ -1,7 +1,7 @@
 import _ from 'underscore';
 
 export default class Cards {
-  path = '/cardsSVG/';
+  path = '';
   suits = [];
   jokers = [];
   cards = [];
@@ -24,7 +24,8 @@ export default class Cards {
     '2': 12
   }
 
-  constructor() {
+  constructor(path) {
+    this.path = path;
     this.suits = new Set(['H', 'C', 'S', 'D']); //hearts, clubs, spades, diamonds
     this.jokers = new Set(['S', 'B']); // Small, big
     this.cards = new Set(['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']);
@@ -46,7 +47,7 @@ export default class Cards {
     if (!this.isValidCard(arr)) {
       console.log(`Invalid card: ${arr}`);
     }
-    return `${arr[0]}${arr[1]}.svg`;
+    return `${this.path}${arr[0]}${arr[1]}.svg`;
   }
 
   isTrump(card) {
@@ -56,8 +57,8 @@ export default class Cards {
   insertCard(cards, newCard, trumpValue, trumpSuit) {
     const cardObject = {
       card: newCard,
-      isSelectedForBottom: false,
-      svg: `${this.path}${this.getSvg(newCard)}`
+      isSelected: false,
+      svg: this.getSvg(newCard)
     }
     if (trumpSuit) {
       // diamonds are trump -> want diamonds first -> move spades to back

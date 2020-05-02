@@ -1,3 +1,11 @@
+export const setScreenSize = (width, height) => ({
+  type: 'SET_SCREEN_SIZE',
+  payload: {
+    width,
+    height
+  }
+})
+
 export const updateClientList = (clients) => ({
   type: 'UPDATE_CLIENT_LIST',
   payload: {
@@ -45,17 +53,27 @@ export const setTrumpValue = (trump) => ({
   payload: trump
 })
 
-export const toggleBottomSelector = (canSelectBottom) => ({
-  type: 'TOGGLE_BOTTOM_SELECTION',
-  payload: canSelectBottom
+export const toggleCardSelector = (canSelectCards) => ({
+  type: 'CAN_SELECT_CARDS',
+  payload: canSelectCards
 })
 
-export const updateNumCardsForBottom = (num) => ({
-  type: 'UPDATE_NUM_BOTTOM_CARDS',
+export const updateNumCardsSelected = (num) => ({
+  type: 'UPDATE_NUM_CARDS_SELECTED',
   payload: num
 })
 
 export const toggleBidButtons = (canBid) => ({
   type: 'TOGGLE_BID_BUTTONS',
   payload: canBid
+})
+
+export const setClientTurn = (clientId) => ({
+  type: 'SET_CLIENT_TURN',
+  payload: clientId
+})
+
+export const setTricksPlayed = (tricks) => ({
+  type: 'SET_ALL_TRICKS',
+  payload: tricks
 })

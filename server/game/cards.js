@@ -19,12 +19,9 @@ const default_ranks = {
 const points = {'5': 5, '10': 10, 'K': 10}
 
 class Card {
-    constructor(value, suit, trump_value = null, trump_suit = null) {
-        this._suit = suit;
+    constructor(value, suit) {
         this._value = value;
-        this._rank = default_ranks[this._value] +
-            (this._value === trump_value ? 52 : 0) +
-            (this._suit === trump_suit ? 26 : 0);
+        this._suit = suit;
     }
 
     get suit() {
@@ -35,11 +32,15 @@ class Card {
         return this._value;
     }
 
-    get rank() {
-        return this._rank;
+    isEqual(card){
+        return this._value === card.value && this._suit === card.suit;
     }
 
-    get points() {
+    getRank(trumpValue, trumpSuit) {
+        return default_ranks[this._value] + (this._value === trumpValue ? 52 : 0) + (this._suit === trumpSuit ? 26 : 0);
+    }
+
+    getPoints() {
         return points[this._value] ? points[this._value] : 0;
     }
 }

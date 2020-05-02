@@ -1,4 +1,5 @@
 /webui/node_modules
+/.vscode
 .idea/
 
 # Logs

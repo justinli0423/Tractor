@@ -1,3 +1,8 @@
+export const getScreenSize = store => ({
+  appWidth: store.appWidth,
+  appHeight: store.appHeight
+});
+
 export const getExistingClients = store => store.clients;
 
 export const getExistingClientIds = store => store.clientIds;
@@ -20,9 +25,12 @@ export const getTrumpValue = store => store.trump;
 
 export const getTrumpTracker = store => store.trumpTracker;
 
-export const getCanSelectCardsForBottom = store => store.canSelectCardsForBottom;
+export const getCanSelectCards = store => store.canSelectCards;
 
-export const getNumCardsSelectedForBottom = store => store.numCardsSelectedForBottom;
+export const getNumCardsSelected = store => store.numCardsSelected;
 
 export const getCanBidForBottom = store => store.canBidForBottom;
 
+export const getCurrentTrick = store => store.currentTricks;
+
+export const getClientTurn = store => store.currentClientTurn;
