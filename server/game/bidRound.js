@@ -25,7 +25,6 @@ class BidRound {
     }
 
     deal() {
-        // console.log("original player order", this._players);
         this._deck.shuffle();
         let i = 0;
         constants.interval = setInterval(() => {
@@ -37,21 +36,17 @@ class BidRound {
             if (this._deck.cards.length === constants.numBottom) {
                 clearInterval(constants.interval);
             }
-        }, 20);
+        }, 1);
     }
 
     receiveBid(bid, socketId) {
         this._trumpSuit = bid[1] === 'J' ? 'NT' : bid[1];
-
         this._declarer = this._roundNumber === 0 ? socketId : this._players[0];
-        console.log('bidRound:receiveBid - Received bid', `bidder: ${constants.su._sockets[this._declarer]}, trumpSuit: ${this._trumpSuit}`);
     }
 
     doneBid() {
         this._ready += 1;
         if (this._ready === this._players.length) {
-            console.log('bidRound:doneBid - Done bidding', `bidWinner: ${constants.su._sockets[this._declarer]}, trumpSuit: ${this._trumpSuit}`);
-            // console.log('bidRound:doneBid - Bottom cards:', this._deck);
             for (let i = 0; i < this._players.length; i ++) {
                 this._hands[this._players[i]].trumpSuit = this._trumpSuit;
             }
@@ -83,7 +78,6 @@ class BidRound {
         for (let j = 0; j < this._players.length; j++) {
             this._players[j] = temp[j];
         }
-        // console.log('Rotated Player Order', this._players);
     }
 
     set bottom(cards) {
@@ -92,8 +86,6 @@ class BidRound {
             this._hands[this._declarer].removeCard(new Card(cards[i][0], cards[i][1]));
             this._bottom.pushCard(new Card(cards[i][0], cards[i][1]));
         }
-        console.log('after sort after returning bottom', this._hands[this._declarer]);
-        console.log('bidRound:setBottom - Bottom sent by declarer:', this._bottom);
     }
 
     get bottom() {

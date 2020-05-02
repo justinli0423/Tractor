@@ -10,14 +10,19 @@ import PlayingCards from '../utils/Cards';
 import {
   makeBidIO,
   returnBottomIO,
+  getClientTurnIO,
+  getTricksPlayedIO,
+  makePlayIO,
   setDoneBidIO
 } from '../socket/connect';
 
 import {
+  setClientTurn,
+  setTricksPlayed,
   setCurrentBid,
   toggleBidButtons,
   updateCardsInHand,
-  toggleBottomSelector,
+  toggleCardSelector,
   updateNumCardsSelected,
 } from '../redux/actions';
 
@@ -30,6 +35,7 @@ import {
   getTrumpValue,
   getTrumpTracker,
   getCanBidForBottom,
+  getClientTurn,
   getNumCardsSelected,
   updateState
 } from '../redux/selectors';
@@ -44,12 +50,12 @@ const CallBottomButtons = (props) => {
   // e.g. no trump: ['S', 'J'] or ['B', 'J']
   const setBottom = (bid) => {
     const {
-      id,
+      myId,
       trumpTracker,
       validBids,
     } = props;
     makeBidIO(bid);
-    props.setCurrentBid(id, bid);
+    props.setCurrentBid(myId, bid);
     Cards.updateBid(bid, trumpTracker, validBids);
   }
 
@@ -58,22 +64,80 @@ const CallBottomButtons = (props) => {
     props.toggleBidButtons(false);
   }
 
+  const enableTurnsListener = (clientId) => {
+    const {
+      myId,
+      setClientTurn,
+      toggleCardSelector
+    } = props;
+    setClientTurn(clientId);
+    console.log('enableTurnsListener', `${clientId}'s turn`);
+    if (myId === clientId) {
+      toggleCardSelector(true);
+    } else {
+      toggleCardSelector(false);
+    }
+  }
+
+  const enableTricksListener = (tricksPlayed) => {
+    props.setTricksPlayed(tricksPlayed);
+  }
+
   const emitReturnBottom = () => {
-    const { cards } = props;
+    const {
+      cards,
+      updateCardsInHand,
+      toggleCardSelector,
+      updateNumCardsSelected
+    } = props;
     let bottomCards = [];
     let cardsInHand = [];
     cards.forEach(card => {
-      if (card.isSelectedForBottom) {
+      if (card.isSelected) {
         bottomCards.push(card.card);
       } else {
         cardsInHand.push(card);
       }
     })
 
-    props.updateCardsInHand(cardsInHand);
-    props.toggleBottomSelector(false);
-    props.updateNumCardsSelected(0);
+    getClientTurnIO(enableTurnsListener);
+    getTricksPlayedIO(enableTricksListener);
+    updateCardsInHand(cardsInHand);
+    toggleCardSelector(false);
+    updateNumCardsSelected(0);
     returnBottomIO(bottomCards);
+    // TODO: CAN START ROUND STATUS HERE
+  }
+
+  const emitTrickValidator = (isValidPlay, cardsInHand) => {
+    const { 
+      updateCardsInHand,
+      toggleCardSelector,
+      updateNumCardsSelected
+    } = props;
+    if (isValidPlay) {
+      updateCardsInHand(cardsInHand);
+      toggleCardSelector(false);
+      updateNumCardsSelected(0);
+    } else {
+      alert('Invalid Trick');
+      // TODO: reset hand for them?
+    }
+  }
+
+  const emitTrick = () => {
+    const { cards } = props;
+    let selectedCards = [];
+    let cardsInHand = [];
+    cards.forEach(card => {
+      if (card.isSelected) {
+        selectedCards.push(card.card);
+      } else {
+        cardsInHand.push(card);
+      }
+    })
+
+    makePlayIO(selectedCards, cardsInHand, emitTrickValidator);
   }
 
   // returns the array of buttons to be rendered
@@ -102,6 +166,7 @@ const CallBottomButtons = (props) => {
     return bidArray;
   }
 
+
   const renderBidButtons = () => (
     <BidButtonContainer>
       {props.canBidForBottom && getAvailableBidButtons().map((buttonObject, i) => {
@@ -126,12 +191,20 @@ const CallBottomButtons = (props) => {
         label="Finish Bid"
         onClickCb={setDoneBid}
       />}
+      {/* TODO: set num cards selected to 8 later */}
       {props.numCardsSelected === 4 &&
         <RegularButton
           id="finishBottomBtn"
           label="Finish Bottom"
           onClickCb={emitReturnBottom}
         />}
+        {props.clientTurnId === props.myId && props.numCardsSelected &&
+        <RegularButton
+          id="finishTrickBtn"
+          label="Finish Trick"
+          onClickCb={emitTrick}
+        />
+        }
     </span>
   )
 
@@ -145,21 +218,23 @@ const CallBottomButtons = (props) => {
 
 const mapStateToProps = (state) => {
   const name = getName(state);
-  const id = getId(state);
+  const myId = getId(state);
   const validBids = getValidBids(state);
   const trumpValue = getTrumpValue(state);
   const trumpTracker = getTrumpTracker(state);
   const currentBid = getCurrentBid(state);
   const canBidForBottom = getCanBidForBottom(state);
+  const clientTurnId = getClientTurn(state);
   const cards = getMyCards(state);
   const numCardsSelected = getNumCardsSelected(state);
 
   const numUpdateStates = updateState(state);
   return {
-    id,
+    myId,
     name,
     cards,
     validBids,
+    clientTurnId,
     currentBid,
     trumpValue,
     canBidForBottom,
@@ -190,6 +265,8 @@ export default connect(mapStateToProps, {
   setCurrentBid,
   toggleBidButtons,
   updateCardsInHand,
-  toggleBottomSelector,
+  toggleCardSelector,
+  setClientTurn,
+  setTricksPlayed,
   updateNumCardsSelected
 })(CallBottomButtons);

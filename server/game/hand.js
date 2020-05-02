@@ -22,9 +22,9 @@ class Hand {
     removeCard(card) {
         this._numCards--;
         let suit = (card.suit === 'J' || card.value === this._trumpValue || card.suit === this._trumpSuit) ? 'T' : card.suit;
-        this._singles[suit].splice(_.findIndex(this._singles[suit], card.isEqual), 1);
-        if (_.findIndex(this._doubles[suit], card.isEqual) > -1) {
-            this._doubles[suit].splice(_.findIndex(this._doubles[suit], card.isEqual), 1);
+        this._singles[suit].splice(_.findIndex(this._singles[suit], card.isEqual.bind(card)), 1);
+        if (_.findIndex(this._doubles[suit], card.isEqual.bind(card)) > -1) {
+            this._doubles[suit].splice(_.findIndex(this._doubles[suit], card.isEqual.bind(card)), 1);
         }
     }
 
@@ -44,6 +44,10 @@ class Hand {
                 this._singles[card.suit].push(card);
             }
         }
+    }
+
+    get numCards() {
+        return this._numCards;
     }
 
     hasSingle(suit, n = 1) {

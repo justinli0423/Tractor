@@ -1,7 +1,9 @@
-const constants = require('../constants')
+const constants = require('../constants');
+const Trick = require('./trick');
 
 class PlayRound {
     constructor(deck, players, hands, trumpValue, trumpSuit, bottom) {
+        console.log('New PlayRound');
         this._discard = deck;
         this._players = players;
         this._hands = hands;
@@ -11,7 +13,23 @@ class PlayRound {
         this._trumpSuit = trumpSuit;
         this._bottom = bottom;
         this._trick = null;
+        this._trickStarter = 0;
         this._winner = null;
+    }
+
+    play() {
+        if (this._hands[this._players[0]].numCards > 0) {
+            this.newTrick();
+        }
+    }
+
+    newTrick() {
+        this._trick = new Trick(this._players, this._hands, this._trickStarter, this._trumpValue, this._trumpSuit);
+        this._trick.play(0);
+    }
+
+    get trick() {
+        return this._trick;
     }
 
     get discard() {

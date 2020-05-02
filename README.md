@@ -1,7 +1,5 @@
 # Tractor
 
-## Features:
-
 
 ## Todos:
 

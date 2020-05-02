@@ -53,9 +53,9 @@ export const setTrumpValue = (trump) => ({
   payload: trump
 })
 
-export const toggleBottomSelector = (canSelectBottom) => ({
+export const toggleCardSelector = (canSelectCards) => ({
   type: 'CAN_SELECT_CARDS',
-  payload: canSelectBottom
+  payload: canSelectCards
 })
 
 export const updateNumCardsSelected = (num) => ({
@@ -66,4 +66,14 @@ export const updateNumCardsSelected = (num) => ({
 export const toggleBidButtons = (canBid) => ({
   type: 'TOGGLE_BID_BUTTONS',
   payload: canBid
+})
+
+export const setClientTurn = (clientId) => ({
+  type: 'SET_CLIENT_TURN',
+  payload: clientId
+})
+
+export const setTricksPlayed = (tricks) => ({
+  type: 'SET_ALL_TRICKS',
+  payload: tricks
 })
