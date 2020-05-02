@@ -305,16 +305,16 @@ const MyCardImgContainer = styled.span`
   z-index: ${prop => prop.zIndex};
   display: flex;
   align-items: flex-end;
+  
+  &:not(:first-child) {
+    margin-left: -30px;
+  }
 `;
 
 const MyCardImg = styled.img`
   flex-shrink: 0;
   width: 50px;
   height: 75px;
-
-  &:not(:first-child) {
-    margin-left: -30px;
-  }
 `;
 
 const CardImgContainer = styled.span`
