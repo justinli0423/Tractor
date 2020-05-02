@@ -11,6 +11,7 @@ import {
 } from "../socket/connect";
 
 import {
+  getId,
   getMyCards,
   updateState,
   getExistingClients,
@@ -19,6 +20,7 @@ import {
   getTrumpTracker,
   getCanSelectCards,
   getNumCardsSelected,
+  getExistingTricks,
   getScreenSize,
   getValidBids
 } from '../redux/selectors';
@@ -71,7 +73,7 @@ class Game extends Component {
       cardHeight = 286;
       cardSelectedHeight = -70;
       cardHoveredHeight = -90;
-    } 
+    }
     if (appWidth === 1920) {
       cardWidth = 120;
       cardHeight = 168;
@@ -81,8 +83,8 @@ class Game extends Component {
     if (appWidth === 1280) {
       cardWidth = 110;
       cardHeight = 148;
-      cardSelectedHeight = -50;
-      cardHoveredHeight = -30;
+      cardSelectedHeight = -30;
+      cardHoveredHeight = -50;
     }
 
     this.setState({
@@ -143,19 +145,31 @@ class Game extends Component {
       numCardsSelected
     } = this.props;
     let isSelected = cards[cardIndex].isSelected;
-    console.log('cantoggleCards', canSelectCards);
-    
+    console.log('canToggleCards', canSelectCards);
+
     if (!canSelectCards) {
       return;
     }
 
     if (cards.length > 25 && !isSelected && numCardsSelected === 4) {
-        window.alert('Maximum cards for bottom selected');
-        return;
+      window.alert('Maximum cards for bottom selected');
+      return;
     }
 
     this.toggleSingleCard(cardIndex);
     this.props.updateCardsInHand(cards, trumpTracker);
+  }
+
+  getExistingTrickSvg() {
+    const {
+      myId,
+      existingTricks
+    } = this.props;
+    if (!existingTricks || !existingTricks[myId]) {
+      return [];
+    }
+    
+    return existingTricks[myId].map((card) => Cards.getSvg(card));
   }
 
   updateBidStatus(socketId, bid) {
@@ -170,7 +184,7 @@ class Game extends Component {
   render() {
     const {
       cards,
-      numCards
+      numCards,
     } = this.props;
     const {
       cardWidth,
@@ -182,38 +196,60 @@ class Game extends Component {
       <Container
         height={cardHeight}
       >
-        {cards.map((card, i) => {
-          return (
-            <CardImgContainer
-              height={cardHeight}
-              onClick={() => { this.toggleCards(i) }}
-              numCards={numCards}
-              cardWidth={cardWidth}
-              cardHoveredHeight={cardHoveredHeight}
-              zIndex={i}
-            >
-              <CardImg
-                // TODO: enable drag and drop custom sorting later?
-                draggable={false}
-                width={cardWidth}
+        <CardContainer>
+          {this.getExistingTrickSvg().map((card, i) => {
+              return (
+                <MyCardImgContainer
+                  zIndex={i}
+                >
+                  <MyCardImg
+                    draggable={false}
+                    width={cardWidth}
+                    height={cardHeight}
+                    src={card}
+                    key={i}
+                  />
+                </MyCardImgContainer>
+              )
+            })
+          }
+        </CardContainer>
+        <CardContainer>
+          {cards.map((card, i) => {
+            return (
+              <CardImgContainer
                 height={cardHeight}
-                isSelected={card.isSelected}
-                cardSelectedHeight={cardSelectedHeight}
-                src={card.svg}
-                key={i}
-              />
-            </CardImgContainer>
-            // change the key prop to the name of card
-          )
-        })}
+                onClick={() => { this.toggleCards(i) }}
+                numCards={numCards}
+                cardWidth={cardWidth}
+                cardHoveredHeight={cardHoveredHeight}
+                zIndex={i}
+              >
+                <CardImg
+                  // TODO: enable drag and drop custom sorting later?
+                  draggable={false}
+                  width={cardWidth}
+                  height={cardHeight}
+                  isSelected={card.isSelected}
+                  cardSelectedHeight={cardSelectedHeight}
+                  src={card.svg}
+                  key={i}
+                />
+              </CardImgContainer>
+              // change the key prop to the name of card
+            )
+          })}
+        </CardContainer>
       </Container>
     )
   }
 }
 
 const mapStateToProps = (state) => {
+  const myId = getId(state);
   const cards = getMyCards(state);
   const connectedClients = getExistingClients(state);
+  const existingTricks = getExistingTricks(state);
   const currentBid = getCurrentBid(state);
   const trumpValue = getTrumpValue(state);
   const trumpTracker = getTrumpTracker(state);
@@ -222,12 +258,14 @@ const mapStateToProps = (state) => {
   const numCardsSelected = getNumCardsSelected(state);
   const { appWidth, appHeight } = getScreenSize(state);
   const numCards = cards.length;
-  
+
   const changeState = updateState(state);
   return {
+    myId,
     cards,
     numCards,
     connectedClients,
+    existingTricks,
     appWidth,
     appHeight,
     canSelectCards,
@@ -243,13 +281,12 @@ const mapStateToProps = (state) => {
 const Container = styled.div`
   position: fixed;
   display: flex;
-  bottom: 25px;
-  flex-direction: row;
+  bottom: 40px;
+  flex-direction: column;
   justify-content: center;
-  align-items: flex-end;
+  align-items: center;
   /* width: 1800px; */
-  height: ${prop => `${prop.height * 1.6}px`};
-  overflow-y: hidden;
+  /* height: ${prop => `${prop.height * 1.8}px`}; */
 `;
 
 const CardImg = styled.img`
@@ -259,11 +296,32 @@ const CardImg = styled.img`
   transform: ${prop => prop.isSelected && `translateY(${prop.cardSelectedHeight}px);`};
 `;
 
+const CardContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
+
+const MyCardImgContainer = styled.span`
+  z-index: ${prop => prop.zIndex};
+  display: flex;
+  align-items: flex-end;
+`;
+
+const MyCardImg = styled.img`
+  flex-shrink: 0;
+  width: 50px;
+  height: 75px;
+
+  &:not(:first-child) {
+    margin-left: -30px;
+  }
+`;
+
 const CardImgContainer = styled.span`
   z-index: ${prop => prop.zIndex};
   display: flex;
   align-items: flex-end;
-  height: ${prop => `${prop.height * 1.6}px`};
+  height: ${prop => `${prop.height + Math.abs(prop.cardHoveredHeight)}px`};
 
   &:not(:first-child) {
     /* margin-left: ${prop => `-${prop.numCards * 2.3}px`}; */
