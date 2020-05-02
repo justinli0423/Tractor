@@ -1,3 +1,4 @@
+const _ = require('underscore');
 const constants = require('../constants');
 const Trick = require('./trick');
 
@@ -7,8 +8,8 @@ class PlayRound {
         this._discard = deck;
         this._players = players;
         this._hands = hands;
-        this._declarer_points = 0;
-        this._opponent_points = 0;
+        this._declarerPoints = 0;
+        this._opponentPoints = 0;
         this._trumpValue = trumpValue;
         this._trumpSuit = trumpSuit;
         this._bottom = bottom;
@@ -17,15 +18,29 @@ class PlayRound {
         this._winner = null;
     }
 
-    play() {
-        if (this._hands[this._players[0]].numCards > 0) {
-            this.newTrick();
+    nextTrick() {
+        if (this._trick) {
+            this._trickStarter = (this._trickStarter + this._trick.winner) % constants.numPlayers;
+            if (this._trickStarter % 2 === 0) {
+                this._declarerPoints += this._trick.points;
+            } else {
+                this._opponentPoints += this._trick.points;
+            }
+            let discard = Object.values(this._trick._cards).flat();
+            _.forEach(discard, (card) => {
+                this._discard.pushCard(card);
+            })
+            console.log('Trick won by', constants.su._sockets[this._players[this._trickStarter]]);
+            console.log('Declarer points:', this._declarerPoints)
+            console.log('Opponent points:', this._opponentPoints)
         }
-    }
 
-    newTrick() {
-        this._trick = new Trick(this._players, this._hands, this._trickStarter, this._trumpValue, this._trumpSuit);
-        this._trick.play(0);
+        if (this._hands[this._players[0]].numCards > 0) {
+            this._trick = new Trick(this._players, this._hands, this._trickStarter, this._trumpValue, this._trumpSuit);
+            this._trick.play(0);
+        } else {
+            constants.game.round.endPlay();
+        }
     }
 
     get trick() {
@@ -45,32 +60,20 @@ class PlayRound {
         return this._players;
     }
 
-    get declarer_points() {
-        return this._declarer_points;
+    get declarerPoints() {
+        return this._declarerPoints;
     }
 
-    set declarer_point(points) {
-        this._declarer_points += points;
+    get opponentPoints() {
+        return this._opponentPoints;
     }
 
-    get opponent_points() {
-        return this._opponent_points;
+    get trumpValue() {
+        return this._trumpValue;
     }
 
-    set opponent_point(points) {
-        this._opponent_points += points;
-    }
-
-    get trump_value() {
-        return this._trump_value;
-    }
-
-    get trump_suit() {
-        return this._trump_suit;
-    }
-
-    set trump_suit(suit) {
-        this._trump_suit = suit;
+    get trumpSuit() {
+        return this._trumpSuit;
     }
 
     get bottom() {

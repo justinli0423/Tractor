@@ -20,7 +20,7 @@ class Trick {
 
     play(i) {
         if (i < constants.numPlayers) {
-            constants.su.emitNextClient(this._players[(this._starter + i) % 4], i);
+            constants.su.emitNextClient(this._players[(this._starter + i) % constants.numPlayers], i);
         } else {
             this.end();
         }
@@ -43,7 +43,7 @@ class Trick {
             return new Card(card[0], card[1]);
         });
 
-        console.log('trick:isvalid:cards', cards)
+        // console.log('trick:isvalid:cards', cards)
 
         const isAllTrump = _.filter(cards, (card) => {
             return card.suit === 'J' || card.value === trumpValue || card.suit === trumpSuit;
@@ -60,6 +60,8 @@ class Trick {
         }
 
         if (this._trickSuit) {
+
+            console.log('trick:isValid - Went in code block with this._trickSuit', this._trickSuit)
 
             if (this._trickSuit === playSuit) {
                 valid = true;
@@ -89,11 +91,11 @@ class Trick {
         if (valid) {
             this._cards[socketId] = cards;
 
-            console.log('trick:isvalid - Hand before removing cards', this._hands[socketId])
+            // console.log('trick:isvalid - Hand before removing cards', this._hands[socketId])
             _.forEach(cards, (card) => {
                 this._hands[socketId].removeCard(card);
             })
-            console.log('trick:isvalid - Hand after removing cards', this._hands[socketId])
+            // console.log('trick:isvalid - Hand after removing cards', this._hands[socketId])
 
             this._points += _.reduce(_.map(cards, function (card) {
                 return card.getPoints();
@@ -120,25 +122,20 @@ class Trick {
 
     cardsPlayed() {
         let cards = {};
-
-        console.log(Object.keys(this._cards))
-
         _.each(Object.keys(this._cards), (player) => {
-            console.log(this._cards[player])
             cards[player] = _.map(this._cards[player], (card) => {
                 return [card.value, card.suit];
             })
         })
-        console.log('trick:cardsPlayed - broadcasting plays:', cards)
         return cards;
-    }
-    
-    pushCard(card) {
-        this._cards.push(card)
     }
 
     end() {
 
+    }
+
+    get points() {
+        return this._points;
     }
 
     get winner() {
