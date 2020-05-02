@@ -33,8 +33,7 @@ class Card {
     }
 
     isEqual(card){
-        console.log(card)
-        return this._value.bind(this) === card.value && this._suit.bind(this) === card.suit
+        return this._value === card.value && this._suit === card.suit;
     }
 
     getRank(trumpValue, trumpSuit) {

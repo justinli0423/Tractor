@@ -15,7 +15,7 @@ import {
   updateState
 } from '../redux/selectors';
 
-
+// TODO: clear all info when trick round is done (determined by listener)
 // make position fixed for the 4 players
 const PlayerInfo = (props) => {
   const {

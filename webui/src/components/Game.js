@@ -7,7 +7,7 @@ import {
   getCardsIO,
   getNewBidIO,
   getTrumpValueIO,
-  getBottom
+  getBottomIO
 } from "../socket/connect";
 
 import {
@@ -28,7 +28,7 @@ import {
   setCurrentBid,
   setTrumpValue,
   updateNumCardsSelected,
-  toggleBottomSelector,
+  toggleCardSelector,
   toggleBidButtons,
   setValidBids
 } from '../redux/actions';
@@ -56,14 +56,10 @@ class Game extends Component {
     getTrumpValueIO(this.props.setTrumpValue.bind(this));
     getCardsIO(this.setCards.bind(this));
     getNewBidIO(this.updateBidStatus.bind(this));
-    getBottom(this.receiveBottomCards.bind(this));
+    getBottomIO(this.receiveBottomCards.bind(this));
+    this.setCardSize();
   }
 
-  setStage2Listeners() {
-    //TODO: turn off stage one listeners here
-  }
-
-  // TODO: set card sizes accordingly
   setCardSize() {
     const {
       appWidth
@@ -98,6 +94,10 @@ class Game extends Component {
   }
 
   setCards(newCard) {
+    if (!newCard || newCard.length !== 2) {
+      return;
+    }
+
     const {
       trumpValue,
       trumpTracker,
@@ -105,8 +105,7 @@ class Game extends Component {
       currentBid,
       cards
     } = this.props;
-    if (!newCard || newCard.length !== 2) return;
-    // TODO: undo hardcoding
+
     Cards.insertCard(cards, newCard, trumpValue, currentBid);
     Cards.newTrump(trumpTracker, validBids, newCard, currentBid, trumpValue);
     this.props.setValidBids(validBids);
@@ -117,36 +116,45 @@ class Game extends Component {
     bottomCards.forEach(bottomCard => {
       this.setCards(bottomCard);
     });
-    this.props.toggleBottomSelector(true);
+    this.props.toggleCardSelector(true);
     this.props.toggleBidButtons(false);
   }
 
-  toggleCardForBottom(cardIndex) {
+  toggleSingleCard(cardIndex) {
     const {
       cards,
-      trumpTracker,
-      canSelectCards,
       numCardsSelected
     } = this.props;
-    const isSelected = cards[cardIndex].isSelectedForBottom;
-
-    if (!canSelectCards) {
-      return;
-    }
-
-    if (!isSelected && numCardsSelected === 4) {
-      // TODO: DISPLAY NICER DIALOG FOR USER THAT THEY HAVE 8 SELECTED ALREADY
-      window.alert('Maximum cards for bottom selected');
-      return;
-    }
+    let isSelected = cards[cardIndex].isSelected;
 
     if (!isSelected) {
       this.props.updateNumCardsSelected(numCardsSelected + 1);
     } else {
       this.props.updateNumCardsSelected(numCardsSelected - 1);
     }
+    cards[cardIndex].isSelected = !isSelected;
+  }
 
-    cards[cardIndex].isSelectedForBottom = !isSelected;
+  toggleCards(cardIndex) {
+    const {
+      cards,
+      trumpTracker,
+      canSelectCards,
+      numCardsSelected
+    } = this.props;
+    let isSelected = cards[cardIndex].isSelected;
+    console.log('cantoggleCards', canSelectCards);
+    
+    if (!canSelectCards) {
+      return;
+    }
+
+    if (cards.length > 25 && !isSelected && numCardsSelected === 4) {
+        window.alert('Maximum cards for bottom selected');
+        return;
+    }
+
+    this.toggleSingleCard(cardIndex);
     this.props.updateCardsInHand(cards, trumpTracker);
   }
 
@@ -178,7 +186,7 @@ class Game extends Component {
           return (
             <CardImgContainer
               height={cardHeight}
-              onClick={() => { this.toggleCardForBottom(i) }}
+              onClick={() => { this.toggleCards(i) }}
               numCards={numCards}
               cardWidth={cardWidth}
               cardHoveredHeight={cardHoveredHeight}
@@ -189,7 +197,7 @@ class Game extends Component {
                 draggable={false}
                 width={cardWidth}
                 height={cardHeight}
-                isSelectedForBottom={card.isSelectedForBottom}
+                isSelected={card.isSelected}
                 cardSelectedHeight={cardSelectedHeight}
                 src={card.svg}
                 key={i}
@@ -210,12 +218,12 @@ const mapStateToProps = (state) => {
   const trumpValue = getTrumpValue(state);
   const trumpTracker = getTrumpTracker(state);
   const validBids = getValidBids(state);
-  const changeState = updateState(state);
   const canSelectCards = getCanSelectCards(state);
   const numCardsSelected = getNumCardsSelected(state);
   const { appWidth, appHeight } = getScreenSize(state);
-
   const numCards = cards.length;
+  
+  const changeState = updateState(state);
   return {
     cards,
     numCards,
@@ -248,7 +256,7 @@ const CardImg = styled.img`
   flex-shrink: 0;
   width: ${prop => `${prop.width}px`};
   height: ${prop => `${prop.height}px`};
-  transform: ${prop => prop.isSelectedForBottom && `translateY(${prop.cardSelectedHeight}px);`};
+  transform: ${prop => prop.isSelected && `translateY(${prop.cardSelectedHeight}px);`};
 `;
 
 const CardImgContainer = styled.span`
@@ -273,7 +281,7 @@ export default connect(mapStateToProps, {
   setValidBids,
   setTrumpValue,
   updateNumCardsSelected,
-  toggleBottomSelector,
+  toggleCardSelector,
   toggleBidButtons,
   setCurrentBid
 })(Game);

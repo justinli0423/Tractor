@@ -10,6 +10,10 @@ export function connectToSocketIO(getStatusCb, name) {
 }
 
 // ------------------ EVENT EMITTERS ------------------
+export function makePlayIO(trick, cardsInHand, validator) {
+  socket.emit('clientPlay', trick, cardsInHand, validator);
+}
+
 export function makeBidIO(bid) {
   socket.emit('newBid', bid);
 }
@@ -29,7 +33,18 @@ function setSocketID(id) {
 }
 
 // ------------------ EVENT LISTENERS ------------------
-export function getBottom(setBottomCardsCb) {
+export function getClientTurnIO(getClientTurnCb) {
+  socket.on('nextClient', (clientId) => {
+    console.log('FROM LISTENER', clientId);
+    getClientTurnCb(clientId);
+  });
+}
+
+export function getTricksPlayedIO(getTricksPlayedCb) {
+ socket.on('cardsPlayed', (tricks) => getTricksPlayedCb(tricks));
+}
+
+export function getBottomIO(setBottomCardsCb) {
   socket.on('originalBottom', (cards) => setBottomCardsCb(cards));
 }
 

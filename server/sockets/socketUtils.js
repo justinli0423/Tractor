@@ -66,6 +66,18 @@ class SocketUtil {
         this.getSocket(socketId).emit('originalBottom', bottom)
     }
 
+    emitNextClient(socketId, i) {
+        console.log(`It's ${this._sockets[socketId]}'s turn.`);
+        constants.io.emit('nextClient', socketId);
+        this.subClientPlay(socketId, i);
+    }
+
+    emitCardsPlayed(cards) {
+        constants.io.emit('cardsPlayed', cards);
+    }
+
+
+
     // ------------ SOCKET SUBS ------------
 
     addSocket(socket) {
@@ -108,16 +120,36 @@ class SocketUtil {
         })
     }
 
-    // subNewBottom(socketId, bidRound) {
     subNewBottom(socketId) {
-        console.log('Waiting for bottom from', socketId)
-        // console.log(bidRound);
         this.getSocket(socketId).on('newBottom', (bottom) => {
+            console.log('New bottom sent by ', this._sockets[socketId], ':', bottom);
             this.closeBottomSub(socketId);
             constants.game.round.bidRound.bottom = bottom;
             constants.game.round.play();
         })
     }
+
+    subClientPlay(socketId, i) {
+        console.log('Waiting for play from', this._sockets[socketId]);
+        this.getSocket(socketId).on('clientPlay', (play, other, fn) => {
+            const Trick = constants.game.round.playRound.trick;
+            console.log('New play sent by ', this._sockets[socketId], ':', play);
+            const valid = Trick.isValid.call(Trick, socketId, play, i);
+            console.log('Is valid play?', typeof valid);
+            console.log('Is valid play?', valid);
+            fn(valid, other);
+            if (valid) {
+                this.closeClientPlaySub(socketId);
+                this.emitCardsPlayed(Trick.cardsPlayed());
+                if (i === 3) {
+                    Trick.end();
+                } else {
+                    Trick.play(i + 1);
+                }
+            }
+        })
+    }
+
 
     // ------------ SOCKET CLOSERS ------------
 
@@ -128,6 +160,10 @@ class SocketUtil {
 
     closeBottomSub(socketId) {
         this.getSocket(socketId).removeAllListeners('newBottom');
+    }
+
+    closeClientPlaySub(socketId) {
+        this.getSocket(socketId).removeAllListeners('clientPlay');
     }
 
 }
