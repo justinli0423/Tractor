@@ -9,10 +9,7 @@ import {
   getExistingClients,
   getExistingClientIds,
   getExistingTricks,
-  getTrumpValue,
-  getBottomClient,
   getScreenSize,
-  getCurrentBid,
   updateState
 } from '../redux/selectors';
 
@@ -23,61 +20,57 @@ const PlayerInfo = (props) => {
     myId,
     clients,
     clientIds,
-    bottomClient,
     appWidth,
-    trumpValue,
-    currentBid,
+    existingTricks,
   } = props;
   const filteredClientIds = clientIds.filter(id => id !== myId);
 
   // keep track of bidding history as well...
 
-  const player1 = (clientName, playerId, cardSvg) => {
-    if (bottomClient === playerId) {
-      return (
-        <Container1
-          appWidth={appWidth}
-        >
-          <Name> {clientName}: </Name>
-          {cardSvg}
-        </Container1>
-      )
-    }
+  const player1 = (clientName, cardSvg) => {
     return (
-      <Container1>
-        {filteredClientIds[0] ? clientName : 'Waiting for P1...'}
+      <Container1
+        appWidth={appWidth}
+      >
+        {filteredClientIds[0] ?
+          <> 
+            <Name>
+              {clientName}: 
+            </Name>
+            {cardSvg}
+          </> : 'Waiting for P1...'}
       </Container1>
     )
   }
 
-  const player2 = (clientName, playerId, cardSvg) => {
-    if (bottomClient === playerId) {
-      return (
-        <Container2>
-          <Name> {clientName}: </Name>
-          {cardSvg}
-        </Container2>
-      )
-    }
+  const player2 = (clientName, cardSvg) => {
     return (
-      <Container2>
-        {filteredClientIds[1] ? clientName : 'Waiting for P2...'}
+      <Container2
+        appWidth={appWidth}
+      >
+        {filteredClientIds[1] ?
+          <> 
+            <Name>
+              {clientName}: 
+            </Name>
+            {cardSvg}
+          </> : 'Waiting for P2...'}
       </Container2>
     )
   }
 
-  const player3 = (clientName, playerId, cardSvg) => {
-    if (bottomClient === playerId) {
-      return (
-        <Container3>
-          <Name> {clientName}: </Name>
-          {cardSvg}
-        </Container3>
-      )
-    }
+  const player3 = (clientName, cardSvg) => {
     return (
-      <Container3>
-        {filteredClientIds[2] ? clientName : 'Waiting for P3...'}
+      <Container3
+        appWidth={appWidth}
+      >
+        {filteredClientIds[2] ?
+          <> 
+            <Name>
+              {clientName}: 
+            </Name>
+            {cardSvg}
+          </> : 'Waiting for P3...'}
       </Container3>
     )
   }
@@ -86,29 +79,20 @@ const PlayerInfo = (props) => {
     const Card = new Cards('/cardsSVG/');
     const clientId = filteredClientIds[index];
     const clientName = clients[clientId];
+    const clientCards = existingTricks[clientId];
     const allSvgs = [];
     let svg;
 
-    // TODO: distinguish bottom bids vs regular tricks
-    // TODO: does not show regular tricks yet
-    if (currentBid && currentBid.length) {
-      if (currentBid[1] === 'J') {
-        svg = Card.getSvg(currentBid);
-        // call with 2 jokers only
-        for(let i = 0; i < 2; i++) {
-          allSvgs.push(<SvgContainer src={svg}/>);
-        }
-      } else {
-        svg = Card.getSvg([trumpValue, currentBid[1]]);
-        for(let i = 0; i < currentBid[0]; i++) {
-          allSvgs.push(<SvgContainer src={svg} />);
-        }
-      }
+    if (clientCards && clientCards.length > 0) {
+      clientCards.forEach(card => {
+        svg = Card.getSvg(card);
+        allSvgs.push(<SvgContainer src={svg} />)
+      })
     }
 
-    return (index === 0) ? player1(clientName, clientId, allSvgs) :
-      (index === 1) ? player2(clientName, clientId, allSvgs) :
-        player3(clientName, clientId, allSvgs);
+    return (index === 0) ? player1(clientName, allSvgs) :
+      (index === 1) ? player2(clientName, allSvgs) :
+        player3(clientName, allSvgs);
   }
 
   return (
@@ -124,13 +108,10 @@ const mapStateToProps = (state) => {
   const myId = getId(state);
   const clients = getExistingClients(state);
   const clientIds = getExistingClientIds(state);
-  const bottomClient = getBottomClient(state);
-  const trumpValue = getTrumpValue(state);
-  const currentBid = getCurrentBid(state);
-  const updateNumState = updateState(state);
   const existingTricks = getExistingTricks(state);
   const { appWidth, appHeight } = getScreenSize(state);
-
+  const updateNumState = updateState(state);
+  
   return {
     myId,
     clients,
@@ -138,9 +119,6 @@ const mapStateToProps = (state) => {
     existingTricks,
     appWidth,
     appHeight,
-    bottomClient,
-    trumpValue,
-    currentBid,
     updateNumState
   }
 }

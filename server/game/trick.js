@@ -27,10 +27,6 @@ class Trick {
     }
 
     isValid(socketId, play, i) {
-        console.log("checking if this shit is valid")
-        console.log('what is this?', this)
-        console.log('what is the trump value?', this._trumpValue)
-
         let valid;
         const trumpValue = this._trumpValue;
         const trumpSuit = this._trumpSuit;
@@ -44,8 +40,10 @@ class Trick {
         }
 
         const cards = _.map(play, (card) => {
-            return new Card(card.value, card.suit);
+            return new Card(card[0], card[1]);
         });
+
+        console.log('trick:isvalid:cards', cards)
 
         const isAllTrump = _.filter(cards, (card) => {
             return card.suit === 'J' || card.value === trumpValue || card.suit === trumpSuit;
@@ -91,6 +89,12 @@ class Trick {
         if (valid) {
             this._cards[socketId] = cards;
 
+            console.log('trick:isvalid - Hand before removing cards', this._hands[socketId])
+            _.forEach(cards, (card) => {
+                this._hands[socketId].removeCard(card);
+            })
+            console.log('trick:isvalid - Hand after removing cards', this._hands[socketId])
+
             this._points += _.reduce(_.map(cards, function (card) {
                 return card.getPoints();
             }), function (memo, num) {
@@ -99,7 +103,6 @@ class Trick {
 
             if (isSameSuit) {
                 playRank = _.reduce(_.map(cards, function (card) {
-
                     return card.getRank.call(card, trumpValue, trumpSuit);
                 }), function (memo, num) {
                     return memo + num
@@ -117,11 +120,16 @@ class Trick {
 
     cardsPlayed() {
         let cards = {};
+
+        console.log(Object.keys(this._cards))
+
         _.each(Object.keys(this._cards), (player) => {
+            console.log(this._cards[player])
             cards[player] = _.map(this._cards[player], (card) => {
                 return [card.value, card.suit];
             })
         })
+        console.log('trick:cardsPlayed - broadcasting plays:', cards)
         return cards;
     }
     

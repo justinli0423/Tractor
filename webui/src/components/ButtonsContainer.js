@@ -62,6 +62,8 @@ const CallBottomButtons = (props) => {
   const setDoneBid = () => {
     setDoneBidIO();
     props.toggleBidButtons(false);
+    getClientTurnIO(enableTurnsListener);
+    getTricksPlayedIO(enableTricksListener);
   }
 
   const enableTurnsListener = (clientId) => {
@@ -100,13 +102,11 @@ const CallBottomButtons = (props) => {
       }
     })
 
-    getClientTurnIO(enableTurnsListener);
-    getTricksPlayedIO(enableTricksListener);
+    console.log('cards sent back for bottom', bottomCards);
     updateCardsInHand(cardsInHand);
     toggleCardSelector(false);
     updateNumCardsSelected(0);
     returnBottomIO(bottomCards);
-    // TODO: CAN START ROUND STATUS HERE
   }
 
   const emitTrickValidator = (isValidPlay, cardsInHand) => {
