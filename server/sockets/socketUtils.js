@@ -140,8 +140,8 @@ class SocketUtil {
             if (valid) {
                 this.closeClientPlaySub(socketId);
                 this.emitCardsPlayed(Trick.cardsPlayed());
-                if (i === 3) {
-                    Trick.end();
+                if (i === constants.numPlayers - 1) {
+                    constants.game.round.playRound.nextTrick();
                 } else {
                     Trick.play(i + 1);
                 }
@@ -153,15 +153,18 @@ class SocketUtil {
     // ------------ SOCKET CLOSERS ------------
 
     closeBidSubs(socketId) {
+        console.log(this.getSocket(socketId).eventNames())
         this.getSocket(socketId).removeAllListeners('newBid');
         this.getSocket(socketId).removeAllListeners('doneBid');
     }
 
     closeBottomSub(socketId) {
+        console.log(this.getSocket(socketId).eventNames())
         this.getSocket(socketId).removeAllListeners('newBottom');
     }
 
     closeClientPlaySub(socketId) {
+        console.log(this.getSocket(socketId).eventNames())
         this.getSocket(socketId).removeAllListeners('clientPlay');
     }
 
