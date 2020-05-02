@@ -25,8 +25,6 @@ const PlayerInfo = (props) => {
   } = props;
   const filteredClientIds = clientIds.filter(id => id !== myId);
 
-  // keep track of bidding history as well...
-
   const player1 = (clientName, cardSvg) => {
     return (
       <Container1
