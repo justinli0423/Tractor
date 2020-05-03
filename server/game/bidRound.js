@@ -5,23 +5,19 @@ const Deck = require('./deck');
 const Card = require('./cards');
 
 class BidRound {
-    constructor(deck, players, trumpValue, trumpSuit, roundNumber) {
+    constructor(deck, players, trumpValue, roundNumber) {
         this._roundNumber = roundNumber;
         this._deck = deck;
         this._players = players;
         this._hands = {};
         for (let i = 0; i < this._players.length; i ++) {
-            this._hands[this._players[i]] = new Hand(trumpValue, trumpSuit);
+            this._hands[this._players[i]] = new Hand(trumpValue);
         }
         this._trumpValue = trumpValue;
-        this._trumpSuit = trumpSuit;
+        this._trumpSuit = null;
         this._declarer = this._players[0];
         this._bottom = new Deck();
         this._ready = 0;
-    }
-
-    get deck() {
-        return this._deck;
     }
 
     deal() {
@@ -89,20 +85,36 @@ class BidRound {
         }
     }
 
+    sortHands() {
+        for (let i = 0; i < this._players.length; i ++) {
+            this._hands[this._players[i]].sortHand();
+            console.log('Highest trump single:', this._hands[this._players[i]].highestSingle('T'));
+            console.log('Highest trump double:', this._hands[this._players[i]].highestDouble('T'));
+            console.log('Highest spade single:', this._hands[this._players[i]].highestSingle('S'));
+            console.log('Highest spade double:', this._hands[this._players[i]].highestDouble('S'));
+            console.log('Highest diamond single:', this._hands[this._players[i]].highestSingle('D'));
+            console.log('Highest diamond double:', this._hands[this._players[i]].highestDouble('D'));
+            console.log('Highest club single:', this._hands[this._players[i]].highestSingle('C'));
+            console.log('Highest club double:', this._hands[this._players[i]].highestDouble('C'));
+            console.log('Highest heart single:', this._hands[this._players[i]].highestSingle('H'));
+            console.log('Highest heart double:', this._hands[this._players[i]].highestDouble('H'));
+        }
+    }
+
+    get deck() {
+        return this._deck;
+    }
+
     get bottom() {
         return this._bottom;
     }
 
-    sortHands() {
-        for (let i = 0; i < this._players.length; i ++) {
-            this._hands[this._players[i]].sortHand(this._trumpSuit);
-            // console.log('Highest Single:', this._hands[this._players[i]].highestSingle('T'));
-            // console.log('Highest Double:', this._hands[this._players[i]].highestDouble('T'));
-        }
-    }
-
     get hands() {
         return this._hands;
+    }
+
+    get trumpSuit() {
+        return this._trumpSuit;
     }
 
 }

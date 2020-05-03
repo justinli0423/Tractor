@@ -4,7 +4,6 @@ const Trick = require('./trick');
 
 class PlayRound {
     constructor(deck, players, hands, trumpValue, trumpSuit, bottom) {
-        console.log('New PlayRound');
         this._discard = deck;
         this._players = players;
         this._hands = hands;
