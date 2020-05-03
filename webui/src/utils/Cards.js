@@ -107,6 +107,80 @@ export default class Cards {
       cards.push(cardObject);
     }
   }
+  
+  // This is for after receiving trump
+  // direction:
+    // 1: increasing (3....A)
+    // 0: decreasing (A....3)
+  sortHand(cards, trumpValue, trumpSuit, direction = 0) {
+    let diamonds = [];
+    let clubs = [];
+    let spades = [];
+    let hearts = [];
+    let jokers = [];
+    let trumpD = [];
+    let trumpS = [];
+    let trumpH = [];
+    let trumpC = [];
+
+    let sortedCards = [];
+
+    if (trumpSuit === 'S') {
+      // if direction changed, sort otherway
+      // otherwise nothing to do
+      return;
+    }
+
+    // only get here if there is a trump suit change
+    cards.forEach((cardObj) => {
+      let cardVal = cardObj.card;
+      if (cardVal[1] === 'J') {
+        jokers.push(cardObj);
+      }
+      if (cardVal[0] === trumpValue) {
+        if (cardVal[1] === 'S') {
+          trumpS.push(cardObj);
+        }
+        if (cardVal[1] === 'C') {
+          trumpC.push(cardObj);      
+        }
+        if (cardVal[1] === 'H') {
+          trumpH.push(cardObj);
+        }
+        if (cardVal[1] === 'D') {
+          trumpD.push(cardObj);
+        }
+      }
+      else {
+        if (cardVal[1] === 'S') {
+          spades.push(cardObj);
+        }
+        if (cardVal[1] === 'C') {
+          clubs.push(cardObj);      
+        }
+        if (cardVal[1] === 'H') {
+          hearts.push(cardObj);
+        }
+        if (cardVal[1] === 'D') {
+          diamonds.push(cardObj);
+        }
+      }
+    });
+
+    sortedCards.push(jokers);
+    if (trumpValue === 'C') {
+      sortedCards.push(trumpC, trumpH, trumpS, trumpD, clubs, hearts, spades, diamonds);
+    }
+    if (trumpValue === 'H') {
+      sortedCards.push(trumpH, trumpS, trumpD, trumpC, hearts, spades, diamonds, clubs);
+    }
+    if (trumpValue === 'D') {
+      sortedCards.push(trumpD, trumpC, trumpH, trumpS, diamonds, clubs, hearts, spades);
+    }
+
+    return sortedCards;
+  }
+
   // TODO
   newTrump(trumpTracker, validBids, newCard, currentBid, trumpValue) {
     if (newCard[1] === 'J') {

@@ -36,7 +36,7 @@ class BidRound {
             if (this._deck.cards.length === constants.numBottom) {
                 clearInterval(constants.interval);
             }
-        }, 1);
+        }, 150);
     }
 
     receiveBid(bid, socketId) {
