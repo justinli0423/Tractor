@@ -61,6 +61,11 @@ class SocketUtil {
         this.getSocket(socketId).broadcast.emit('setNewBid', socketId, bid);
     }
 
+    emitGeneratedTrump(clientId, trump) {
+        console.log('Emitted random trump to', clientId, trump);
+        constants.io.emit('generateTrump', clientId, trump);
+    }
+
     emitBottom(socketId, bottom) {
         console.log('Sending', this._sockets[socketId], 'the bottom:', bottom);
         this.getSocket(socketId).emit('originalBottom', bottom);
@@ -75,8 +80,6 @@ class SocketUtil {
     emitCardsPlayed(cards) {
         constants.io.emit('cardsPlayed', cards);
     }
-
-
 
     // ------------ SOCKET SUBS ------------
 

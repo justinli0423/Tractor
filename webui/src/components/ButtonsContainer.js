@@ -12,6 +12,7 @@ import {
   returnBottomIO,
   getClientTurnIO,
   getTricksPlayedIO,
+  getGeneratedTrumpIO,
   makePlayIO,
   setDoneBidIO
 } from '../socket/connect';
@@ -64,6 +65,11 @@ const CallBottomButtons = (props) => {
     props.toggleBidButtons(false);
     getClientTurnIO(enableTurnsListener);
     getTricksPlayedIO(enableTricksListener);
+    getGeneratedTrumpIO(enableTrumpListener);
+  }
+
+  const enableTrumpListener = (clientId, trumpCard) => {
+    props.setCurrentBid(clientId, trumpCard);
   }
 
   const enableTurnsListener = (clientId) => {
@@ -126,7 +132,6 @@ const CallBottomButtons = (props) => {
         cardObj.isSelected = false;
         return cardObj;
       }))
-      // TODO: reset hand for them?
     }
   }
 
@@ -141,7 +146,6 @@ const CallBottomButtons = (props) => {
         cardsInHand.push(card);
       }
     })
-
     makePlayIO(selectedCards, cardsInHand, emitTrickValidator);
   }
 
