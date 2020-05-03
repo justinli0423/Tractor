@@ -125,9 +125,9 @@ export default class Cards {
 
     let sortedCards = [];
 
-    if (trumpSuit === 'S') {
+    if (trumpSuit === 'S' || trumpSuit === 'J') {
       // if direction changed, sort otherway
-      // otherwise nothing to do
+      // otherwise nothing to do for no trump or spades
       return cards;
     }
 

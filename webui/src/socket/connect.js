@@ -6,7 +6,7 @@ var socket = null;
 export function connectToSocketIO(getStatusCb, name) {
   socket = io(ENDPOINT);
   getConnectionStatus(getStatusCb, name);
-  setSocketID(name);
+  setSocketIdIO(name);
 }
 
 // ------------------ EVENT EMITTERS ------------------
@@ -29,11 +29,15 @@ export function returnBottomIO(bottom) {
   socket.emit('newBottom', bottom);
 }
 
-function setSocketID(id) {
+function setSocketIdIO(id) {
   socket.emit('setSocketId', id);
 }
 
 // ------------------ EVENT LISTENERS ------------------
+export function getGeneratedTrumpIO(getGeneratedTrumpCb) {
+  socket.on('generateTrump', (clientId, card) => getGeneratedTrumpCb(clientId, card));
+}
+
 export function getFinalBidIO (getFinalBidCb) {
   socket.on('bidWon', getFinalBidCb);
 }

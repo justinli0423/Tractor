@@ -29,21 +29,14 @@ const app = express();
 app.use(index);
 
 const server = http.createServer(app);
-const io = socketIo(server, { reconnect: false });
+const io = socketIo(server);
 const su = new SocketUtil(io);
 constants.io = io;
 constants.su = su;
 
 io.on('connection', (socket) => {
     su.addSocket(socket);
-    // emit tester
-    var event = null;
-    socket.on(event, () => {
-        console.log("event emits")
-    })
-
     su.removeSocket(socket)
-
     if (constants.interval) {
         clearInterval(constants.interval);
     }

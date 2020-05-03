@@ -45,6 +45,14 @@ class BidRound {
     doneBid() {
         this._ready += 1;
         if (this._ready === this._players.length) {
+            if (!this._trumpSuit) {
+              let suits = ['S', 'H', 'C', 'D'];
+              // TODO: make index * 4 
+              let index = Math.floor(Math.random() * 2);
+              this._trumpSuit = suits[index];
+              this._declarer = this._players[index];
+              constants.su.emitGeneratedTrump(this._declarer, [1, this._trumpSuit]);
+            }
             for (let i = 0; i < this._players.length; i ++) {
                 this._hands[this._players[i]].trumpSuit = this._trumpSuit;
             }
