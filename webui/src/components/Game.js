@@ -67,9 +67,11 @@ class Game extends Component {
   sortHand() {
     const {
       cards,
-      currentBid
+      currentBid,
+      trumpTracker,
+      trumpValue
     } = this.props;
-    console.log(currentBid);
+    this.props.updateCardsInHand(Cards.sortHand(cards, trumpValue, currentBid[1]), trumpTracker);
   }
 
   setCardSize() {

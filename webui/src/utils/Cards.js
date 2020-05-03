@@ -128,7 +128,7 @@ export default class Cards {
     if (trumpSuit === 'S') {
       // if direction changed, sort otherway
       // otherwise nothing to do
-      return;
+      return cards;
     }
 
     // only get here if there is a trump suit change
@@ -167,17 +167,17 @@ export default class Cards {
       }
     });
 
-    sortedCards.push(jokers);
-    if (trumpValue === 'C') {
-      sortedCards.push(trumpC, trumpH, trumpS, trumpD, clubs, hearts, spades, diamonds);
+    sortedCards = sortedCards.concat(jokers);
+    if (trumpSuit === 'C') {
+      sortedCards = sortedCards.concat(trumpC, trumpH, trumpS, trumpD, clubs, hearts, spades, diamonds);
     }
-    if (trumpValue === 'H') {
-      sortedCards.push(trumpH, trumpS, trumpD, trumpC, hearts, spades, diamonds, clubs);
+    if (trumpSuit === 'H') {
+      sortedCards = sortedCards.concat(trumpH, trumpS, trumpD, trumpC, hearts, spades, diamonds, clubs);
     }
-    if (trumpValue === 'D') {
-      sortedCards.push(trumpD, trumpC, trumpH, trumpS, diamonds, clubs, hearts, spades);
+    if (trumpSuit === 'D') {
+      sortedCards = sortedCards.concat(trumpD, trumpC, trumpH, trumpS, diamonds, clubs, hearts, spades);
     }
-
+    console.log('sortedCards', sortedCards);
     return sortedCards;
   }
 

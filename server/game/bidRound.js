@@ -36,7 +36,8 @@ class BidRound {
             if (this._deck.cards.length === constants.numBottom) {
                 clearInterval(constants.interval);
             }
-        }, 150);
+        }, 1);
+        // 150 seems to be a good dealing speed? could be slower
     }
 
     receiveBid(bid, socketId) {
