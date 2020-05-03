@@ -111,6 +111,7 @@ const CallBottomButtons = (props) => {
 
   const emitTrickValidator = (isValidPlay, cardsInHand) => {
     const {
+      cards,
       updateCardsInHand,
       toggleCardSelector,
       updateNumCardsSelected
@@ -121,6 +122,10 @@ const CallBottomButtons = (props) => {
       updateNumCardsSelected(0);
     } else {
       alert('Invalid Trick');
+      updateCardsInHand(cards.map(cardObj => {
+        cardObj.isSelected = false;
+        return cardObj;
+      }))
       // TODO: reset hand for them?
     }
   }
