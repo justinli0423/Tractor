@@ -32,7 +32,7 @@ class Round {
 
     dealAndBid() {
         constants.su.emitTrumpValue(this._trumpValue);
-        this._bidRound = new BidRound(this._deck, this._players, this._trumpValue, this._trumpSuit, this._roundNumber);
+        this._bidRound = new BidRound(this._deck, this._players, this._trumpValue, this._roundNumber);
         this._bidRound.deal();
         _.map(this._players, function(socketId) {
             constants.su.subSetBid(socketId);
@@ -45,6 +45,8 @@ class Round {
     }
 
     play() {
+        this._trumpSuit = this._bidRound.trumpSuit;
+        console.log('creating new play round with trump', this._trumpValue, this._trumpSuit)
         this._playRound = new PlayRound(this._deck, this._players, this._bidRound.hands, this._trumpValue, this._trumpSuit, this._bidRound.bottom)
         this._playRound.nextTrick()
     }

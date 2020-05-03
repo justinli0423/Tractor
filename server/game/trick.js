@@ -23,13 +23,15 @@ class Trick {
     }
 
     isValid(socketId, play, i) {
-        console.log(typeof this)
-        console.log(this)
+        // console.log(typeof this)
+        // console.log(this)
         let valid;
         const trumpValue = this._trumpValue;
         const trumpSuit = this._trumpSuit;
         let playSuit = null;
         let playRank = 0;
+        console.log('the trump value of this trick is :', trumpValue)
+        console.log('the trump suit of this trick is:', trumpSuit)
 
         if (this._trickNumCards) {
             if (this._trickNumCards !== play.length) {
@@ -51,11 +53,16 @@ class Trick {
             return card.suit === cards[0].suit;
         }).length === cards.length || isAllTrump;
 
+        console.log('the cards are all trump:', isAllTrump)
+        console.log('the cards are the same suit:', isSameSuit)
+
         if (isAllTrump) {
             playSuit = 'T';
         } else if (isSameSuit) {
             playSuit = cards[0].suit;
         }
+
+        console.log('The play suit is:', playSuit)
 
         if (this._trickSuit) {
 

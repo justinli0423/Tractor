@@ -1,11 +1,11 @@
 const _ = require('underscore');
 
 class Hand {
-    constructor(trumpValue, trumpSuit) {
+    constructor(trumpValue) {
         this._numCards = 0;
         this._rawCards = [];
         this._trumpValue = trumpValue;
-        this._trumpSuit = trumpSuit;
+        this._trumpSuit = null;
         this._singles = {'S': [], 'D': [], 'C': [], 'H': [], 'T': []};
         this._doubles = {'S': [], 'D': [], 'C': [], 'H': [], 'T': []};
     }
@@ -28,8 +28,7 @@ class Hand {
         }
     }
 
-    sortHand(trumpSuit) {
-        this._trumpSuit = trumpSuit;
+    sortHand() {
         while (this._rawCards.length > 0) {
             let card = this._rawCards.pop();
             if (card.suit === 'J' || card.value === this._trumpValue || card.suit === this._trumpSuit) {
