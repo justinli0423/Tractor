@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import {
   getExistingClients,
   getExistingClientIds,
+  getClientTurn,
   getId,
   getName,
   updateState
@@ -23,14 +24,21 @@ const ConnectedClients = (props) => {
   });
 
   const renderClientStatus = (id) => {
-    let outputString = clients[id];
-    if (id === myId) {
-      outputString = `(you) ${outputString}`;
+    const { clientTurn } = props;
+    let outputString = '';
+    if (clientTurn === id) {
+      outputString = 'Waiting for '
     }
-    return outputString + ' - Lv: 2';
+    if (id === myId) {
+      outputString += `you`;
+    } else {
+      outputString += clients[id];
+    }
+    return outputString
+    // return outputString + ' - Lv: 2';
   }
 
-  // TODO: show player levels as well
+  // TODO: show player levels as well as level
   return (
     <ClientsContainer>
       <ClientsHeader>PLAYERS</ClientsHeader>
@@ -52,12 +60,14 @@ const mapStateToProps = state => {
   const name = getName(state);
   const clients = getExistingClients(state);
   const clientIds = getExistingClientIds(state);
+  const clientTurn = getClientTurn(state);
 
   const numStateChanges = updateState(state);
   return {
     myId,
     name,
     clients,
+    clientTurn,
     clientIds,
     numStateChanges
   };
