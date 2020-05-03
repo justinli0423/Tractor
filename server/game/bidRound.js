@@ -95,8 +95,16 @@ class BidRound {
     sortHands() {
         for (let i = 0; i < this._players.length; i ++) {
             this._hands[this._players[i]].sortHand(this._trumpSuit);
-            // console.log('Highest Single:', this._hands[this._players[i]].highestSingle('T'));
-            // console.log('Highest Double:', this._hands[this._players[i]].highestDouble('T'));
+            console.log('Highest trump single:', this._hands[this._players[i]].highestSingle('T'));
+            console.log('Highest trump double:', this._hands[this._players[i]].highestDouble('T'));
+            console.log('Highest spade single:', this._hands[this._players[i]].highestSingle('S'));
+            console.log('Highest spade double:', this._hands[this._players[i]].highestDouble('S'));
+            console.log('Highest diamond single:', this._hands[this._players[i]].highestSingle('D'));
+            console.log('Highest diamond double:', this._hands[this._players[i]].highestDouble('D'));
+            console.log('Highest club single:', this._hands[this._players[i]].highestSingle('C'));
+            console.log('Highest club double:', this._hands[this._players[i]].highestDouble('C'));
+            console.log('Highest heart single:', this._hands[this._players[i]].highestSingle('H'));
+            console.log('Highest heart double:', this._hands[this._players[i]].highestDouble('H'));
         }
     }
 

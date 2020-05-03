@@ -7,6 +7,20 @@ const constants = require('./constants');
 // const Round = require('./game/round');
 // const Deck = require('./game/deck');
 // const Card = require('./game/cards');
+//
+// const trumpValue = '2'
+// const trumpSuit = 'S'
+//
+// card1 = new Card('B', 'J')
+// card2 = new Card('2', 'S')
+// card3 = new Card('2', 'D')
+// card4 = new Card('K', 'S')
+//
+// console.log(card1, card1.getRank(trumpValue, trumpSuit))
+// console.log(card2, card2.getRank(trumpValue, trumpSuit))
+// console.log(card3, card3.getRank(trumpValue, trumpSuit))
+// console.log(card4, card4.getRank(trumpValue, trumpSuit))
+
 const index = require('./routes/index');
 const SocketUtil = require('./sockets/socketUtils');
 const port = process.env.PORT || 8000;

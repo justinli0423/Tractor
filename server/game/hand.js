@@ -58,22 +58,28 @@ class Hand {
         return this._doubles[suit].length >= n;
     }
 
-
     highestSingle(suit) {
         const trumpValue = this._trumpValue;
         const trumpSuit = this._trumpSuit;
-
-        return _.max(this._singles[suit], function (card) {
-            return card.getRank(trumpSuit, trumpValue)
-        });
+        if (this._singles[suit].length > 0) {
+            return _.max(this._singles[suit], (card) => {
+                return card.getRank(trumpSuit, trumpValue)
+            });
+        } else {
+            return null;
+        }
     }
 
     highestDouble(suit) {
         const trumpValue = this._trumpValue;
         const trumpSuit = this._trumpSuit;
-        return _.max(this._doubles[suit], function (card) {
-            return card.getRank(trumpSuit, trumpValue)
-        });
+        if (this._doubles[suit].length > 0) {
+            return _.max(this._doubles[suit], (card) => {
+                return card.getRank(trumpSuit, trumpValue)
+            });
+        } else {
+            return null;
+        }
     }
 
     highestTractor(suit, length) {

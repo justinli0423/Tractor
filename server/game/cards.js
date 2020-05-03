@@ -36,6 +36,10 @@ class Card {
     }
 
     getRank(trumpValue, trumpSuit) {
+        console.log(this)
+        console.log(default_ranks[this._value])
+        console.log('is trump value', this._value === trumpValue)
+        console.log('is trump suit', this._suit === trumpSuit)
         return default_ranks[this._value] + (this._value === trumpValue ? 52 : 0) + (this._suit === trumpSuit ? 26 : 0);
     }
 
