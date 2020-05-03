@@ -8,12 +8,10 @@ class Round {
         this._roundNumber = roundNumber
         this._deck = deck;
         this._players = players;
-        this._declarerPoints = 0;
         this._opponentPoints = 0;
         this._trumpValue = trumpValue;
         this._trumpSuit = null;
         this._bottom = null;
-        this._winner = null;
         this._bidRound = null;
         this._playRound = null;
         this._bids = {};
@@ -53,39 +51,12 @@ class Round {
 
     endRound() {
         this._opponentPoints = this._playRound.opponentPoints;
-    }
-
-
-    get players() {
-        return this._players;
-    }
-
-    get declarerPoints() {
-        return this._declarerPoints;
-    }
-
-    set declarerPoint(points) {
-        this._declarerPoints += points;
+        this._deck = this._playRound.discard;
+        constants.game.newRound();
     }
 
     get opponentPoints() {
         return this._opponentPoints;
-    }
-
-    set opponentPoint(points) {
-        this._opponentPoints += points;
-    }
-
-    get bottom() {
-        return this._bottom;
-    }
-
-    set bottom(cards) {
-        this._bottom = cards;
-    }
-
-    winner() {
-        self._winner = this._opponentPoints >= 80 ? 'Opponents' : 'Declarers';
     }
 
 }

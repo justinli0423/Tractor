@@ -19,9 +19,7 @@ class PlayRound {
     nextTrick() {
         if (this._trick) {
             this._trickStarter = (this._trickStarter + this._trick.winner) % constants.numPlayers;
-            if (this._trickStarter % 2 === 0) {
-                this._declarerPoints += this._trick.points;
-            } else {
+            if (this._trickStarter % 2 !== 0) {
                 this._opponentPoints += this._trick.points;
             }
             let discard = Object.values(this._trick._cards).flat();
@@ -59,20 +57,13 @@ class PlayRound {
     }
 
     get discard() {
+        console.log('discard numcards', this._discard.numCards);
         return this._discard;
     }
 
     pushCard(cards) {
         for (let i = 0; i < cards.length; i++)
             this._discard.pushCard(cards[i]);
-    }
-
-    get players() {
-        return this._players;
-    }
-
-    get declarerPoints() {
-        return this._declarerPoints;
     }
 
     get opponentPoints() {
@@ -93,10 +84,6 @@ class PlayRound {
 
     set bottom(cards) {
         this._bottom = cards;
-    }
-
-    winner() {
-        self._winner = this._opponent_points >= 80 ? 'Opponents' : 'Declarers';
     }
 
 }

@@ -3,7 +3,8 @@ const constants = require('../constants');
 const Round = require('./round');
 const Deck = require('./deck');
 
-const levels = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
+// const levels = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
+const levels = ['2', 'K', 'A'];
 const switchPoints = 32;
 const levelPoints = 16;
 
@@ -19,40 +20,7 @@ class Game {
         this._declarer = null;
     }
 
-    set team1([players]) {
-        this._team1 = players;
-        this._players[0] = players[0];
-        this._players[2] = players[1];
-    }
-
-    set team2([players]) {
-        this._team2 = players;
-        this._players[1] = players[0];
-        this._players[3] = players[1];
-    }
-
-    get players() {
-        return this._players;
-    }
-
-    get team1Level() {
-        return this._team1_level;
-    }
-
-    set team1Level(level) {
-        this._team1_level = level;
-    }
-
-    get team2Level() {
-        return this._team2_level;
-    }
-
-    set team2Level(level) {
-        this._team2_level = level;
-    }
-
     newRound(level = null) {
-        // TODO: update to dynamic trumpValue
 
         if (this._round) {
             this._roundNumber++;
@@ -73,7 +41,6 @@ class Game {
             this._round = new Round(this._deck, this._players, levels[this._levels[team]], this._roundNumber);
             // this._round = constants.game.round;
             this._round.dealAndBid();
-
         }
 
         const trumpValue = '2';
@@ -96,6 +63,22 @@ class Game {
 
     get round() {
         return this._round;
+    }
+
+    set team1([players]) {
+        this._team1 = players;
+        this._players[0] = players[0];
+        this._players[2] = players[1];
+    }
+
+    set team2([players]) {
+        this._team2 = players;
+        this._players[1] = players[0];
+        this._players[3] = players[1];
+    }
+
+    get players() {
+        return this._players;
     }
 
 }
