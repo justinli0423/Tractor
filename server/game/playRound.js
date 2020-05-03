@@ -7,7 +7,6 @@ class PlayRound {
         this._discard = deck;
         this._players = players;
         this._hands = hands;
-        this._declarerPoints = 0;
         this._opponentPoints = 0;
         this._trumpValue = trumpValue;
         this._trumpSuit = trumpSuit;
@@ -27,7 +26,6 @@ class PlayRound {
                 this._discard.pushCard(card);
             })
             console.log('Trick won by', constants.su._sockets[this._players[this._trickStarter]]);
-            console.log('Declarer points:', this._declarerPoints)
             console.log('Opponent points:', this._opponentPoints)
         }
 

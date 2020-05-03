@@ -31,7 +31,7 @@ class Round {
     dealAndBid() {
         constants.su.emitTrumpValue(this._trumpValue);
         this._bidRound = new BidRound(this._deck, this._players, this._trumpValue, this._roundNumber);
-        this._bidRound.deal();
+        this._bidRound.deal.call(this._bidRound);
         _.map(this._players, function(socketId) {
             constants.su.subSetBid(socketId);
             constants.su.subDoneBid(socketId);

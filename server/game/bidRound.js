@@ -48,7 +48,7 @@ class BidRound {
             if (!this._trumpSuit) {
               let suits = ['S', 'H', 'C', 'D'];
               // TODO: make index * 4 
-              let index = Math.floor(Math.random() * 2);
+              let index = Math.floor(Math.random() * constants.numPlayers);
               this._trumpSuit = suits[index];
               this._declarer = this._players[index];
               constants.su.emitGeneratedTrump(this._declarer, [1, this._trumpSuit]);

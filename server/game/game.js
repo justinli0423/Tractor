@@ -24,7 +24,7 @@ class Game {
 
         if (this._round) {
             this._roundNumber++;
-            let opponentPoints = this._round.opponentPoints()
+            let opponentPoints = this._round.opponentPoints;
             this._declarer = opponentPoints >= switchPoints ? this._players[1] : this._players[2];
             const team = _.contains(this._teams[0], this._declarer) ? 0 : 1;
             let levelIncrease = 0;
