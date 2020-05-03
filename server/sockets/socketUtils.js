@@ -32,7 +32,7 @@ class SocketUtil {
         // TODO: CHANGE SOCKET LENGTH BACK TO 4
         if (Object.keys(this._sockets).length === constants.numPlayers) {
             constants.game = new Game(Object.keys(this._sockets));
-            constants.game.new_round()
+            constants.game.newRound();
         }
     }
 
@@ -154,18 +154,18 @@ class SocketUtil {
     // ------------ SOCKET CLOSERS ------------
 
     closeBidSubs(socketId) {
-        console.log(this.getSocket(socketId).eventNames())
+        // console.log(this.getSocket(socketId).eventNames())
         this.getSocket(socketId).removeAllListeners('newBid');
         this.getSocket(socketId).removeAllListeners('doneBid');
     }
 
     closeBottomSub(socketId) {
-        console.log(this.getSocket(socketId).eventNames())
+        // console.log(this.getSocket(socketId).eventNames())
         this.getSocket(socketId).removeAllListeners('newBottom');
     }
 
     closeClientPlaySub(socketId) {
-        console.log(this.getSocket(socketId).eventNames())
+        // console.log(this.getSocket(socketId).eventNames())
         this.getSocket(socketId).removeAllListeners('clientPlay');
     }
 

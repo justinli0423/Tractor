@@ -14,7 +14,6 @@ class PlayRound {
         this._bottom = bottom;
         this._trick = null;
         this._trickStarter = 0;
-        this._winner = null;
     }
 
     nextTrick() {
@@ -38,7 +37,20 @@ class PlayRound {
             this._trick = new Trick(this._players, this._hands, this._trickStarter, this._trumpValue, this._trumpSuit);
             this._trick.play(0);
         } else {
-            constants.game.round.endPlay();
+            let bottomPoints = 0;
+            for (let i = 0; i < constants.numBottom; i++) {
+                const card = this._bottom.deal()
+                bottomPoints += card.getPoints();
+                this._discard.pushCard(card)
+            }
+            if (this._trickStarter % 2 === 0) {
+                this._declarerPoints += bottomPoints;
+            } else {
+                this._opponentPoints += bottomPoints;
+            }
+            console.log('Declarer points:', this._declarerPoints)
+            console.log('Opponent points:', this._opponentPoints)
+            constants.game.round.endRound();
         }
     }
 

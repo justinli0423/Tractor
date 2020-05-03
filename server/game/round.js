@@ -46,13 +46,13 @@ class Round {
 
     play() {
         this._trumpSuit = this._bidRound.trumpSuit;
-        console.log('creating new play round with trump', this._trumpValue, this._trumpSuit)
+        console.log(this._bidRound.bottom)
         this._playRound = new PlayRound(this._deck, this._players, this._bidRound.hands, this._trumpValue, this._trumpSuit, this._bidRound.bottom)
         this._playRound.nextTrick()
     }
 
-    endPlay() {
-
+    endRound() {
+        this._opponentPoints = this._playRound.opponentPoints;
     }
 
 
