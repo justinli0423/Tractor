@@ -34,9 +34,12 @@ function setSocketID(id) {
 }
 
 // ------------------ EVENT LISTENERS ------------------
+export function getFinalBidIO (getFinalBidCb) {
+  socket.on('bidWon', getFinalBidCb);
+}
+
 export function getClientTurnIO(getClientTurnCb) {
   socket.on('nextClient', (clientId) => {
-    console.log('FROM LISTENER', clientId);
     getClientTurnCb(clientId);
   });
 }

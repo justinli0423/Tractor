@@ -63,7 +63,6 @@ class SocketUtil {
 
     emitBottom(socketId, bottom) {
         console.log('Sending', this._sockets[socketId], 'the bottom:', bottom);
-        constants.io.emit('bidWon');
         this.getSocket(socketId).emit('originalBottom', bottom);
     }
 
@@ -124,6 +123,7 @@ class SocketUtil {
     subNewBottom(socketId) {
         this.getSocket(socketId).on('newBottom', (bottom) => {
             console.log('New bottom sent by ', this._sockets[socketId], ':', bottom);
+            constants.io.emit('bidWon');
             this.closeBottomSub(socketId);
             constants.game.round.bidRound.bottom = bottom;
             constants.game.round.play();

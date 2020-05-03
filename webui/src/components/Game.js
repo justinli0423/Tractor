@@ -7,6 +7,7 @@ import {
   getCardsIO,
   getNewBidIO,
   getTrumpValueIO,
+  getFinalBidIO,
   getBottomIO
 } from "../socket/connect";
 
@@ -59,7 +60,18 @@ class Game extends Component {
     getCardsIO(this.setCards.bind(this));
     getNewBidIO(this.updateBidStatus.bind(this));
     getBottomIO(this.receiveBottomCards.bind(this));
+    getFinalBidIO(this.sortHand.bind(this));
     this.setCardSize();
+  }
+
+  sortHand() {
+    const {
+      cards,
+      currentBid,
+      trumpTracker,
+      trumpValue
+    } = this.props;
+    this.props.updateCardsInHand(Cards.sortHand(cards, trumpValue, currentBid[1]), trumpTracker);
   }
 
   setCardSize() {

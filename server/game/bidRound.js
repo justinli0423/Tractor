@@ -37,6 +37,7 @@ class BidRound {
                 clearInterval(constants.interval);
             }
         }, 1);
+        // 150 seems to be a good dealing speed? could be slower
     }
 
     receiveBid(bid, socketId) {
