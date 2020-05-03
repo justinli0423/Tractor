@@ -19,14 +19,12 @@ class Trick {
     }
 
     play(i) {
-        if (i < constants.numPlayers) {
-            constants.su.emitNextClient(this._players[(this._starter + i) % constants.numPlayers], i);
-        } else {
-            this.end();
-        }
+        constants.su.emitNextClient(this._players[(this._starter + i) % constants.numPlayers], i);
     }
 
     isValid(socketId, play, i) {
+        console.log(typeof this)
+        console.log(this)
         let valid;
         const trumpValue = this._trumpValue;
         const trumpSuit = this._trumpSuit;
@@ -68,9 +66,10 @@ class Trick {
             } else if (playSuit === 'T') {
                 valid = !this._hands[socketId].hasSingle(this._trickSuit, 1);
             } else {
-                const num = _.filter(cards, function (card) {
+                const sameSuit = (card) => {
                     return card.suit === this._trickSuit;
-                }).length
+                }
+                const num = _.filter(cards, sameSuit.bind(this)).length
                 valid = !this._hands[socketId].hasSingle(this._trickSuit, num + 1);
             }
 
@@ -109,6 +108,7 @@ class Trick {
                 }), function (memo, num) {
                     return memo + num
                 }, 0);
+                console.log('The play', cards, `has rank ${playRank}.`)
             }
 
             if (playRank > this._maxRank) {
@@ -128,10 +128,6 @@ class Trick {
             })
         })
         return cards;
-    }
-
-    end() {
-
     }
 
     get points() {
