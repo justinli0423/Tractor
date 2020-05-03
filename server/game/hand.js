@@ -62,6 +62,7 @@ class Hand {
     highestSingle(suit) {
         const trumpValue = this._trumpValue;
         const trumpSuit = this._trumpSuit;
+
         return _.max(this._singles[suit], function (card) {
             return card.getRank(trumpSuit, trumpValue)
         });

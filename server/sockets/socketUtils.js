@@ -63,7 +63,8 @@ class SocketUtil {
 
     emitBottom(socketId, bottom) {
         console.log('Sending', this._sockets[socketId], 'the bottom:', bottom);
-        this.getSocket(socketId).emit('originalBottom', bottom)
+        constants.io.emit('bidWon');
+        this.getSocket(socketId).emit('originalBottom', bottom);
     }
 
     emitNextClient(socketId, i) {

@@ -15,7 +15,6 @@ const default_ranks = {
     'B': 250,
     'S': 500
 }
-
 const points = {'5': 5, '10': 10, 'K': 10}
 
 class Card {

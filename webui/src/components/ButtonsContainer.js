@@ -193,7 +193,7 @@ const CallBottomButtons = (props) => {
           onClickCb={setDoneBid}
         />}
       {/* TODO: set num cards selected to 8 later */}
-      {props.numCardsSelected === 4 && props.cards.length > 25 &&
+      {props.numCardsSelected === 4 && props.cards.length > 6 &&
         <RegularButton
           id="finishBottomBtn"
           label="Finish Bottom"
