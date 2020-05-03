@@ -40,7 +40,7 @@ class Game {
             this.rotatePlayers();
             this._round = new Round(this._deck, this._players, levels[this._levels[team]], this._roundNumber);
             // this._round = constants.game.round;
-            this._round.dealAndBid();
+            this._round.dealAndBid.call(this._round);
         }
 
         const trumpValue = '2';
