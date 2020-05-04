@@ -30,9 +30,12 @@ class Round {
 
     dealAndBid() {
         constants.su.emitTrumpValue(this._trumpValue);
+        // console.log('round:dealAndBid - typeof deck', typeof this._deck)
+        // console.log('round:dealAndBid - round', this)
+        // console.log('round:dealAndBid - deck numcards', this._deck.numCards)
         this._bidRound = new BidRound(this._deck, this._players, this._trumpValue, this._roundNumber);
         this._bidRound.deal.call(this._bidRound);
-        _.map(this._players, function(socketId) {
+        _.map(this._players, function (socketId) {
             constants.su.subSetBid(socketId);
             constants.su.subDoneBid(socketId);
         })
@@ -51,7 +54,10 @@ class Round {
 
     endRound() {
         this._opponentPoints = this._playRound.opponentPoints;
-        this._deck = this._playRound.discard;
+        console.log('round.endRound - opponentPoints', this._opponentPoints, this._playRound.opponentPoints)
+        console.log('round.endRound - this._deck before discard', this._deck.numCards, this._playRound.discard.numCards)
+        constants.game._deck = this._playRound.discard;
+        console.log('round.endRound - this._deck after discard', this._deck.numCards, this._playRound.discard.numCards)
         constants.game.newRound();
     }
 

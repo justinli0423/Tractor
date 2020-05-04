@@ -38,16 +38,17 @@ class Game {
             }
             this._levels[team] = (this._levels[team] + levelIncrease) % levels.length
             this.rotatePlayers();
+            console.log('game.newRound - deck', this._deck.numCards)
             this._round = new Round(this._deck, this._players, levels[this._levels[team]], this._roundNumber);
             // this._round = constants.game.round;
             this._round.dealAndBid.call(this._round);
+        } else {
+            const trumpValue = '2';
+            this._round = new Round(this._deck, this._players, trumpValue, this._roundNumber);
+            // this._round = constants.game.round;
+            this._round.dealAndBid();
+            this._deck = this._round.deck;
         }
-
-        const trumpValue = '2';
-        this._round = new Round(this._deck, this._players, trumpValue, this._roundNumber);
-        // this._round = constants.game.round;
-        this._round.dealAndBid();
-        this._deck = this._round.deck;
     }
 
     rotatePlayers() {

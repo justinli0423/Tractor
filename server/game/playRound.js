@@ -39,12 +39,9 @@ class PlayRound {
                 bottomPoints += card.getPoints();
                 this._discard.pushCard(card)
             }
-            if (this._trickStarter % 2 === 0) {
-                this._declarerPoints += bottomPoints;
-            } else {
+            if (this._trickStarter % 2 !== 0) {
                 this._opponentPoints += bottomPoints;
             }
-            console.log('Declarer points:', this._declarerPoints)
             console.log('Opponent points:', this._opponentPoints)
             constants.game.round.endRound();
         }
