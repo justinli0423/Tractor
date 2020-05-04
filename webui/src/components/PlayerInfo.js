@@ -23,7 +23,12 @@ const PlayerInfo = (props) => {
     appWidth,
     existingTricks,
   } = props;
-  const filteredClientIds = clientIds.filter(id => id !== myId);
+  const filteredClientIds = [];
+  const myIndex = clientIds.indexOf(myId);
+  for(let i = 1; i < 4; i++) {
+    filteredClientIds.push(clientIds[(myIndex + i) % 4]);
+  }
+
 
   const player1 = (clientName, cardSvg) => {
     return (
@@ -36,7 +41,7 @@ const PlayerInfo = (props) => {
               {clientName}: 
             </Name>
             {cardSvg}
-          </> : 'Waiting for P1...'}
+          </> : 'Waiting for Player...'}
       </Container1>
     )
   }
@@ -52,7 +57,7 @@ const PlayerInfo = (props) => {
               {clientName}: 
             </Name>
             {cardSvg}
-          </> : 'Waiting for P2...'}
+          </> : 'Waiting for Player...'}
       </Container2>
     )
   }
@@ -68,7 +73,7 @@ const PlayerInfo = (props) => {
               {clientName}: 
             </Name>
             {cardSvg}
-          </> : 'Waiting for P3...'}
+          </> : 'Waiting for Player...'}
       </Container3>
     )
   }
