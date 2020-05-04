@@ -104,7 +104,7 @@ class Game extends Component {
       cardHeight,
       cardHoveredHeight,
       cardSelectedHeight
-    })
+    });
   }
 
   setCards(newCard) {
@@ -113,17 +113,21 @@ class Game extends Component {
     }
 
     let {
+      cards,
       trumpValue,
       trumpTracker,
       validBids,
       currentBid,
-      cards
+      toggleBidButtons,
+      setValidBids,
+      updateCardsInHand
     } = this.props;
-    
+
     Cards.insertCard(cards, newCard, trumpValue, currentBid);
     Cards.newTrump(trumpTracker, validBids, newCard, currentBid, trumpValue);
-    this.props.setValidBids(validBids);
-    this.props.updateCardsInHand(cards, trumpTracker);
+    setValidBids(validBids);
+    updateCardsInHand(cards, trumpTracker);
+    toggleBidButtons(true);
   }
 
   receiveBottomCards(bottomCards) {

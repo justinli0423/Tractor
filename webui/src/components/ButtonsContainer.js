@@ -61,11 +61,14 @@ const CallBottomButtons = (props) => {
   }
 
   const setDoneBid = () => {
+    const { cards } = props;
     setDoneBidIO();
     props.toggleBidButtons(false);
     getClientTurnIO(enableTurnsListener);
     getTricksPlayedIO(enableTricksListener);
     getGeneratedTrumpIO(enableTrumpListener);
+    // resetting trump tracker after bidding
+    updateCardsInHand(cards, { 'S': 0, 'D': 0, 'C': 0, 'H': 0, 'SJ': 0, 'BJ': 0 });
   }
 
   const enableTrumpListener = (clientId, trumpCard) => {
