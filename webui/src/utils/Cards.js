@@ -191,7 +191,8 @@ export default class Cards {
         }
       }
     } else if (newCard[0] === trumpValue) {
-      trumpTracker[newCard[1]] += 1
+      console.log(trumpTracker);
+      trumpTracker[newCard[1]] += 1;
       if (!currentBid || (currentBid[0] === 1 && trumpTracker[newCard[1]] === 2)) {
         validBids.push([trumpTracker[newCard[1]], newCard[1]])
       }

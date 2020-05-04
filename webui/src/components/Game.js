@@ -112,14 +112,14 @@ class Game extends Component {
       return;
     }
 
-    const {
+    let {
       trumpValue,
       trumpTracker,
       validBids,
       currentBid,
       cards
     } = this.props;
-
+    
     Cards.insertCard(cards, newCard, trumpValue, currentBid);
     Cards.newTrump(trumpTracker, validBids, newCard, currentBid, trumpValue);
     this.props.setValidBids(validBids);
@@ -163,7 +163,7 @@ class Game extends Component {
       return;
     }
 
-    if (cards.length > 25 && !isSelected && numCardsSelected === 4) {
+    if (cards.length > 4 && !isSelected && numCardsSelected === 4) {
       window.alert('Maximum cards for bottom selected');
       return;
     }

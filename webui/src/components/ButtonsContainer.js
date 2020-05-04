@@ -94,6 +94,7 @@ const CallBottomButtons = (props) => {
   const emitReturnBottom = () => {
     const {
       cards,
+      trumpTracker,
       updateCardsInHand,
       toggleCardSelector,
       updateNumCardsSelected
@@ -109,7 +110,7 @@ const CallBottomButtons = (props) => {
     })
 
     console.log('cards sent back for bottom', bottomCards);
-    updateCardsInHand(cardsInHand);
+    updateCardsInHand(cardsInHand, trumpTracker);
     toggleCardSelector(false);
     updateNumCardsSelected(0);
     returnBottomIO(bottomCards);
@@ -119,11 +120,12 @@ const CallBottomButtons = (props) => {
     const {
       cards,
       updateCardsInHand,
+      trumpTracker,
       toggleCardSelector,
       updateNumCardsSelected
     } = props;
     if (isValidPlay) {
-      updateCardsInHand(cardsInHand);
+      updateCardsInHand(cardsInHand, trumpTracker);
       toggleCardSelector(false);
       updateNumCardsSelected(0);
     } else {
@@ -131,7 +133,7 @@ const CallBottomButtons = (props) => {
       updateCardsInHand(cards.map(cardObj => {
         cardObj.isSelected = false;
         return cardObj;
-      }))
+      }), trumpTracker);
     }
   }
 
@@ -202,7 +204,7 @@ const CallBottomButtons = (props) => {
           onClickCb={setDoneBid}
         />}
       {/* TODO: set num cards selected to 8 later */}
-      {props.numCardsSelected === 8 && props.cards.length > 25 &&
+      {props.numCardsSelected === 4 && props.cards.length > 4 &&
         <RegularButton
           id="finishBottomBtn"
           label="Finish Bottom"
