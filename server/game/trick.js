@@ -62,6 +62,8 @@ class Trick {
 
         if (this._trickSuit) {
             if (this._trickSuit === playSuit) {
+                console.log('trick:isValid - playNumDoubles', playNumDoubles);
+                console.log('trick:isValid - trickNumDoubles', this._trickNumDoubles);
                 if (playNumDoubles !== this._trickNumDoubles) {
                     if (this._hands[socketId].hasDouble(this._trickSuit, this._trickNumDoubles)) {
                         valid = false;
