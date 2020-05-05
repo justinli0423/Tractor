@@ -105,7 +105,7 @@ class SocketUtil {
     }
 
     subSetBid(socketId) {
-        // subSetBid(socketId, bidRound) {
+        console.log('waiting for bids')
         this.getSocket(socketId).on('newBid', (bid) => {
             console.log("Received bid of", bid, "from", this._sockets[socketId]);
             // cb(bid, socketId);
@@ -115,7 +115,6 @@ class SocketUtil {
     }
 
     subDoneBid(socketId) {
-        // subDoneBid(socketId, bidRound) {
         this.getSocket(socketId).on('doneBid', () => {
             console.log(`${this._sockets[socketId]} is done bidding.`);
             this.closeBidSubs(socketId)

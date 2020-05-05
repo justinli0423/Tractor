@@ -14,6 +14,7 @@ class Trick {
         this._maxRank = 0;
         this._trickSuit = null;
         this._trickNumCards = 0;
+        this._trickNumDoubles = 0;
         this._winner = null;
         this._points = 0;
     }
@@ -23,15 +24,15 @@ class Trick {
     }
 
     isValid(socketId, play, i) {
-        // console.log(typeof this)
-        // console.log(this)
+
         let valid;
         const trumpValue = this._trumpValue;
         const trumpSuit = this._trumpSuit;
         let playSuit = null;
         let playRank = 0;
-        // console.log('the trump value of this trick is :', trumpValue)
-        // console.log('the trump suit of this trick is:', trumpSuit)
+        let playNumDoubles = 0;
+        let considerRank = true;
+
 
         if (this._trickNumCards) {
             if (this._trickNumCards !== play.length) {
@@ -40,10 +41,8 @@ class Trick {
         }
 
         const cards = _.map(play, (card) => {
-            return new Card(card[0], card[1]);
+            return new Card(card[0], card[1])
         });
-
-        // console.log('trick:isvalid:cards', cards)
 
         const isAllTrump = _.filter(cards, (card) => {
             return card.suit === 'J' || card.value === trumpValue || card.suit === trumpSuit;
@@ -53,26 +52,30 @@ class Trick {
             return card.suit === cards[0].suit;
         }).length === cards.length || isAllTrump;
 
-        // console.log('the cards are all trump:', isAllTrump)
-        // console.log('the cards are the same suit:', isSameSuit)
-
         if (isAllTrump) {
             playSuit = 'T';
         } else if (isSameSuit) {
             playSuit = cards[0].suit;
         }
 
-        // console.log('The play suit is:', playSuit)
+        playNumDoubles = countDoubles(cards);
 
         if (this._trickSuit) {
-
-            // console.log('trick:isValid - Went in code block with this._trickSuit', this._trickSuit)
-
             if (this._trickSuit === playSuit) {
+                if (playNumDoubles !== this._trickNumDoubles) {
+                    if (this._hands[socketId].hasDouble(this._trickSuit, this._trickNumDoubles)) {
+                        valid = false;
+                        considerRank = false;
+                    }
+                }
                 valid = true;
             } else if (playSuit === 'T') {
                 valid = !this._hands[socketId].hasSingle(this._trickSuit, 1);
+                if (playNumDoubles !== this._trickNumDoubles) {
+                    considerRank = false;
+                }
             } else {
+                considerRank = false;
                 const sameSuit = (card) => {
                     return card.suit === this._trickSuit;
                 }
@@ -81,14 +84,11 @@ class Trick {
             }
 
         } else {
-            if (isAllTrump) {
+            if (isSameSuit) {
                 valid = true;
-                this._trickSuit = 'T';
+                this._trickSuit = playSuit;
                 this._trickNumCards = cards.length;
-            } else if (isSameSuit) {
-                valid = true;
-                this._trickSuit = cards[0].suit;
-                this._trickNumCards = cards.length;
+                this._trickNumDoubles = playNumDoubles;
             } else {
                 return false;
             }
@@ -97,11 +97,9 @@ class Trick {
         if (valid) {
             this._cards[socketId] = cards;
 
-            // console.log('trick:isvalid - Hand before removing cards', this._hands[socketId])
             _.forEach(cards, (card) => {
                 this._hands[socketId].removeCard(card);
             })
-            // console.log('trick:isvalid - Hand after removing cards', this._hands[socketId])
 
             this._points += _.reduce(_.map(cards, function (card) {
                 return card.getPoints();
@@ -136,6 +134,15 @@ class Trick {
         })
         return cards;
     }
+
+    countDoubles(cards) {
+        let count = 0;
+        for (let i = 0; i < cards.length - 1; i++) {
+            count += cards[i].isEmpty(cards[i + 1]) ? 1 : 0;
+        }
+        return count;
+    }
+
 
     get points() {
         return this._points;
