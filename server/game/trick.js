@@ -58,7 +58,7 @@ class Trick {
             playSuit = cards[0].suit;
         }
 
-        playNumDoubles = countDoubles(cards);
+        playNumDoubles = this.countDoubles(cards);
 
         if (this._trickSuit) {
             if (this._trickSuit === playSuit) {
@@ -138,7 +138,7 @@ class Trick {
     countDoubles(cards) {
         let count = 0;
         for (let i = 0; i < cards.length - 1; i++) {
-            count += cards[i].isEmpty(cards[i + 1]) ? 1 : 0;
+            count += cards[i].isEqual(cards[i + 1]) ? 1 : 0;
         }
         return count;
     }
