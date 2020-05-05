@@ -167,7 +167,8 @@ class Game extends Component {
       return;
     }
 
-    if (cards.length > 4 && !isSelected && numCardsSelected === 4) {
+    // numBottom
+    if (cards.length > 25 && !isSelected && numCardsSelected === 8) {
       window.alert('Maximum cards for bottom selected');
       return;
     }

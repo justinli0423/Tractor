@@ -84,6 +84,7 @@ class Trick {
             }
 
         } else {
+            console.log(`${constants.su.sockets[socketId]} started the trick.`)
             if (isSameSuit) {
                 valid = true;
                 this._trickSuit = playSuit;
@@ -107,14 +108,14 @@ class Trick {
                 return memo + num
             }, 0);
 
-            if (isSameSuit) {
+            if (considerRank) {
                 playRank = _.reduce(_.map(cards, function (card) {
                     return card.getRank.call(card, trumpValue, trumpSuit);
                 }), function (memo, num) {
                     return memo + num
                 }, 0);
-                console.log('The play', cards, `has rank ${playRank}.`)
             }
+            console.log('The play', cards, `has rank ${playRank}.`)
 
             if (playRank > this._maxRank) {
                 this._maxRank = playRank;
