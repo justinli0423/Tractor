@@ -1,23 +1,23 @@
 {
   "files": {
-    "main.css": "/Jli0423/tractor/webui/static/css/main.706e7acd.chunk.css",
-    "main.js": "/Jli0423/tractor/webui/static/js/main.3284d121.chunk.js",
-    "main.js.map": "/Jli0423/tractor/webui/static/js/main.3284d121.chunk.js.map",
-    "runtime-main.js": "/Jli0423/tractor/webui/static/js/runtime-main.032a1515.js",
-    "runtime-main.js.map": "/Jli0423/tractor/webui/static/js/runtime-main.032a1515.js.map",
-    "static/js/2.dcd692a5.chunk.js": "/Jli0423/tractor/webui/static/js/2.dcd692a5.chunk.js",
-    "static/js/2.dcd692a5.chunk.js.map": "/Jli0423/tractor/webui/static/js/2.dcd692a5.chunk.js.map",
-    "index.html": "/Jli0423/tractor/webui/index.html",
-    "precache-manifest.6fbe864a2db35cb5c06f15fa8587f70f.js": "/Jli0423/tractor/webui/precache-manifest.6fbe864a2db35cb5c06f15fa8587f70f.js",
-    "service-worker.js": "/Jli0423/tractor/webui/service-worker.js",
-    "static/css/main.706e7acd.chunk.css.map": "/Jli0423/tractor/webui/static/css/main.706e7acd.chunk.css.map",
-    "static/js/2.dcd692a5.chunk.js.LICENSE.txt": "/Jli0423/tractor/webui/static/js/2.dcd692a5.chunk.js.LICENSE.txt",
-    "static/media/tractor_logo.svg": "/Jli0423/tractor/webui/static/media/tractor_logo.e6e625d4.svg"
+    "main.css": "/tractor/static/css/main.706e7acd.chunk.css",
+    "main.js": "/tractor/static/js/main.23841cf9.chunk.js",
+    "main.js.map": "/tractor/static/js/main.23841cf9.chunk.js.map",
+    "runtime-main.js": "/tractor/static/js/runtime-main.d06bd7a1.js",
+    "runtime-main.js.map": "/tractor/static/js/runtime-main.d06bd7a1.js.map",
+    "static/js/2.b30540b4.chunk.js": "/tractor/static/js/2.b30540b4.chunk.js",
+    "static/js/2.b30540b4.chunk.js.map": "/tractor/static/js/2.b30540b4.chunk.js.map",
+    "index.html": "/tractor/index.html",
+    "precache-manifest.5d00cabdc43766e54e1437c52072532f.js": "/tractor/precache-manifest.5d00cabdc43766e54e1437c52072532f.js",
+    "service-worker.js": "/tractor/service-worker.js",
+    "static/css/main.706e7acd.chunk.css.map": "/tractor/static/css/main.706e7acd.chunk.css.map",
+    "static/js/2.b30540b4.chunk.js.LICENSE.txt": "/tractor/static/js/2.b30540b4.chunk.js.LICENSE.txt",
+    "static/media/tractor_logo.svg": "/tractor/static/media/tractor_logo.e6e625d4.svg"
   },
   "entrypoints": [
-    "static/js/runtime-main.032a1515.js",
-    "static/js/2.dcd692a5.chunk.js",
+    "static/js/runtime-main.d06bd7a1.js",
+    "static/js/2.b30540b4.chunk.js",
     "static/css/main.706e7acd.chunk.css",
-    "static/js/main.3284d121.chunk.js"
+    "static/js/main.23841cf9.chunk.js"
   ]
 }
