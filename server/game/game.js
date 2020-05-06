@@ -4,9 +4,9 @@ const Round = require('./round');
 const Deck = require('./deck');
 
 // const levels = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
-const levels = ['2', 'K', 'A'];
-const switchPoints = 32;
-const levelPoints = 16;
+const levels = ['2', '5', '10', 'K'];
+const switchPoints = 80;
+const levelPoints = 40;
 
 class Game {
     constructor(players) {

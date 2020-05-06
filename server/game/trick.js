@@ -62,38 +62,44 @@ class Trick {
 
         if (this._trickSuit) {
             if (this._trickSuit === playSuit) {
-                console.log('trick:isValid - playNumDoubles', playNumDoubles);
-                console.log('trick:isValid - trickNumDoubles', this._trickNumDoubles);
-                if (playNumDoubles !== this._trickNumDoubles) {
-                    console.log(this._hands[socketId]);
-                    console.log('trick:isValid - player has less than trickNumDoubles', this._hands[socketId].hasDouble(this._trickSuit, this._trickNumDoubles));
+                console.log('trick.isValid - player played same suit');
+                console.log('trick.isValid - playNumDoubles', playNumDoubles);
+                console.log('trick.isValid - trickNumDoubles', this._trickNumDoubles);
+                if (playNumDoubles < this._trickNumDoubles) {
                     if (this._hands[socketId].hasDouble(this._trickSuit, this._trickNumDoubles)) {
+                        console.log('trick.isValid - player has more doubles to play', this._hands[socketId].hasDouble(this._trickSuit, this._trickNumDoubles));
                         valid = false;
-                        console.log('trick.isValid - valid1', valid)
                     } else {
+                        console.log('trick.isValid - player has no more doubles to play')
                         valid = true;
                     }
                     considerRank = false;
-                    console.log('trick.isValid - considerRank1', considerRank)
                 } else {
                     valid = true;
                 }
             } else if (playSuit === 'T') {
+                console.log(`trick.isValid - played trump`)
                 valid = !this._hands[socketId].hasSingle(this._trickSuit, 1);
+                console.log(`trick.isValid - player has no more ${this._trickSuit}'s?`, valid)
                 if (valid && playNumDoubles !== this._trickNumDoubles) {
                     considerRank = false;
                 }
             } else {
                 considerRank = false;
                 const sameSuit = (card) => {
-                    return card.suit === this._trickSuit;
+                    if (this._trickSuit !== 'T') {
+                        return card.suit === this._trickSuit;
+                    } else {
+                        return card.suit === 'J' || card.value === trumpValue || card.suit === trumpSuit;
+                    }
                 }
                 const num = _.filter(cards, sameSuit.bind(this)).length
+                console.log(`trick.isValid - played ${num} ${this._trickSuit}'s`)
                 valid = !this._hands[socketId].hasSingle(this._trickSuit, num + 1);
+                console.log(`trick.isValid - player has more than ${num} ${this._trickSuit}'s?`, valid)
             }
 
         } else {
-            console.log(`${constants.su.sockets[socketId]} started the trick.`)
             if (isSameSuit) {
                 valid = true;
                 this._trickSuit = playSuit;
@@ -133,6 +139,8 @@ class Trick {
                 this._winner = i;
             }
 
+        } else {
+            console.log('trick.isValid - trick is invalid. players hand:', this._hands[socketId]);
         }
         return valid;
     }
