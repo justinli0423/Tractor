@@ -5,6 +5,9 @@ var socket = null;
 
 export function connectToSocketIO(getStatusCb, name) {
   socket = io(ENDPOINT);
+  if (!socket.connected) {
+    socket = io('tractorio.web.app:443');
+  }
   getConnectionStatus(getStatusCb, name);
   setSocketIdIO(name);
 }
@@ -76,5 +79,8 @@ export function getTrumpValueIO(setTrumpValueCb) {
 }
 
 function getConnectionStatus(setStatusCb, name) {
-  socket.on('connectionStatus', status => setStatusCb(status, socket.id, name));
+  socket.on('connectionStatus', status => {
+    console.log('connected');
+    setStatusCb(status, socket.id, name);
+  });
 }
