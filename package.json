@@ -7,7 +7,9 @@
     "ui": "cd webui && npm start",
     "server": "nodemon server/app.js --watch server/",
     "start": "node server/app.js",
-    "debug": "nodemon --inspect server/app.js --watch server/"
+    "debug": "nodemon --inspect server/app.js --watch server/",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "repository": {
     "type": "git",
@@ -19,7 +21,7 @@
   "bugs": {
     "url": "https://github.com/Jli0423/Tractor/issues"
   },
-  "homepage": "https://github.com/Jli0423/Tractor#readme",
+  "homepage": "https://github.com/Jli0423/tractor",
   "dependencies": {
     "express": "^4.17.1",
     "http": "0.0.1-security",
@@ -27,6 +29,7 @@
     "underscore": "^1.10.2"
   },
   "devDependencies": {
+    "gh-pages": "^2.2.0",
     "nodemon": "^2.0.3"
   }
 }
