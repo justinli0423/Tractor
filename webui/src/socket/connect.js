@@ -6,7 +6,7 @@ var socket = null;
 export function connectToSocketIO(getStatusCb, name) {
   socket = io(ENDPOINT);
   if (!socket.connected) {
-    socket = io('tractorio.web.app:443');
+    socket = io('tractorserver.herokuapp.com');
   }
   getConnectionStatus(getStatusCb, name);
   setSocketIdIO(name);
