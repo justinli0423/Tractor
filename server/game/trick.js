@@ -70,11 +70,11 @@ class Trick {
                     if (this._hands[socketId].hasDouble(this._trickSuit, this._trickNumDoubles)) {
                         valid = false;
                         console.log('trick.isValid - valid1', valid)
-                        considerRank = false;
-                        console.log('trick.isValid - considerRank1', considerRank)
                     } else {
                         valid = true;
                     }
+                    considerRank = false;
+                    console.log('trick.isValid - considerRank1', considerRank)
                 } else {
                     valid = true;
                 }
