@@ -54,6 +54,8 @@ class Hand {
     }
 
     hasDouble(suit, n = 1) {
+        console.log('deck.hasDouble - suit, n', suit, n)
+        console.log(this._doubles[suit].length)
         return this._doubles[suit].length >= n;
     }
 
