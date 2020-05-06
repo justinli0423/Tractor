@@ -6,6 +6,7 @@
   "scripts": {
     "ui": "cd webui && npm start",
     "server": "nodemon server/app.js --watch server/",
+    "start": "node server/app.js",
     "debug": "nodemon --inspect server/app.js --watch server/"
   },
   "repository": {
