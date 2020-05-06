@@ -65,15 +65,22 @@ class Trick {
                 console.log('trick:isValid - playNumDoubles', playNumDoubles);
                 console.log('trick:isValid - trickNumDoubles', this._trickNumDoubles);
                 if (playNumDoubles !== this._trickNumDoubles) {
+                    console.log(this._hands[socketId]);
+                    console.log('trick:isValid - player has less than trickNumDoubles', this._hands[socketId].hasDouble(this._trickSuit, this._trickNumDoubles));
                     if (this._hands[socketId].hasDouble(this._trickSuit, this._trickNumDoubles)) {
                         valid = false;
+                        console.log('trick.isValid - valid1', valid)
                         considerRank = false;
+                        console.log('trick.isValid - considerRank1', considerRank)
+                    } else {
+                        valid = true;
                     }
+                } else {
+                    valid = true;
                 }
-                valid = true;
             } else if (playSuit === 'T') {
                 valid = !this._hands[socketId].hasSingle(this._trickSuit, 1);
-                if (playNumDoubles !== this._trickNumDoubles) {
+                if (valid && playNumDoubles !== this._trickNumDoubles) {
                     considerRank = false;
                 }
             } else {
@@ -109,6 +116,8 @@ class Trick {
             }), function (memo, num) {
                 return memo + num
             }, 0);
+
+            console.log('trick.isValid - considerRank2', considerRank)
 
             if (considerRank) {
                 playRank = _.reduce(_.map(cards, function (card) {
