@@ -131,6 +131,9 @@ const CallBottomButtons = (props) => {
       updateCardsInHand(cardsInHand, trumpTracker);
       toggleCardSelector(false);
       updateNumCardsSelected(0);
+      if (cardsInHand.length === 0) {
+        setCurrentBid(null, null);
+      }
     } else {
       alert('Invalid Trick');
       updateCardsInHand(cards.map(cardObj => {
