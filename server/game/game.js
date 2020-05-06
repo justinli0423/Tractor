@@ -20,13 +20,16 @@ class Game {
         this._declarer = null;
     }
 
-    newRound(level = null) {
+    newRound() {
 
         if (this._round) {
             this._roundNumber++;
             let opponentPoints = this._round.opponentPoints;
+            console.log(`game.newRound - Opponent Points: ${opponentPoints}`);
             this._declarer = opponentPoints >= switchPoints ? this._players[1] : this._players[2];
+            console.log(`game.newRound - Next declarer is ${constants.su.sockets[this._declarer]}`);
             const team = _.contains(this._teams[0], this._declarer) ? 0 : 1;
+            console.log(`game.newRound - declarers' original level: ${levels[this._levels[team]]}`);
             let levelIncrease = 0;
             if (opponentPoints === switchPoints + levelPoints * 3 || opponentPoints === 0) {
                 levelIncrease = 3;
@@ -36,7 +39,8 @@ class Game {
             } else if (opponentPoints >= switchPoints + levelPoints || opponentPoints <= switchPoints) {
                 levelIncrease = 1;
             }
-            this._levels[team] = (this._levels[team] + levelIncrease) % levels.length
+            this._levels[team] = (this._levels[team] + levelIncrease) % levels.length;
+            console.log(`game.newRound - declarers' new level: ${levels[this._levels[team]]}`);
             this.rotatePlayers();
             console.log('game.newRound - deck', this._deck.numCards)
             this._round = new Round(this._deck, this._players, levels[this._levels[team]], this._roundNumber);
