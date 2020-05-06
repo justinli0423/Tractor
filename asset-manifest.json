@@ -1,23 +1,23 @@
 {
   "files": {
-    "main.css": "/Tractor/static/css/main.706e7acd.chunk.css",
-    "main.js": "/Tractor/static/js/main.0399c48d.chunk.js",
-    "main.js.map": "/Tractor/static/js/main.0399c48d.chunk.js.map",
-    "runtime-main.js": "/Tractor/static/js/runtime-main.af918e0e.js",
-    "runtime-main.js.map": "/Tractor/static/js/runtime-main.af918e0e.js.map",
-    "static/js/2.73fb4aaa.chunk.js": "/Tractor/static/js/2.73fb4aaa.chunk.js",
-    "static/js/2.73fb4aaa.chunk.js.map": "/Tractor/static/js/2.73fb4aaa.chunk.js.map",
-    "index.html": "/Tractor/index.html",
-    "precache-manifest.9aa84b329bc11f2f4879c9cebe99cda0.js": "/Tractor/precache-manifest.9aa84b329bc11f2f4879c9cebe99cda0.js",
-    "service-worker.js": "/Tractor/service-worker.js",
-    "static/css/main.706e7acd.chunk.css.map": "/Tractor/static/css/main.706e7acd.chunk.css.map",
-    "static/js/2.73fb4aaa.chunk.js.LICENSE.txt": "/Tractor/static/js/2.73fb4aaa.chunk.js.LICENSE.txt",
-    "static/media/tractor_logo.svg": "/Tractor/static/media/tractor_logo.e6e625d4.svg"
+    "main.css": "/tractor/static/css/main.706e7acd.chunk.css",
+    "main.js": "/tractor/static/js/main.23841cf9.chunk.js",
+    "main.js.map": "/tractor/static/js/main.23841cf9.chunk.js.map",
+    "runtime-main.js": "/tractor/static/js/runtime-main.d06bd7a1.js",
+    "runtime-main.js.map": "/tractor/static/js/runtime-main.d06bd7a1.js.map",
+    "static/js/2.b30540b4.chunk.js": "/tractor/static/js/2.b30540b4.chunk.js",
+    "static/js/2.b30540b4.chunk.js.map": "/tractor/static/js/2.b30540b4.chunk.js.map",
+    "index.html": "/tractor/index.html",
+    "precache-manifest.5d00cabdc43766e54e1437c52072532f.js": "/tractor/precache-manifest.5d00cabdc43766e54e1437c52072532f.js",
+    "service-worker.js": "/tractor/service-worker.js",
+    "static/css/main.706e7acd.chunk.css.map": "/tractor/static/css/main.706e7acd.chunk.css.map",
+    "static/js/2.b30540b4.chunk.js.LICENSE.txt": "/tractor/static/js/2.b30540b4.chunk.js.LICENSE.txt",
+    "static/media/tractor_logo.svg": "/tractor/static/media/tractor_logo.e6e625d4.svg"
   },
   "entrypoints": [
-    "static/js/runtime-main.af918e0e.js",
-    "static/js/2.73fb4aaa.chunk.js",
+    "static/js/runtime-main.d06bd7a1.js",
+    "static/js/2.b30540b4.chunk.js",
     "static/css/main.706e7acd.chunk.css",
-    "static/js/main.0399c48d.chunk.js"
+    "static/js/main.23841cf9.chunk.js"
   ]
 }
