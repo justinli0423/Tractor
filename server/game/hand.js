@@ -44,27 +44,25 @@ class Hand {
             }
         }
         const suits = ['T', 'S', 'D', 'C', 'H']
-        console.log(this._singles, this._doubles);
-        for (const suit in suits) {
-            _.sortBy(this._doubles[suits[suit]], (card) => {
+        for (let i = 0; i < 5; i++) {
+            this._doubles[suits[i]] = _.sortBy(this._doubles[suits[i]], (card) => {
                 return card.getRank(this._trumpValue, this._trumpSuit);
             });
-            _.sortBy(this._singles[suits[suit]], (card) => {
+            this._singles[suits[i]] = _.sortBy(this._singles[suits[i]], (card) => {
                 return card.getRank(this._trumpValue, this._trumpSuit);
             });
         }
-        console.log(this._singles, this._doubles);
     }
 
     get numCards() {
         return this._numCards;
     }
 
-    hasSingle(suit, n = 1) {
+    hasSingle(suit, n) {
         return this._singles[suit].length >= n;
     }
 
-    hasDouble(suit, n = 1) {
+    hasDouble(suit, n) {
         console.log('deck.hasDouble - suit, n', suit, n)
         console.log(this._doubles[suit].length)
         return this._doubles[suit].length >= n;

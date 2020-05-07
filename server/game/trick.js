@@ -75,7 +75,7 @@ class Trick {
                 console.log('trick.isValid - playNumDoubles', playNumDoubles);
                 console.log('trick.isValid - trickNumDoubles', this._trickNumDoubles);
                 if (playNumDoubles < this._trickNumDoubles) {
-                    if (this._hands[socketId].hasDouble(this._trickSuit, this._trickNumDoubles)) {
+                    if (this._hands[socketId].hasDouble(this._trickSuit, playNumDoubles + 1)) {
                         console.log('trick.isValid - player has more doubles to play', this._hands[socketId].hasDouble(this._trickSuit, this._trickNumDoubles));
                         valid = false;
                     } else {
@@ -132,9 +132,7 @@ class Trick {
             }), function (memo, num) {
                 return memo + num
             }, 0);
-
-            console.log('trick.isValid - considerRank2', considerRank)
-
+            
             if (considerRank) {
                 playRank = _.reduce(_.map(cards, function (card) {
                     return card.getRank.call(card, trumpValue, trumpSuit);
@@ -143,6 +141,8 @@ class Trick {
                 }, 0);
             }
             console.log('The play', cards, `has rank ${playRank}.`)
+            console.log(`trickNumTractor; ${this._trickNumTractors}; trickNumDoubles: ${this._trickNumDoubles}; trickNumCards: ${this._trickNumCards}`)
+            console.log(`playNumTractor; ${playNumTractors}; playNumDoubles: ${playNumDoubles}; playNumCards: ${play.length}`)
 
             if (playRank > this._maxRank) {
                 this._maxRank = playRank;
@@ -258,15 +258,18 @@ class Trick {
     }
 
     countTractors(tractors) {
-        // let numTractors = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        let tracker = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
         let numTractors = [];
         for (let i = 0; i < tractors.length; i++) {
-            if (numTractors[tractors[i].length]) {
-                numTractors[tractors[i].length]++;
-            } else {
-                numTractors[tractors[i].length] = 1
-            }
-            // numTractors[tractors[i].length]++;
+            // if (numTractors[tractors[i].length]) {
+            //     numTractors[tractors[i].length]++;
+            // } else {
+            //     numTractors[tractors[i].length] = 1
+            // }
+            tracker[tractors[i].length]++;
+        }
+        for (let i = 0; i < numTractors.length; i++) {
+            numTractors.push([tracker[i], i])
         }
         return numTractors
     }
