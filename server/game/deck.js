@@ -2,9 +2,9 @@ const _ = require('underscore');
 const Card = require('./cards');
 
 const values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
-// const values = ['2', 'A'];
+// const values = ['2', '5', '10', 'K'];
 const suits = ['S', 'D', 'C', 'H'];
-// const suits = ['S'];
+// const suits = ['S', 'D'];
 const jokers = [new Card('S', 'J'), new Card('B', 'J')];
 
 class Deck {
