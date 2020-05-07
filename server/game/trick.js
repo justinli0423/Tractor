@@ -2,6 +2,7 @@ const _ = require('underscore');
 const constants = require('../constants');
 const Card = require('./cards');
 
+
 class Trick {
     constructor(players, hands, starter, trumpValue, trumpSuit) {
         console.log('New Trick');
@@ -15,6 +16,7 @@ class Trick {
         this._trickSuit = null;
         this._trickNumCards = 0;
         this._trickNumDoubles = 0;
+        this._trickNumTractors = {};
         this._winner = null;
         this._points = 0;
     }
@@ -31,8 +33,10 @@ class Trick {
         let playSuit = null;
         let playRank = 0;
         let playNumDoubles = 0;
+        let playDoubles;
+        let playNumTractors;
+        let playTractors;
         let considerRank = true;
-
 
         if (this._trickNumCards) {
             if (this._trickNumCards !== play.length) {
@@ -58,7 +62,12 @@ class Trick {
             playSuit = cards[0].suit;
         }
 
-        playNumDoubles = this.countDoubles(cards);
+        playDoubles = this.getDoubles(cards);
+        playNumDoubles = playDoubles.length;
+        playTractors = this.getTractors(playDoubles, trumpValue, trumpSuit);
+        playNumTractors = this.countTractors(playTractors);
+
+
 
         if (this._trickSuit) {
             if (this._trickSuit === playSuit) {
@@ -66,7 +75,7 @@ class Trick {
                 console.log('trick.isValid - playNumDoubles', playNumDoubles);
                 console.log('trick.isValid - trickNumDoubles', this._trickNumDoubles);
                 if (playNumDoubles < this._trickNumDoubles) {
-                    if (this._hands[socketId].hasDouble(this._trickSuit, this._trickNumDoubles)) {
+                    if (this._hands[socketId].hasDouble(this._trickSuit, playNumDoubles + 1)) {
                         console.log('trick.isValid - player has more doubles to play', this._hands[socketId].hasDouble(this._trickSuit, this._trickNumDoubles));
                         valid = false;
                     } else {
@@ -105,6 +114,7 @@ class Trick {
                 this._trickSuit = playSuit;
                 this._trickNumCards = cards.length;
                 this._trickNumDoubles = playNumDoubles;
+                this._trickNumTractors = playNumTractors;
             } else {
                 return false;
             }
@@ -122,9 +132,7 @@ class Trick {
             }), function (memo, num) {
                 return memo + num
             }, 0);
-
-            console.log('trick.isValid - considerRank2', considerRank)
-
+            
             if (considerRank) {
                 playRank = _.reduce(_.map(cards, function (card) {
                     return card.getRank.call(card, trumpValue, trumpSuit);
@@ -133,6 +141,8 @@ class Trick {
                 }, 0);
             }
             console.log('The play', cards, `has rank ${playRank}.`)
+            console.log(`trickNumTractor; ${this._trickNumTractors}; trickNumDoubles: ${this._trickNumDoubles}; trickNumCards: ${this._trickNumCards}`)
+            console.log(`playNumTractor; ${playNumTractors}; playNumDoubles: ${playNumDoubles}; playNumCards: ${play.length}`)
 
             if (playRank > this._maxRank) {
                 this._maxRank = playRank;
@@ -155,14 +165,114 @@ class Trick {
         return cards;
     }
 
-    countDoubles(cards) {
-        let count = 0;
-        for (let i = 0; i < cards.length - 1; i++) {
-            count += cards[i].isEqual(cards[i + 1]) ? 1 : 0;
+    getDoubles(cards) {
+        let doubles = [];
+        let i = 0;
+        while (i < cards.length - 1) {
+            if (cards[i].isEqual(cards[i + 1])) {
+                doubles.push(cards[i]);
+                i += 2;
+            } else {
+                i++;
+            }
         }
-        return count;
+        return doubles;
     }
 
+    getTractors(doubles, trumpValue, trumpSuit) {
+        let order = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
+        order.splice(_.indexOf(order, trumpValue), 1);
+
+        let tractors = [];
+
+        if (doubles.length < 2) {
+            return tractors;
+        }
+
+        let currTractor = [doubles[0]];
+        let i = 1;
+
+        while (i < doubles.length) {
+            // big joker
+            if (currTractor[currTractor.length - 1].value === 'B') {
+                if (doubles[i].value === 'S') {
+                    currTractor.push(doubles[i])
+                } else {
+                    if (currTractor.length >= 2) {
+                        tractors.push(currTractor);
+                    }
+                    currTractor = [doubles[i]];
+                }
+                i++;
+            // small joker
+            } else if (currTractor[currTractor.length - 1].value === 'S') {
+                if (doubles[i].value === trumpValue && doubles[i].suit === trumpSuit) {
+                    currTractor.push(doubles[i])
+                } else {
+                    if (currTractor.length >= 2) {
+                        tractors.push(currTractor);
+                    }
+                    currTractor = [doubles[i]];
+                }
+                i++;
+            // big trumpValue
+            } else if (currTractor[currTractor.length - 1].value === trumpValue && currTractor[currTractor.length - 1].suit === trumpSuit) {
+                if (doubles[i].value === trumpValue) {
+                    currTractor.push(doubles[i])
+                } else {
+                    if (currTractor.length >= 2) {
+                        tractors.push(currTractor);
+                    }
+                    currTractor = [doubles[i]];
+                }
+                i++;
+            // small trumpValue
+            } else if (currTractor[currTractor.length - 1].value === trumpValue) {
+                if (doubles[i].value === order[order.length - 1]) {
+                    currTractor.push(doubles[i])
+                } else if (doubles[i].value !== trumpValue) {
+                    if (currTractor.length >= 2) {
+                        tractors.push(currTractor);
+                    }
+                    currTractor = [doubles[i]];
+                }
+                i++;
+            // everything else, including non trump
+            } else {
+                const j = _.indexOf(order, currTractor[currTractor.length - 1].value)
+                if (doubles[i].value === order[j - 1]) {
+                    currTractor.push(doubles[i])
+                } else {
+                    if (currTractor.length >= 2) {
+                        tractors.push(currTractor);
+                    }
+                    currTractor = [doubles[i]];
+                }
+                i++;
+            }
+        }
+        if (currTractor.length >= 2) {
+            tractors.push(currTractor);
+        }
+        return tractors;
+    }
+
+    countTractors(tractors) {
+        let tracker = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        let numTractors = [];
+        for (let i = 0; i < tractors.length; i++) {
+            // if (numTractors[tractors[i].length]) {
+            //     numTractors[tractors[i].length]++;
+            // } else {
+            //     numTractors[tractors[i].length] = 1
+            // }
+            tracker[tractors[i].length]++;
+        }
+        for (let i = 0; i < numTractors.length; i++) {
+            numTractors.push([tracker[i], i])
+        }
+        return numTractors
+    }
 
     get points() {
         return this._points;
@@ -171,7 +281,6 @@ class Trick {
     get winner() {
         return this._winner;
     }
-
 
 }
 
