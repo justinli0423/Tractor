@@ -43,6 +43,17 @@ class Hand {
                 this._singles[card.suit].push(card);
             }
         }
+        const suits = ['T', 'S', 'D', 'C', 'H']
+        console.log(this._singles, this._doubles);
+        for (const suit in suits) {
+            _.sortBy(this._doubles[suits[suit]], (card) => {
+                return card.getRank(this._trumpValue, this._trumpSuit);
+            });
+            _.sortBy(this._singles[suits[suit]], (card) => {
+                return card.getRank(this._trumpValue, this._trumpSuit);
+            });
+        }
+        console.log(this._singles, this._doubles);
     }
 
     get numCards() {
