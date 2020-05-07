@@ -3,8 +3,8 @@ const constants = require('../constants');
 const Round = require('./round');
 const Deck = require('./deck');
 
-const levels = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
-// const levels = ['2', '5', '10', 'K'];
+// const levels = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
+const levels = ['2', 'A'];
 const switchPoints = 80;
 const levelPoints = 40;
 

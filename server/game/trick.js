@@ -84,7 +84,18 @@ class Trick {
                     }
                     considerRank = false;
                 } else {
+                    // if (!_.isEqual(this._trickNumTractors, playNumTractors)) {
+                    //     if (has more tractors) {
+                    //         console.log('trick.isValid - Player has more tractors.')
+                    //         valid = true;
+                    //     } else {
+                    //         console.log('trick.isValid - Player has no more tractors.')
+                    //         valid = true
+                    //     }
+                    //     considerRank = false;
+                    // } else {
                     valid = true;
+                    // }
                 }
             } else if (playSuit === 'T') {
                 console.log(`trick.isValid - played trump`)
