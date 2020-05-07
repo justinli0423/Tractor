@@ -25,7 +25,8 @@ export default class Cards {
   }
 
   constructor(path) {
-    this.path = path;
+    // this.path = path;
+    this.path = 'https://jli0423.github.io/Tractor/cardsSVG/';
     this.suits = new Set(['H', 'C', 'S', 'D']); //hearts, clubs, spades, diamonds
     this.jokers = new Set(['S', 'B']); // Small, big
     this.cards = new Set(['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']);
