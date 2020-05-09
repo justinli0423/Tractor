@@ -217,7 +217,7 @@ class Trick {
             }
 
         } else {
-            console.log('trick.isValid - trick is invalid. players hand:', this._hands[socketId]);
+            // console.log('trick.isValid - trick is invalid. players hand:', this._hands[socketId]);
         }
         return valid;
     }
@@ -344,7 +344,9 @@ class Trick {
     getSingles(cards, doubles) {
         let singles = [];
         for (let i = 0; i < cards.length; i++) {
-            if (_.indexOf(doubles, cards[i]) === -1) {
+            if (_.findIndex(doubles, (card) => {
+                cards[i].isEqual(card)
+            }) === -1) {
                 singles.push(cards[i])
             }
         }
