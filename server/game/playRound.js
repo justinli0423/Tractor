@@ -27,6 +27,7 @@ class PlayRound {
             })
             console.log('Trick won by', constants.su._sockets[this._players[this._trickStarter]]);
             console.log('Opponent points:', this._opponentPoints)
+            constants.su.emitOpponentPoints(this._opponentPoints);
         }
 
         if (this._hands[this._players[0]].numCards > 0) {

@@ -81,6 +81,10 @@ class SocketUtil {
         constants.io.emit('cardsPlayed', cards);
     }
 
+    emitOpponentPoints(points) {
+        constants.io.emit('opponentPoints', points);
+    }
+
     // ------------ SOCKET SUBS ------------
 
     addSocket(socket) {

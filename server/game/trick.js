@@ -217,7 +217,9 @@ class Trick {
             }, 0);
 
             if (considerRank) {
-                if (this._trickNumDoubles > 0) {
+                if (playTractors.length > 0) {
+                    playRank = playTractors[0][0].getRank.call(playTractors[0][0], trumpValue, trumpSuit);
+                } else if (this._trickNumDoubles > 0) {
                     playRank = playDoubles[0].getRank.call(playDoubles[0], trumpValue, trumpSuit);
                 } else {
                     playRank = playSingles[0].getRank.call(playSingles[0], trumpValue, trumpSuit);
@@ -338,7 +340,9 @@ class Trick {
         if (currTractor.length >= 2) {
             tractors.push(currTractor);
         }
-        return tractors;
+        return _.sortBy(tractors, (list) => {
+            return -list.length;
+        });
     }
 
     countTractors(tractors) {
