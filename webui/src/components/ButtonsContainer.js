@@ -125,6 +125,7 @@ const CallBottomButtons = (props) => {
       updateCardsInHand,
       trumpTracker,
       toggleCardSelector,
+      setCurrentBid,
       updateNumCardsSelected
     } = props;
     if (isValidPlay) {
@@ -132,7 +133,7 @@ const CallBottomButtons = (props) => {
       toggleCardSelector(false);
       updateNumCardsSelected(0);
       if (cardsInHand.length === 0) {
-        setCurrentBid(null, null);
+        setCurrentBid('', []);
       }
     } else {
       alert('Invalid Trick');
@@ -263,6 +264,7 @@ const mapStateToProps = (state) => {
 }
 
 const AllButtonsContainer = styled.div`
+  z-index: 100;
   display: flex;
   flex-direction: column;
   align-items: center;

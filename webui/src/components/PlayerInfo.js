@@ -8,6 +8,7 @@ import {
   getId,
   getExistingClients,
   getExistingClientIds,
+  getClientTurn,
   getExistingTricks,
   getScreenSize,
   updateState
@@ -22,23 +23,26 @@ const PlayerInfo = (props) => {
     clientIds,
     appWidth,
     existingTricks,
+    currentClientTurn,
   } = props;
   const filteredClientIds = [];
   const myIndex = clientIds.indexOf(myId);
-  for(let i = 1; i < 4; i++) {
+  for (let i = 1; i < 4; i++) {
     filteredClientIds.push(clientIds[(myIndex + i) % 4]);
   }
 
 
-  const player1 = (clientName, cardSvg) => {
+  const player1 = (clientName, clientId, cardSvg) => {
     return (
       <Container1
+        clientTurn={currentClientTurn}
+        myId={clientId}
         appWidth={appWidth}
       >
         {filteredClientIds[0] ?
-          <> 
+          <>
             <Name>
-              {clientName}: 
+              {clientName}:
             </Name>
             {cardSvg}
           </> : 'Waiting for Player...'}
@@ -46,15 +50,17 @@ const PlayerInfo = (props) => {
     )
   }
 
-  const player2 = (clientName, cardSvg) => {
+  const player2 = (clientName, clientId, cardSvg) => {
     return (
       <Container2
+        clientTurn={currentClientTurn}
+        myId={clientId}
         appWidth={appWidth}
       >
         {filteredClientIds[1] ?
-          <> 
+          <>
             <Name>
-              {clientName}: 
+              {clientName}:
             </Name>
             {cardSvg}
           </> : 'Waiting for Player...'}
@@ -62,15 +68,17 @@ const PlayerInfo = (props) => {
     )
   }
 
-  const player3 = (clientName, cardSvg) => {
+  const player3 = (clientName, clientId, cardSvg) => {
     return (
       <Container3
+        clientTurn={currentClientTurn}
+        myId={clientId}
         appWidth={appWidth}
       >
         {filteredClientIds[2] ?
-          <> 
+          <>
             <Name>
-              {clientName}: 
+              {clientName}:
             </Name>
             {cardSvg}
           </> : 'Waiting for Player...'}
@@ -93,13 +101,19 @@ const PlayerInfo = (props) => {
       })
     }
 
-    return (index === 0) ? player1(clientName, allSvgs) :
-      (index === 1) ? player2(clientName, allSvgs) :
-        player3(clientName, allSvgs);
+    return (index === 0) ? player1(clientName, clientId, allSvgs) :
+      (index === 1) ? player2(clientName, clientId, allSvgs) :
+        player3(clientName, clientId, allSvgs);
   }
 
   return (
     <>
+      <PlayerSignal
+        myId={myId}
+        clientTurn={currentClientTurn}
+      >
+        Go
+      </PlayerSignal>
       {renderPlayerInfo(0)}
       {renderPlayerInfo(1)}
       {renderPlayerInfo(2)}
@@ -112,13 +126,14 @@ const mapStateToProps = (state) => {
   const clients = getExistingClients(state);
   const clientIds = getExistingClientIds(state);
   const existingTricks = getExistingTricks(state);
+  const currentClientTurn = getClientTurn(state);
   const { appWidth, appHeight } = getScreenSize(state);
   const updateNumState = updateState(state);
-  
   return {
     myId,
     clients,
     clientIds,
+    currentClientTurn,
     existingTricks,
     appWidth,
     appHeight,
@@ -159,6 +174,7 @@ const Container1 = styled(Container)`
   top: 50%;
   left: 0;
   transform: translateY(-50%);
+  border: ${props => (props.clientTurn && props.myId === props.clientTurn) ? '2px solid red' : '2px solid transparent'};
   margin-left: 30px;
 `;
 
@@ -166,6 +182,7 @@ const Container2 = styled(Container)`
   top: 0;
   left: 50%;
   transform: translateX(-50%);
+  border: ${props => (props.clientTurn && props.myId === props.clientTurn) ? '2px solid red' : '2px solid transparent'};
   margin-top: 30px;
 `;
 
@@ -173,7 +190,23 @@ const Container3 = styled(Container)`
   top: 50%;
   right: 0;
   transform: translateY(-50%);
+  border: ${props => (props.clientTurn && props.myId === props.clientTurn) ? '2px solid red' : '2px solid transparent'};
   margin-right: 30px;
+`;
+
+const PlayerSignal = styled.div`
+  z-index: 0;
+  position: absolute;
+  display: ${props => props.myId === props.clientTurn ? 'flex' : 'none'};
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+  color: rgba(255, 255, 255, .1);
+  font-size: 20rem;
 `;
 
 

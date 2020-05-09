@@ -1,7 +1,9 @@
 import _ from 'underscore';
 
 export default class Cards {
-  path = '';
+  // TODO: DEPLOYMENT CARDS PATH IS DIFFERENT
+  path = '/cardsSVG/';
+  // path = '/Tractor/cardsSVG/';
   suits = [];
   jokers = [];
   cards = [];
@@ -25,7 +27,7 @@ export default class Cards {
   }
 
   constructor(path) {
-    this.path = path;
+    // this.path = path;
     this.suits = new Set(['H', 'C', 'S', 'D']); //hearts, clubs, spades, diamonds
     this.jokers = new Set(['S', 'B']); // Small, big
     this.cards = new Set(['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']);

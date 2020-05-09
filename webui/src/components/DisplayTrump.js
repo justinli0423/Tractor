@@ -38,6 +38,13 @@ class DisplayTrump extends Component {
       return;
     }
 
+    if (currentBid.length === 0) {
+      this.setState({
+        bidHistory: []
+      });
+      return;
+    }
+
     bidHistory.push([currentBottomClient, currentBid]);
 
     this.setState({
