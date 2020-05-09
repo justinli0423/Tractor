@@ -140,7 +140,8 @@ class Trick {
                     if (playNumDoubles > 0) {
                         const lowestDouble = playDoubles[playDoubles.length - 1]
                         for (let i = 0; i < constants.numPlayers; i++) {
-                            const highestDouble = this._hands[this._players[i]].highestDouble(this._trickSuit)
+                            const hand = this._hands[this._players[i]];
+                            const highestDouble = hand.highestDouble.call(hand, playSuit);
                             if (lowestDouble.getRank(trumpValue, trumpSuit) < highestDouble.getRank(trumpValue, trumpSuit)) {
                                 valid = false;
                             }
