@@ -137,6 +137,9 @@ class Trick {
                         console.log(playSingles);
                         const lowestSingle = playSingles[playSingles.length - 1]
                         for (let i = 0; i < constants.numPlayers; i++) {
+                            if (this._players[i] === socketId) {
+                                continue;
+                            }
                             const hand = this._hands[this._players[i]];
                             if (hand.hasSingle(playSuit, 1)) {
                                 const highestSingle = hand.highestSingle.call(hand, playSuit);
@@ -151,6 +154,9 @@ class Trick {
                         console.log(playDoubles)
                         const lowestDouble = playDoubles[playDoubles.length - 1]
                         for (let i = 0; i < constants.numPlayers; i++) {
+                            if (this._players[i] === socketId) {
+                                continue;
+                            }
                             const hand = this._hands[this._players[i]];
                             if (hand.hasDouble(playSuit, 1)) {
                                 const highestDouble = hand.highestDouble.call(hand, playSuit);
