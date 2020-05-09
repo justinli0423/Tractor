@@ -66,11 +66,17 @@ class Trick {
         }
 
         playDoubles = this.getDoubles(cards);
+        console.log('trick.playDoubles', playDoubles);
         playNumDoubles = playDoubles.length;
+        console.log('trick.playNumDoubles', playNumDoubles)
         playTractors = this.getTractors(playDoubles, trumpValue, trumpSuit);
+        console.log('trick.playTractors', playTractors);
         playNumTractors = this.countTractors(playTractors);
+        console.log('trick.playNumTractors', playNumTractors);
         playSingles = this.getSingles(cards, playDoubles);
+        console.log('trick.playSingles', playSingles);
         playNumSingles = playSingles.length;
+        console.log('trick.playNumSingles', playNumSingles);
 
 
         if (this._trickSuit) {
@@ -132,9 +138,9 @@ class Trick {
                         const lowestSingle = playSingles[playSingles.length - 1]
                         for (let i = 0; i < constants.numPlayers; i++) {
                             const hand = this._hands[this._players[i]];
-                            const highestSingle = hand.highestSingle.call(hand, playSuit);
-                            console.log(i, highestSingle)
                             if (hand.hasSingle(playSuit, 1)) {
+                                const highestSingle = hand.highestSingle.call(hand, playSuit);
+                                console.log(i, highestSingle)
                                 if (lowestSingle.getRank(trumpValue, trumpSuit) < highestSingle.getRank(trumpValue, trumpSuit)) {
                                     valid = false;
                                 }
@@ -146,9 +152,9 @@ class Trick {
                         const lowestDouble = playDoubles[playDoubles.length - 1]
                         for (let i = 0; i < constants.numPlayers; i++) {
                             const hand = this._hands[this._players[i]];
-                            const highestDouble = hand.highestDouble.call(hand, playSuit);
-                            console.log(i, highestDouble)
                             if (hand.hasDouble(playSuit, 1)) {
+                                const highestDouble = hand.highestDouble.call(hand, playSuit);
+                                console.log(i, highestDouble)
                                 if (lowestDouble.getRank(trumpValue, trumpSuit) < highestDouble.getRank(trumpValue, trumpSuit)) {
                                     valid = false;
                                 }
