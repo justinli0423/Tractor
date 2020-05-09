@@ -16,7 +16,8 @@ class Trick {
         this._trickSuit = null;
         this._trickNumCards = 0;
         this._trickNumDoubles = 0;
-        this._trickNumTractors = {};
+        this._trickNumTractors = null;
+        this._trickNumTractorCards = 0;
         this._trickNumSingles = 0;
         this._winner = null;
         this._points = 0;
@@ -26,7 +27,7 @@ class Trick {
         constants.su.emitNextClient(this._players[(this._starter + i) % constants.numPlayers], i);
     }
 
-    isValid(socketId, play, i) {
+    isValid(socketId, play) {
 
         let valid = true;
         const trumpValue = this._trumpValue;
@@ -36,7 +37,10 @@ class Trick {
         let playNumDoubles = 0;
         let playDoubles;
         let playNumTractors;
+        let playNumTractorCards;
         let playTractors;
+        let playLongestTractor;
+        let playShortestTractor;
         let playNumSingles;
         let playSingles;
         let considerRank = true;
@@ -66,44 +70,61 @@ class Trick {
         }
 
         playDoubles = this.getDoubles(cards);
-        console.log('trick.playDoubles', playDoubles);
+        // console.log('trick.playDoubles', playDoubles);
         playNumDoubles = playDoubles.length;
-        console.log('trick.playNumDoubles', playNumDoubles)
+        // console.log('trick.playNumDoubles', playNumDoubles)
         playTractors = this.getTractors(playDoubles, trumpValue, trumpSuit);
-        console.log('trick.playTractors', playTractors);
+        // console.log('trick.playTractors', playTractors);
         playNumTractors = this.countTractors(playTractors);
-        console.log('trick.playNumTractors', playNumTractors);
+        // console.log('trick.playNumTractors', playNumTractors);
+        playNumTractorCards = _.reduce(_.mapObject(playNumTractors, (key, val) => {
+            return key * val;
+        }), (a, b) => {
+            return a + b;
+        })
+        // console.log('trick.playNumTractorCards', playNumTractorCards);
+        playLongestTractor = _.findLastIndex(playNumTractors, (i) => {
+            return i > 0;
+        })
+        playShortestTractor = _.findIndex(playNumTractors, (i) => {
+            return i > 0;
+        })
         playSingles = this.getSingles(cards, playDoubles);
-        console.log('trick.playSingles', playSingles);
+        // console.log('trick.playSingles', playSingles);
         playNumSingles = playSingles.length;
-        console.log('trick.playNumSingles', playNumSingles);
+        // console.log('trick.playNumSingles', playNumSingles);
 
 
         if (this._trickSuit) {
             if (this._trickSuit === playSuit) {
-                console.log('trick.isValid - player played same suit');
-                console.log('trick.isValid - playNumDoubles', playNumDoubles);
-                console.log('trick.isValid - trickNumDoubles', this._trickNumDoubles);
+                // console.log('trick.isValid - player played same suit');
+                // console.log('trick.isValid - playNumDoubles', playNumDoubles);
+                // console.log('trick.isValid - trickNumDoubles', this._trickNumDoubles);
                 if (playNumDoubles < this._trickNumDoubles) {
                     if (this._hands[socketId].hasDouble(this._trickSuit, playNumDoubles + 1)) {
-                        console.log('trick.isValid - player has more doubles to play', this._hands[socketId].hasDouble(this._trickSuit, this._trickNumDoubles));
+                        console.log('trick.isValid - Invalid - player has more doubles to play.');
                         valid = false;
                     } else {
-                        console.log('trick.isValid - player has no more doubles to play')
+                        console.log('trick.isValid - Valid - player has no more doubles to play')
                         valid = true;
                     }
                     considerRank = false;
                 } else {
                     if (!_.isEqual(this._trickNumTractors, playNumTractors)) {
-                        // has more tractors
-                        if (false) {
-                            console.log('trick.isValid - Player has more tractors.')
+                        // console.log(this._trickNumTractors, playNumTractors)
+                        if (playNumTractorCards >= this._trickNumTractorCards) {
+                            console.log('trick.isValid - Valid - Player played enough tractors.')
                             valid = true;
+                            considerRank = true;
+                        } else if (this._hands[socketId].hasTractor(this._trickSuit, playNumTractorCards)) {
+                            console.log('trick.isValid - Invalid - Player has more tractors.')
+                            valid = false;
+                            considerRank = false;
                         } else {
-                            console.log('trick.isValid - Player has no more tractors.')
+                            console.log('trick.isValid - Valid - Player has no more tractors.')
                             valid = true
+                            considerRank = false;
                         }
-                        considerRank = false;
                     } else {
                         valid = true;
                     }
@@ -129,12 +150,11 @@ class Trick {
                 valid = !this._hands[socketId].hasSingle(this._trickSuit, num + 1);
                 console.log(`trick.isValid - player has more than ${num} ${this._trickSuit}'s?`, valid)
             }
-
         } else {
             if (isSameSuit) {
+                // if (false) {
                 if (playNumSingles >= 2 || playNumSingles + playNumDoubles >= 2) {
                     if (playNumSingles > 0) {
-                        console.log(playSingles);
                         const lowestSingle = playSingles[playSingles.length - 1]
                         for (let i = 0; i < constants.numPlayers; i++) {
                             if (this._players[i] === socketId) {
@@ -143,15 +163,14 @@ class Trick {
                             const hand = this._hands[this._players[i]];
                             if (hand.hasSingle(playSuit, 1)) {
                                 const highestSingle = hand.highestSingle.call(hand, playSuit);
-                                console.log(i, highestSingle)
                                 if (lowestSingle.getRank(trumpValue, trumpSuit) < highestSingle.getRank(trumpValue, trumpSuit)) {
+                                    console.log(`trick.isValid - Invalid - cannot throw; ${constants.su.sockets[this._players[i]]} has a ${highestSingle}.`);
                                     valid = false;
                                 }
                             }
                         }
                     }
                     if (playNumDoubles > 0) {
-                        console.log(playDoubles)
                         const lowestDouble = playDoubles[playDoubles.length - 1]
                         for (let i = 0; i < constants.numPlayers; i++) {
                             if (this._players[i] === socketId) {
@@ -160,8 +179,8 @@ class Trick {
                             const hand = this._hands[this._players[i]];
                             if (hand.hasDouble(playSuit, 1)) {
                                 const highestDouble = hand.highestDouble.call(hand, playSuit);
-                                console.log(i, highestDouble)
                                 if (lowestDouble.getRank(trumpValue, trumpSuit) < highestDouble.getRank(trumpValue, trumpSuit)) {
+                                    console.log(`trick.isValid - Invalid - cannot throw; ${constants.su.sockets[this._players[i]]} has a ${highestSingle}.`);
                                     valid = false;
                                 }
                             }
@@ -170,8 +189,6 @@ class Trick {
                     valid = valid && true;
                     if (valid) {
                         console.log('trick.isValid - player played a valid throw');
-                    } else {
-                        console.log('trick.isValid - player played an invalid throw');
                     }
                 }
             } else {
@@ -182,6 +199,7 @@ class Trick {
                 this._trickNumCards = cards.length;
                 this._trickNumDoubles = playNumDoubles;
                 this._trickNumTractors = playNumTractors;
+                this._trickNumTractorCards = playNumTractorCards;
             }
         }
 
@@ -199,14 +217,7 @@ class Trick {
             }, 0);
 
             if (considerRank) {
-                // playRank = _.reduce(_.map(cards, function (card) {
-                //     return card.getRank.call(card, trumpValue, trumpSuit);
-                // }), function (memo, num) {
-                //     return memo + num
-                // }, 0);
-                if (this._trickNumTractors.length > 0) {
-                    playRank = playDoubles[0].getRank.call(playDoubles[0], trumpValue, trumpSuit);
-                } else if (this._trickNumDoubles > 0) {
+                if (this._trickNumDoubles > 0) {
                     playRank = playDoubles[0].getRank.call(playDoubles[0], trumpValue, trumpSuit);
                 } else {
                     playRank = playSingles[0].getRank.call(playSingles[0], trumpValue, trumpSuit);
@@ -214,12 +225,12 @@ class Trick {
             }
 
             console.log('The play', cards, `has rank ${playRank}.`)
-            console.log(`trickNumTractor; ${this._trickNumTractors}; trickNumDoubles: ${this._trickNumDoubles}; trickNumCards: ${this._trickNumCards}`)
-            console.log(`playNumTractor; ${playNumTractors}; playNumDoubles: ${playNumDoubles}; playNumCards: ${play.length}`)
+            // console.log(`trickNumTractor; ${this._trickNumTractors}; trickNumDoubles: ${this._trickNumDoubles}; trickNumCards: ${this._trickNumCards}`)
+            // console.log(`playNumTractor; ${playNumTractors}; playNumDoubles: ${playNumDoubles}; playNumCards: ${play.length}`)
 
             if (playRank > this._maxRank) {
                 this._maxRank = playRank;
-                this._winner = i;
+                this._winner = this._cards.length - 1;
             }
 
         } else {
@@ -332,19 +343,10 @@ class Trick {
 
     countTractors(tractors) {
         let tracker = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        let numTractors = [];
         for (let i = 0; i < tractors.length; i++) {
-            // if (numTractors[tractors[i].length]) {
-            //     numTractors[tractors[i].length]++;
-            // } else {
-            //     numTractors[tractors[i].length] = 1
-            // }
             tracker[tractors[i].length]++;
         }
-        for (let i = 0; i < numTractors.length; i++) {
-            numTractors.push([tracker[i], i])
-        }
-        return numTractors
+        return tracker;
     }
 
     getSingles(cards, doubles) {

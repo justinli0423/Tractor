@@ -92,7 +92,105 @@ class Hand {
         }
     }
 
-    highestTractor(suit, length) {
+    getTractors(suit) {
+
+        const doubles = this._doubles[suit]
+        const trumpValue = this._trumpValue;
+        const trumpSuit = this._trumpSuit;
+
+        let order = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
+        order.splice(_.indexOf(order, trumpValue), 1);
+
+        let tractors = [];
+
+        if (doubles.length < 2) {
+            return tractors;
+        }
+
+        let currTractor = [doubles[0]];
+        let i = 1;
+
+        while (i < doubles.length) {
+            // big joker
+            if (currTractor[currTractor.length - 1].value === 'B') {
+                if (doubles[i].value === 'S') {
+                    currTractor.push(doubles[i])
+                } else {
+                    if (currTractor.length >= 2) {
+                        tractors.push(currTractor);
+                    }
+                    currTractor = [doubles[i]];
+                }
+                i++;
+                // small joker
+            } else if (currTractor[currTractor.length - 1].value === 'S') {
+                if (doubles[i].value === trumpValue && doubles[i].suit === trumpSuit) {
+                    currTractor.push(doubles[i])
+                } else {
+                    if (currTractor.length >= 2) {
+                        tractors.push(currTractor);
+                    }
+                    currTractor = [doubles[i]];
+                }
+                i++;
+                // big trumpValue
+            } else if (currTractor[currTractor.length - 1].value === trumpValue && currTractor[currTractor.length - 1].suit === trumpSuit) {
+                if (doubles[i].value === trumpValue) {
+                    currTractor.push(doubles[i])
+                } else {
+                    if (currTractor.length >= 2) {
+                        tractors.push(currTractor);
+                    }
+                    currTractor = [doubles[i]];
+                }
+                i++;
+                // small trumpValue
+            } else if (currTractor[currTractor.length - 1].value === trumpValue) {
+                if (doubles[i].value === order[order.length - 1]) {
+                    currTractor.push(doubles[i])
+                } else if (doubles[i].value !== trumpValue) {
+                    if (currTractor.length >= 2) {
+                        tractors.push(currTractor);
+                    }
+                    currTractor = [doubles[i]];
+                }
+                i++;
+                // everything else, including non trump
+            } else {
+                const j = _.indexOf(order, currTractor[currTractor.length - 1].value)
+                if (doubles[i].value === order[j - 1]) {
+                    currTractor.push(doubles[i])
+                } else {
+                    if (currTractor.length >= 2) {
+                        tractors.push(currTractor);
+                    }
+                    currTractor = [doubles[i]];
+                }
+                i++;
+            }
+        }
+        if (currTractor.length >= 2) {
+            tractors.push(currTractor);
+        }
+        return tractors;
+    }
+
+    countTractors(tractors) {
+        let tracker = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        for (let i = 0; i < tractors.length; i++) {
+            tracker[tractors[i].length]++;
+        }
+        return tracker;
+    }
+
+    hasTractor(suit, playNumTractorCards) {
+        const tractors = this.getTractors(suit);
+        const numTractors = this.countTractors(tractors);
+        return _.reduce(_.mapObject(numTractors, (key, val) => {
+            return key * val;
+        }), (a, b) => {
+            return a + b;
+        }) > playNumTractorCards;
 
     }
 
