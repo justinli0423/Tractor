@@ -345,7 +345,7 @@ class Trick {
         let singles = [];
         for (let i = 0; i < cards.length; i++) {
             if (_.findIndex(doubles, (card) => {
-                cards[i].isEqual(card)
+                return cards[i].isEqual(card);
             }) === -1) {
                 singles.push(cards[i])
             }
