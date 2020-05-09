@@ -128,10 +128,12 @@ class Trick {
             if (isSameSuit) {
                 if (playNumSingles >= 2 || playNumSingles + playNumDoubles >= 2) {
                     if (playNumSingles > 0) {
+                        console.log(playSingles);
                         const lowestSingle = playSingles[playSingles.length - 1]
                         for (let i = 0; i < constants.numPlayers; i++) {
                             const hand = this._hands[this._players[i]];
                             const highestSingle = hand.highestSingle.call(hand, playSuit);
+                            console.log(i, highestSingle)
                             if (hand.hasSingle(playSuit, 1)) {
                                 if (lowestSingle.getRank(trumpValue, trumpSuit) < highestSingle.getRank(trumpValue, trumpSuit)) {
                                     valid = false;
@@ -140,10 +142,12 @@ class Trick {
                         }
                     }
                     if (playNumDoubles > 0) {
+                        console.log(playDoubles)
                         const lowestDouble = playDoubles[playDoubles.length - 1]
                         for (let i = 0; i < constants.numPlayers; i++) {
                             const hand = this._hands[this._players[i]];
                             const highestDouble = hand.highestDouble.call(hand, playSuit);
+                            console.log(i, highestDouble)
                             if (hand.hasDouble(playSuit, 1)) {
                                 if (lowestDouble.getRank(trumpValue, trumpSuit) < highestDouble.getRank(trumpValue, trumpSuit)) {
                                     valid = false;
