@@ -132,8 +132,10 @@ class Trick {
                         for (let i = 0; i < constants.numPlayers; i++) {
                             const hand = this._hands[this._players[i]];
                             const highestSingle = hand.highestSingle.call(hand, playSuit);
-                            if (lowestSingle.getRank(trumpValue, trumpSuit) < highestSingle.getRank(trumpValue, trumpSuit)) {
-                                valid = false;
+                            if (hand.hasSingle(playSuit, 1)) {
+                                if (lowestSingle.getRank(trumpValue, trumpSuit) < highestSingle.getRank(trumpValue, trumpSuit)) {
+                                    valid = false;
+                                }
                             }
                         }
                     }
@@ -142,8 +144,10 @@ class Trick {
                         for (let i = 0; i < constants.numPlayers; i++) {
                             const hand = this._hands[this._players[i]];
                             const highestDouble = hand.highestDouble.call(hand, playSuit);
-                            if (lowestDouble.getRank(trumpValue, trumpSuit) < highestDouble.getRank(trumpValue, trumpSuit)) {
-                                valid = false;
+                            if (hand.hasDouble(playSuit, 1)) {
+                                if (lowestDouble.getRank(trumpValue, trumpSuit) < highestDouble.getRank(trumpValue, trumpSuit)) {
+                                    valid = false;
+                                }
                             }
                         }
                     }
