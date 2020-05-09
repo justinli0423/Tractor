@@ -264,6 +264,7 @@ const mapStateToProps = (state) => {
 }
 
 const AllButtonsContainer = styled.div`
+  z-index: 100;
   display: flex;
   flex-direction: column;
   align-items: center;
