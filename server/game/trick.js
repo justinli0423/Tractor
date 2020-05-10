@@ -106,6 +106,8 @@ class Trick {
                     if (this._hands[socketId].hasDouble(this._trickSuit, playNumDoubles + 1)) {
                         console.log('trick.isValid - Invalid - player has more doubles to play.');
                         valid = false;
+                        flag = 'invalid'
+                        newOther = other;
                     } else {
                         console.log('trick.isValid - Valid - player has no more doubles to play')
                         valid = true;
@@ -122,6 +124,8 @@ class Trick {
                             console.log('trick.isValid - Invalid - Player has more tractors.')
                             valid = false;
                             considerRank = false;
+                            flag = 'invalid'
+                            newOther = other;
                         } else {
                             console.log('trick.isValid - Valid - Player has no more tractors.')
                             valid = true
@@ -134,6 +138,10 @@ class Trick {
             } else if (playSuit === 'T') {
                 console.log(`trick.isValid - played trump`)
                 valid = !this._hands[socketId].hasSingle(this._trickSuit, 1);
+                if (!valid) {
+                    flag = 'invalid'
+                    newOther = other;
+                }
                 console.log(`trick.isValid - player has no more ${this._trickSuit}'s?`, valid)
                 if (valid && playNumDoubles !== this._trickNumDoubles) {
                     considerRank = false;
@@ -150,6 +158,10 @@ class Trick {
                 const num = _.filter(cards, sameSuit.bind(this)).length
                 console.log(`trick.isValid - played ${num} ${this._trickSuit}'s`)
                 valid = !this._hands[socketId].hasSingle(this._trickSuit, num + 1);
+                if (!valid) {
+                    flag = 'invalid'
+                    newOther = other;
+                }
                 console.log(`trick.isValid - player has more than ${num} ${this._trickSuit}'s?`, valid)
             }
         } else {
@@ -168,7 +180,7 @@ class Trick {
                                 if (lowestSingle.getRank(trumpValue, trumpSuit) < highestSingle.getRank(trumpValue, trumpSuit)) {
                                     console.log(`trick.isValid - Invalid - cannot throw; ${constants.su.sockets[this._players[i]]} has a ${highestSingle}.`);
                                     valid = false;
-                                    flag = 'Bad Throw';
+                                    flag = 'badThrow';
                                     newOther = this.updateOther(play, other, lowestSingle);
                                 }
                             }
@@ -241,7 +253,7 @@ class Trick {
                 this._winner = i;
             }
 
-            flag = 'Valid';
+            flag = 'valid';
             newOther = other;
 
         } else {
