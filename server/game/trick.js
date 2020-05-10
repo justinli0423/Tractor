@@ -53,7 +53,7 @@ class Trick {
             }
         }
 
-        const cards = _.map(play, (card) => {
+        let cards = _.map(play, (card) => {
             return new Card(card[0], card[1])
         });
 
@@ -179,14 +179,16 @@ class Trick {
                                 const highestSingle = hand.highestSingle.call(hand, playSuit);
                                 if (lowestSingle.getRank(trumpValue, trumpSuit) < highestSingle.getRank(trumpValue, trumpSuit)) {
                                     console.log('trick.isValid - Invalid - cannot throw;', constants.su.sockets[this._players[i]], 'has a', highestSingle);
-                                    valid = false;
+                                    valid = true;
                                     flag = 'badThrow';
+                                    cards = [lowestSingle];
                                     newOther = this.updateOther(play, other, lowestSingle);
+                                    break;
                                 }
                             }
                         }
                     }
-                    if (playNumDoubles > 0) {
+                    if (playNumDoubles > 0 && flag !== 'badThrow') {
                         const lowestDouble = playDoubles[playDoubles.length - 1]
                         for (let i = 0; i < constants.numPlayers; i++) {
                             if (this._players[i] === socketId) {
@@ -199,7 +201,9 @@ class Trick {
                                     console.log('trick.isValid - Invalid - cannot throw;', constants.su.sockets[this._players[i]], 'has a pair of', highestDouble);
                                     valid = false;
                                     flag = 'badThrow';
+                                    cards = [lowestDouble];
                                     newOther = this.updateOther(play, other, lowestDouble);
+                                    break;
                                 }
                             }
                         }
@@ -401,6 +405,10 @@ class Trick {
             }
         }
         return newOther;
+    }
+
+    get trickNumCards() {
+        return this._trickNumCards;
     }
 
     get points() {
