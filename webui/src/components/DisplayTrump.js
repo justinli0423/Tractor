@@ -6,6 +6,7 @@ import {
   getExistingClients,
   getCurrentBid,
   getTrumpValue,
+  getPoints,
   getBottomClient,
   updateState
 } from '../redux/selectors';
@@ -86,10 +87,14 @@ class DisplayTrump extends Component {
   }
 
   render() {
-    const { clients } = this.props;
+    const {
+      clients,
+      points
+    } = this.props;
     const { bidHistory } = this.state;
     return (
       <ClientsContainer>
+        Points: {points}
         <ClientsHeader>TRUMP</ClientsHeader>
         {bidHistory.length ? bidHistory.map(bidArr => (
           <ClientItem>
@@ -105,6 +110,7 @@ const mapStateToProps = state => {
   const clients = getExistingClients(state);
   const currentBottomClient = getBottomClient(state);
   const currentBid = getCurrentBid(state);
+  const points = getPoints(state);
   const trumpValue = getTrumpValue(state);
 
   const numStateChanges = updateState(state);
@@ -112,6 +118,7 @@ const mapStateToProps = state => {
     clients,
     currentBid,
     trumpValue,
+    points,
     currentBottomClient,
     numStateChanges
   };
