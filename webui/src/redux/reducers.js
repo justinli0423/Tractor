@@ -15,7 +15,7 @@ const currState = {
   trumpTracker: { 'S': 0, 'D': 0, 'C': 0, 'H': 0, 'SJ': 0, 'BJ': 0 },
   validBids: [],
   points: 0,
-  // canSelectCards & numCardsSelected is for 
+  // canSelectCards & numCardsSelected is for
   // both returning bottom and playing cards on your turn
   canSelectCards: false,
   numCardsSelected: 0,

@@ -126,8 +126,10 @@ const CallBottomButtons = (props) => {
       updateCardsInHand,
       trumpTracker,
       toggleCardSelector,
+      trumpValue,
       setClientTurn,
       setCurrentBid,
+      currentBid,
       updateNumCardsSelected
     } = props;
     if (isValidPlay === 'valid') {
@@ -150,6 +152,7 @@ const CallBottomButtons = (props) => {
       }), trumpTracker);
     } else if (isValidPlay === 'badThrow') {
       alert('Bad Throw!');
+      Cards.sortHand(cards, trumpValue, currentBid[1], trumpTracker);
       updateCardsInHand(cards.map(cardObj => {
         cardObj.isSelected = false;
         return cardObj;
@@ -254,8 +257,8 @@ const mapStateToProps = (state) => {
   const validBids = getValidBids(state);
   const trumpValue = getTrumpValue(state);
   const trumpTracker = getTrumpTracker(state);
-  const currentBid = getCurrentBid(state);
   const canBidForBottom = getCanBidForBottom(state);
+  const currentBid = getCurrentBid(state);
   const clientTurnId = getClientTurn(state);
   const cards = getMyCards(state);
   const numCardsSelected = getNumCardsSelected(state);
