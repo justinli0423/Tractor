@@ -77,3 +77,8 @@ export const setTricksPlayed = (tricks) => ({
   type: 'SET_ALL_TRICKS',
   payload: tricks
 })
+
+export const setPoints = (points) => ({
+  type: 'SET_POINTS',
+  payload: points
+})

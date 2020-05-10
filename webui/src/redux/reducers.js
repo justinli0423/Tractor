@@ -14,6 +14,7 @@ const currState = {
   existingTricks: {},
   trumpTracker: { 'S': 0, 'D': 0, 'C': 0, 'H': 0, 'SJ': 0, 'BJ': 0 },
   validBids: [],
+  points: 0,
   // canSelectCards & numCardsSelected is for 
   // both returning bottom and playing cards on your turn
   canSelectCards: false,
@@ -91,6 +92,10 @@ export default (state = currState, action) => {
       return Object.assign({}, state, {
         existingTricks: action.payload,
         numStateUpdated: state.numStateUpdated + 1
+      })
+    case 'SET_POINTS':
+      return Object.assign({}, state, {
+        points: action.payload,
       })
     default:
       return state;
