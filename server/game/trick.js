@@ -269,6 +269,7 @@ class Trick {
         } else {
             // console.log('trick.isValid - trick is invalid. players hand:', this._hands[socketId]);
         }
+        console.log('trick.cards', cards)
         return [valid, flag, newOther];
     }
 

@@ -5,9 +5,9 @@ var socket = null;
 
 export function connectToSocketIO(getStatusCb, name) {
   socket = io(ENDPOINT);
-  // if (!socket.connected) {
-  //   socket = io('tractorserver.herokuapp.com');
-  // }
+  if (!socket.connected) {
+    socket = io('tractorserver.herokuapp.com');
+  }
   getConnectionStatus(getStatusCb, name);
   setSocketIdIO(name);
 }
