@@ -142,6 +142,7 @@ class SocketUtil {
             const Trick = constants.game.round.playRound.trick;
             console.log('New play sent by ', this._sockets[socketId], ':', play);
             const valid = Trick.isValid.call(Trick, socketId, play, other, i);
+            console.log()
             callback(valid[1], valid[2]);
             if (valid[0]) {
                 this.closeClientPlaySub(socketId);
