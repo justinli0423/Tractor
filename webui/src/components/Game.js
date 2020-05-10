@@ -33,6 +33,7 @@ import {
   setTrumpValue,
   updateNumCardsSelected,
   toggleCardSelector,
+  setPoints,
   toggleBidButtons,
   setValidBids
 } from '../redux/actions';
@@ -363,6 +364,7 @@ export default connect(mapStateToProps, {
   setTrumpValue,
   updateNumCardsSelected,
   toggleCardSelector,
+  setPoints,
   toggleBidButtons,
   setCurrentBid
 })(Game);

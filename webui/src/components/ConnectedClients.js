@@ -5,7 +5,6 @@ import styled from 'styled-components';
 import {
   getExistingClients,
   getExistingClientIds,
-  getPoints,
   getClientTurn,
   getId,
   getName,
@@ -51,7 +50,6 @@ const ConnectedClients = (props) => {
           </ClientItem>
         );
       })}
-      Points: {props.points}
     </ClientsContainer>
   )
 }
@@ -62,14 +60,12 @@ const mapStateToProps = state => {
   const clients = getExistingClients(state);
   const clientIds = getExistingClientIds(state);
   const clientTurn = getClientTurn(state);
-  const points = getPoints(state);
 
   const numStateChanges = updateState(state);
   return {
     myId,
     name,
     clients,
-    points,
     clientTurn,
     clientIds,
     numStateChanges
