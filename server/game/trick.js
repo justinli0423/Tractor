@@ -254,6 +254,7 @@ class Trick {
 
             if (flag === 'valid') {
                 console.log('The play', cards, `has rank ${playRank}.`)
+                newOther = other;
             } else {
                 console.log('Bad throw. Forced to play', cards, `with rank' ${playRank}.`)
             }
@@ -265,7 +266,6 @@ class Trick {
                 this._winner = i;
             }
 
-            newOther = other;
 
         } else {
             // console.log('trick.isValid - trick is invalid. players hand:', this._hands[socketId]);
