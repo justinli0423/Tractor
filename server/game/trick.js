@@ -29,6 +29,8 @@ class Trick {
 
     isValid(socketId, play, other, i) {
 
+        console.log('trick other.length in', other.length)
+
         let valid = true;
         const trumpValue = this._trumpValue;
         const trumpSuit = this._trumpSuit;
@@ -269,7 +271,7 @@ class Trick {
             // console.log('trick.isValid - trick is invalid. players hand:', this._hands[socketId]);
         }
         console.log('trick.cards', cards)
-        console.log('trick.newOther', newOther)
+        console.log('trick other.length out', other.length)
         return [valid, flag, newOther];
     }
 
