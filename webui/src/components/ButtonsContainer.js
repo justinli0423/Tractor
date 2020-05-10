@@ -130,7 +130,7 @@ const CallBottomButtons = (props) => {
       setCurrentBid,
       updateNumCardsSelected
     } = props;
-    if (isValidPlay) {
+    if (isValidPlay === 'valid') {
       updateCardsInHand(cardsInHand, trumpTracker);
       toggleCardSelector(false);
       updateNumCardsSelected(0);
@@ -142,8 +142,14 @@ const CallBottomButtons = (props) => {
           setPoints(0);
         }, 2000);
       }
-    } else {
+    } else if (isValidPlay === 'invalid') {
       alert('Invalid Trick');
+      updateCardsInHand(cards.map(cardObj => {
+        cardObj.isSelected = false;
+        return cardObj;
+      }), trumpTracker);
+    } else if (isValidPlay === 'badThrow') {
+      alert('Bad Throw!');
       updateCardsInHand(cards.map(cardObj => {
         cardObj.isSelected = false;
         return cardObj;
