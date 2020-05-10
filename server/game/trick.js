@@ -198,7 +198,7 @@ class Trick {
                                 if (lowestDouble.getRank(trumpValue, trumpSuit) < highestDouble.getRank(trumpValue, trumpSuit)) {
                                     console.log(`trick.isValid - Invalid - cannot throw; ${constants.su.sockets[this._players[i]]} has a ${highestSingle}.`);
                                     valid = false;
-                                    flag = 'Bad Throw';
+                                    flag = 'badThrow';
                                     newOther = this.updateOther(play, other, lowestDouble);
                                 }
                             }
