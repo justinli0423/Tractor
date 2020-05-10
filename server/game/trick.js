@@ -178,7 +178,7 @@ class Trick {
                             if (hand.hasSingle(playSuit, 1)) {
                                 const highestSingle = hand.highestSingle.call(hand, playSuit);
                                 if (lowestSingle.getRank(trumpValue, trumpSuit) < highestSingle.getRank(trumpValue, trumpSuit)) {
-                                    console.log(`trick.isValid - Invalid - cannot throw; ${constants.su.sockets[this._players[i]]} has a ${highestSingle}.`);
+                                    console.log('trick.isValid - Invalid - cannot throw;', constants.su.sockets[this._players[i]], 'has a', highestSingle);
                                     valid = false;
                                     flag = 'badThrow';
                                     newOther = this.updateOther(play, other, lowestSingle);
@@ -196,7 +196,7 @@ class Trick {
                             if (hand.hasDouble(playSuit, 1)) {
                                 const highestDouble = hand.highestDouble.call(hand, playSuit);
                                 if (lowestDouble.getRank(trumpValue, trumpSuit) < highestDouble.getRank(trumpValue, trumpSuit)) {
-                                    console.log(`trick.isValid - Invalid - cannot throw; ${constants.su.sockets[this._players[i]]} has a ${highestSingle}.`);
+                                    console.log('trick.isValid - Invalid - cannot throw;', constants.su.sockets[this._players[i]], 'has a pair of', highestDouble);
                                     valid = false;
                                     flag = 'badThrow';
                                     newOther = this.updateOther(play, other, lowestDouble);
