@@ -271,7 +271,7 @@ class Trick {
             // console.log('trick.isValid - trick is invalid. players hand:', this._hands[socketId]);
         }
         console.log('trick.cards', cards)
-        console.log('trick other.length out', other.length)
+        console.log('trick other.length out', newOther.length)
         return [valid, flag, newOther];
     }
 
@@ -404,6 +404,7 @@ class Trick {
         // console.log(lowest)
         // console.log(other);
         let newOther = other.slice()
+        console.log('len1', newOther.length)
         for (let i = 0; i < play.length; i++) {
             if (play[i][0] !== lowest.value || play[i][1] !== lowest.suit) {
                 newOther.push({
@@ -414,6 +415,7 @@ class Trick {
                 })
             }
         }
+        console.log('len2', newOther.length)
         return newOther;
     }
 
