@@ -41,7 +41,7 @@ class PlayRound {
                 this._discard.pushCard(card)
             }
             if (this._trickStarter % 2 !== 0) {
-                this._opponentPoints += bottomPoints;
+                this._opponentPoints += bottomPoints * this._trick.trickNumCards * 2;
             }
             console.log('Opponent points:', this._opponentPoints)
             constants.game.round.endRound();

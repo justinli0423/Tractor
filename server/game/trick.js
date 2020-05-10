@@ -53,7 +53,7 @@ class Trick {
             }
         }
 
-        const cards = _.map(play, (card) => {
+        let cards = _.map(play, (card) => {
             return new Card(card[0], card[1])
         });
 
@@ -178,15 +178,17 @@ class Trick {
                             if (hand.hasSingle(playSuit, 1)) {
                                 const highestSingle = hand.highestSingle.call(hand, playSuit);
                                 if (lowestSingle.getRank(trumpValue, trumpSuit) < highestSingle.getRank(trumpValue, trumpSuit)) {
-                                    console.log(`trick.isValid - Invalid - cannot throw; ${constants.su.sockets[this._players[i]]} has a ${highestSingle}.`);
-                                    valid = false;
+                                    console.log('trick.isValid - Invalid - cannot throw;', constants.su.sockets[this._players[i]], 'has a', highestSingle);
+                                    valid = true;
                                     flag = 'badThrow';
+                                    cards = [lowestSingle];
                                     newOther = this.updateOther(play, other, lowestSingle);
+                                    break;
                                 }
                             }
                         }
                     }
-                    if (playNumDoubles > 0) {
+                    if (playNumDoubles > 0 && flag !== 'badThrow') {
                         const lowestDouble = playDoubles[playDoubles.length - 1]
                         for (let i = 0; i < constants.numPlayers; i++) {
                             if (this._players[i] === socketId) {
@@ -196,10 +198,12 @@ class Trick {
                             if (hand.hasDouble(playSuit, 1)) {
                                 const highestDouble = hand.highestDouble.call(hand, playSuit);
                                 if (lowestDouble.getRank(trumpValue, trumpSuit) < highestDouble.getRank(trumpValue, trumpSuit)) {
-                                    console.log(`trick.isValid - Invalid - cannot throw; ${constants.su.sockets[this._players[i]]} has a ${highestSingle}.`);
+                                    console.log('trick.isValid - Invalid - cannot throw;', constants.su.sockets[this._players[i]], 'has a pair of', highestDouble);
                                     valid = false;
-                                    flag = 'Bad Throw';
+                                    flag = 'badThrow';
+                                    cards = [lowestDouble, lowestDouble];
                                     newOther = this.updateOther(play, other, lowestDouble);
+                                    break;
                                 }
                             }
                         }
@@ -234,7 +238,7 @@ class Trick {
                 return memo + num
             }, 0);
 
-            if (considerRank) {
+            if (considerRank && flag === 'valid') {
                 if (playTractors.length > 0) {
                     playRank = playTractors[0][0].getRank.call(playTractors[0][0], trumpValue, trumpSuit);
                 } else if (this._trickNumDoubles > 0) {
@@ -242,9 +246,16 @@ class Trick {
                 } else {
                     playRank = playSingles[0].getRank.call(playSingles[0], trumpValue, trumpSuit);
                 }
+            } else if (considerRank) {
+                playRank = cards[0].getRank.call(cards[0], trumpValue, trumpSuit);
             }
 
-            console.log('The play', cards, `has rank ${playRank}.`)
+
+            if (flag === 'valid') {
+                console.log('The play', cards, `has rank ${playRank}.`)
+            } else {
+                console.log('Bad throw. Forced to play', cards, `with rank' ${playRank}.`)
+            }
             // console.log(`trickNumTractor; ${this._trickNumTractors}; trickNumDoubles: ${this._trickNumDoubles}; trickNumCards: ${this._trickNumCards}`)
             // console.log(`playNumTractor; ${playNumTractors}; playNumDoubles: ${playNumDoubles}; playNumCards: ${play.length}`)
 
@@ -387,8 +398,24 @@ class Trick {
     }
 
     updateOther(play, other, lowest) {
-        console.log(other);
-        return other;
+        // console.log(play)
+        // console.log(lowest)
+        // console.log(other);
+        let newOther = other.slice()
+        for (let i = 0; i < play.length; i++) {
+            if (play[i][0] !== lowest.value || play[i][1] !== lowest.suit) {
+                newOther.push({
+                    cards: play[i],
+                    isSelected: false,
+                    svg: '/Tractor/cardsSVG/' + play[i][0] + play[i][1] + '.svg'
+                })
+            }
+        }
+        return newOther;
+    }
+
+    get trickNumCards() {
+        return this._trickNumCards;
     }
 
     get points() {
