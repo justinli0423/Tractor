@@ -37,6 +37,10 @@ function setSocketIdIO(id) {
 }
 
 // ------------------ EVENT LISTENERS ------------------
+export function getPointsIO(getPointsCb) {
+  socket.on('opponentPoints', (pointsFromNonBottom) => getPointsCb(pointsFromNonBottom));
+}
+
 export function getGeneratedTrumpIO(getGeneratedTrumpCb) {
   socket.on('generateTrump', (clientId, card) => getGeneratedTrumpCb(clientId, card));
 }
