@@ -3,11 +3,6 @@ const socketIo = require('socket.io');
 const http = require('http');
 const constants = require('./constants');
 
-const _ = require('underscore')
-a = [[3, 1], [1], [2, 1]]
-b = _.sortBy(a, (x) => { return -x.length})
-console.log(b)
-
 const index = require('./routes/index');
 const SocketUtil = require('./sockets/socketUtils');
 const port = process.env.PORT || 8000;

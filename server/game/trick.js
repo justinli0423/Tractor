@@ -27,7 +27,7 @@ class Trick {
         constants.su.emitNextClient(this._players[(this._starter + i) % constants.numPlayers], i);
     }
 
-    isValid(socketId, play) {
+    isValid(socketId, play, i) {
 
         let valid = true;
         const trumpValue = this._trumpValue;
@@ -232,7 +232,7 @@ class Trick {
 
             if (playRank > this._maxRank) {
                 this._maxRank = playRank;
-                this._winner = this._cards.length - 1;
+                this._winner = i;
             }
 
         } else {
