@@ -199,7 +199,7 @@ class Trick {
                                 const highestDouble = hand.highestDouble.call(hand, playSuit);
                                 if (lowestDouble.getRank(trumpValue, trumpSuit) < highestDouble.getRank(trumpValue, trumpSuit)) {
                                     console.log('trick.isValid - Invalid - cannot throw;', constants.su.sockets[this._players[i]], 'has a pair of', highestDouble);
-                                    valid = false;
+                                    valid = true;
                                     flag = 'badThrow';
                                     cards = [lowestDouble, lowestDouble];
                                     newOther = this.updateOther(play, other, lowestDouble);
@@ -208,8 +208,7 @@ class Trick {
                             }
                         }
                     }
-                    valid = valid && true;
-                    if (valid) {
+                    if (flag === 'valid') {
                         console.log('trick.isValid - player played a valid throw');
                     }
                 }
@@ -270,6 +269,7 @@ class Trick {
             // console.log('trick.isValid - trick is invalid. players hand:', this._hands[socketId]);
         }
         console.log('trick.cards', cards)
+        console.log('trick.newOther', newOther)
         return [valid, flag, newOther];
     }
 
