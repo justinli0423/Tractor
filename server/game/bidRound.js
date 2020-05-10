@@ -10,7 +10,7 @@ class BidRound {
         this._deck = deck;
         this._players = players;
         this._hands = {};
-        for (let i = 0; i < this._players.length; i ++) {
+        for (let i = 0; i < this._players.length; i++) {
             this._hands[this._players[i]] = new Hand(trumpValue);
         }
         this._trumpValue = trumpValue;
@@ -46,14 +46,14 @@ class BidRound {
         this._ready += 1;
         if (this._ready === this._players.length) {
             if (!this._trumpSuit) {
-              let suits = ['S', 'H', 'C', 'D'];
-              // TODO: make index * 4
-              let index = Math.floor(Math.random() * constants.numPlayers);
-              this._trumpSuit = suits[index];
-              this._declarer = this._players[index];
-              constants.su.emitGeneratedTrump(this._declarer, [1, this._trumpSuit]);
+                let suits = ['S', 'D', 'C', 'H'];
+                let index = Math.floor(Math.random() * constants.numPlayers);
+                this._trumpSuit = suits[index];
+                index = Math.floor(Math.random() * constants.numPlayers);
+                this._declarer = this._players[index];
+                constants.su.emitGeneratedTrump(this._declarer, [1, this._trumpSuit]);
             }
-            for (let i = 0; i < this._players.length; i ++) {
+            for (let i = 0; i < this._players.length; i++) {
                 this._hands[this._players[i]].trumpSuit = this._trumpSuit;
             }
             this.sendBottom();
@@ -95,7 +95,7 @@ class BidRound {
     }
 
     sortHands() {
-        for (let i = 0; i < this._players.length; i ++) {
+        for (let i = 0; i < this._players.length; i++) {
             this._hands[this._players[i]].sortHand();
             // console.log('Highest trump single:', this._hands[this._players[i]].highestSingle('T'));
             // console.log('Highest trump double:', this._hands[this._players[i]].highestDouble('T'));

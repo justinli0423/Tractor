@@ -387,8 +387,20 @@ class Trick {
     }
 
     updateOther(play, other, lowest) {
+        console.log(play)
+        console.log(lowest)
         console.log(other);
-        return other;
+        let newOther = other.slice()
+        for (let i = 0; i < play.length; i++) {
+            if (play[i][0] !== lowest.value || play[i][1] !== lowest.suit) {
+                newOther.push({
+                    cards: play[i],
+                    isSelected: false,
+                    svg: '/Tractor/cardsSVG/' + play[i][0] + play[i][1] + '.svg'
+                })
+            }
+        }
+        return newOther;
     }
 
     get points() {
