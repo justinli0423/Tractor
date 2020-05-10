@@ -132,6 +132,7 @@ const CallBottomButtons = (props) => {
       currentBid,
       updateNumCardsSelected
     } = props;
+    alert(isValidPlay)
     if (isValidPlay === 'valid') {
       updateCardsInHand(cardsInHand, trumpTracker);
       toggleCardSelector(false);
@@ -151,7 +152,6 @@ const CallBottomButtons = (props) => {
         return cardObj;
       }), trumpTracker);
     } else if (isValidPlay === 'badThrow') {
-      alert('Bad Throw!');
       console.log(cards)
       Cards.sortHand(cards, trumpValue, currentBid[1], trumpTracker);
       updateCardsInHand(cards.map(cardObj => {

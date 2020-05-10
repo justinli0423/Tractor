@@ -406,7 +406,8 @@ class Trick {
                 newOther.push({
                     cards: play[i],
                     isSelected: false,
-                    svg: '/Tractor/cardsSVG/' + play[i][0] + play[i][1] + '.svg'
+                    // svg: '/Tractor/cardsSVG/' + play[i][0] + play[i][1] + '.svg'
+                    svg: 'https://jli0423.github.io/Tractor/cardsSVG/' + play[i][0] + play[i][1] + '.svg'
                 })
             }
         }

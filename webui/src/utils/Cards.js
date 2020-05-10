@@ -2,7 +2,8 @@ import _ from 'underscore';
 
 export default class Cards {
   // TODO: DEPLOYMENT CARDS PATH IS DIFFERENT
-  path = '/cardsSVG/';
+  // path = '/cardsSVG/';
+  path = 'https://jli0423.github.io/Tractor/cardsSVG/';
   // path = '/Tractor/cardsSVG/';
   suits = [];
   jokers = [];
