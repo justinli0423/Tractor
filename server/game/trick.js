@@ -27,7 +27,7 @@ class Trick {
         constants.su.emitNextClient(this._players[(this._starter + i) % constants.numPlayers], i);
     }
 
-    isValid(socketId, play, i) {
+    isValid(socketId, play, other, i) {
 
         let valid = true;
         const trumpValue = this._trumpValue;
@@ -44,6 +44,8 @@ class Trick {
         let playNumSingles;
         let playSingles;
         let considerRank = true;
+        let flag;
+        let newOther;
 
         if (this._trickNumCards) {
             if (this._trickNumCards !== play.length) {
@@ -166,6 +168,8 @@ class Trick {
                                 if (lowestSingle.getRank(trumpValue, trumpSuit) < highestSingle.getRank(trumpValue, trumpSuit)) {
                                     console.log(`trick.isValid - Invalid - cannot throw; ${constants.su.sockets[this._players[i]]} has a ${highestSingle}.`);
                                     valid = false;
+                                    flag = 'Bad Throw';
+                                    newOther = this.updateOther(play, other, lowestSingle);
                                 }
                             }
                         }
@@ -182,6 +186,8 @@ class Trick {
                                 if (lowestDouble.getRank(trumpValue, trumpSuit) < highestDouble.getRank(trumpValue, trumpSuit)) {
                                     console.log(`trick.isValid - Invalid - cannot throw; ${constants.su.sockets[this._players[i]]} has a ${highestSingle}.`);
                                     valid = false;
+                                    flag = 'Bad Throw';
+                                    newOther = this.updateOther(play, other, lowestDouble);
                                 }
                             }
                         }
@@ -235,10 +241,13 @@ class Trick {
                 this._winner = i;
             }
 
+            flag = 'Valid';
+            newOther = other;
+
         } else {
             // console.log('trick.isValid - trick is invalid. players hand:', this._hands[socketId]);
         }
-        return valid;
+        return [valid, flag, newOther];
     }
 
     cardsPlayed() {
@@ -363,6 +372,11 @@ class Trick {
             }
         }
         return singles;
+    }
+
+    updateOther(play, other, lowest) {
+        console.log(other);
+        return other;
     }
 
     get points() {
