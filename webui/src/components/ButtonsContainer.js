@@ -152,6 +152,7 @@ const CallBottomButtons = (props) => {
       }), trumpTracker);
     } else if (isValidPlay === 'badThrow') {
       alert('Bad Throw!');
+      console.log(cards)
       Cards.sortHand(cards, trumpValue, currentBid[1], trumpTracker);
       updateCardsInHand(cards.map(cardObj => {
         cardObj.isSelected = false;

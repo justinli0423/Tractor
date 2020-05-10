@@ -44,7 +44,7 @@ class Trick {
         let playNumSingles;
         let playSingles;
         let considerRank = true;
-        let flag;
+        let flag = 'valid';
         let newOther;
 
         if (this._trickNumCards) {
@@ -264,7 +264,6 @@ class Trick {
                 this._winner = i;
             }
 
-            flag = 'valid';
             newOther = other;
 
         } else {
@@ -425,7 +424,6 @@ class Trick {
     get winner() {
         return this._winner;
     }
-
 
 }
 
