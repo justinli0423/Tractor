@@ -408,7 +408,7 @@ class Trick {
         for (let i = 0; i < play.length; i++) {
             if (play[i][0] !== lowest.value || play[i][1] !== lowest.suit) {
                 newOther.push({
-                    cards: play[i],
+                    card: play[i],
                     isSelected: false,
                     // svg: '/Tractor/cardsSVG/' + play[i][0] + play[i][1] + '.svg'
                     svg: 'https://jli0423.github.io/Tractor/cardsSVG/' + play[i][0] + play[i][1] + '.svg'
