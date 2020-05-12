@@ -14,7 +14,6 @@ export function connectToSocketIO(getStatusCb, name) {
 
 // ------------------ EVENT EMITTERS ------------------
 export function makePlayIO(trick, cardsInHand, validator) {
-  // console.log('emitting cards', trick);
   socket.emit('clientPlay', trick, cardsInHand, validator);
 }
 

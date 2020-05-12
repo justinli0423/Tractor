@@ -134,7 +134,7 @@ const CallBottomButtons = (props) => {
     } = props;
     // alert(isValidPlay)
     if (isValidPlay === 'valid') {
-      updateCardsInHand(cardsInHand, trumpTracker);
+    updateCardsInHand(cardsInHand, trumpTracker);
       toggleCardSelector(false);
       updateNumCardsSelected(0);
       if (cardsInHand.length === 0) {
@@ -152,8 +152,12 @@ const CallBottomButtons = (props) => {
         return cardObj;
       }), trumpTracker);
     } else if (isValidPlay === 'badThrow') {
-      cardsInHand = Cards.sortHand(cardsInHand, trumpValue, currentBid[1], trumpTracker);
-      updateCardsInHand(cardsInHand, trumpTracker);
+      let newCards = [];
+      cardsInHand.forEach(card => {
+        console.log(card, card.card);
+        Cards.insertCard(newCards, card.card, trumpValue, currentBid[1]);
+      })
+      updateCardsInHand(newCards, trumpTracker);
     }
   }
 
