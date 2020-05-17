@@ -25,7 +25,7 @@ class Trick {
     }
 
     play(i) {
-        constants.su.emitNextClient(this._room, this._players[(this._starter + i) % constants.numPlayers], i);
+        constants.su.emitNextClient(this._players[(this._starter + i) % constants.numPlayers], i);
     }
 
     isValid(socketId, play, other, i) {
