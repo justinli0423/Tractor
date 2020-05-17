@@ -145,7 +145,6 @@ class App extends Component {
             ref={(nameRef) => { this.nameRef = nameRef }}
           />
           <Input
-            autoFocus
             placeholder="Enter a room code!"
             inputWidth={inputWidth}
             ref={(roomRef) => { this.roomRef = roomRef }}
