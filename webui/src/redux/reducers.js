@@ -8,6 +8,7 @@ const currState = {
   id: '',
   cards: [],
   trump: '2',
+  room: '',
   currentBid: null,
   currentBottomClient: null,
   currentClientTurn: null,
@@ -44,6 +45,7 @@ export default (state = currState, action) => {
       console.log(action.payload)
       return Object.assign({}, state, {
         name: action.payload.name,
+        room: action.payload.room,
         id: action.payload.id
       })
     case 'SET_DECLARER':

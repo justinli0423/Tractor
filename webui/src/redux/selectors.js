@@ -3,6 +3,8 @@ export const getScreenSize = store => ({
   appHeight: store.appHeight
 });
 
+export const getRoom = store => store.room;
+
 export const getExistingClients = store => store.clients;
 
 export const getExistingClientIds = store => store.clientIds;

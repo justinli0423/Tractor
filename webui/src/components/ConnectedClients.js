@@ -6,6 +6,7 @@ import {
   getExistingClients,
   getExistingClientIds,
   getClientTurn,
+  getRoom,
   getId,
   getName,
   updateState
@@ -16,6 +17,7 @@ const ConnectedClients = (props) => {
     myId,
     name,
     clientIds,
+    roomName,
     clients,
   } = props;
 
@@ -40,7 +42,7 @@ const ConnectedClients = (props) => {
   // TODO: show player levels as well as level
   return (
     <ClientsContainer>
-      <ClientsHeader>PLAYERS</ClientsHeader>
+      <ClientsHeader>PLAYERS ({roomName})</ClientsHeader>
       {clientIds.map(id => {
         return (
           <ClientItem
@@ -59,6 +61,7 @@ const mapStateToProps = state => {
   const name = getName(state);
   const clients = getExistingClients(state);
   const clientIds = getExistingClientIds(state);
+  const roomName = getRoom(state);
   const clientTurn = getClientTurn(state);
 
   const numStateChanges = updateState(state);
@@ -66,6 +69,7 @@ const mapStateToProps = state => {
     myId,
     name,
     clients,
+    roomName,
     clientTurn,
     clientIds,
     numStateChanges

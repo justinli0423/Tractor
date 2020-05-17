@@ -5,7 +5,8 @@ const Deck = require('./deck');
 const Card = require('./cards');
 
 class BidRound {
-    constructor(deck, players, trumpValue, roundNumber) {
+    constructor(room, deck, players, trumpValue, roundNumber) {
+        this._room = room;
         this._roundNumber = roundNumber;
         this._deck = deck;
         this._players = players;
@@ -51,7 +52,7 @@ class BidRound {
                 this._trumpSuit = suits[index];
                 index = Math.floor(Math.random() * constants.numPlayers);
                 this._declarer = this._players[index];
-                constants.su.emitGeneratedTrump(this._declarer, [1, this._trumpSuit]);
+                constants.su.emitGeneratedTrump(this._room, this._declarer, [1, this._trumpSuit]);
             }
             for (let i = 0; i < this._players.length; i++) {
                 this._hands[this._players[i]].trumpSuit = this._trumpSuit;

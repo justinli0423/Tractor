@@ -9,7 +9,8 @@ const switchPoints = 80;
 const levelPoints = 40;
 
 class Game {
-    constructor(players) {
+    constructor(room, players) {
+        this._room = room;
         this._teams = [[players[0], players[2]], [players[1], players[3]]];
         this._players = players;
         this._levels = [0, 0];
@@ -43,12 +44,12 @@ class Game {
             console.log(`game.newRound - declarers' new level: ${levels[this._levels[team]]}`);
             this.rotatePlayers();
             console.log('game.newRound - deck', this._deck.numCards)
-            this._round = new Round(this._deck, this._players, levels[this._levels[team]], this._roundNumber);
+            this._round = new Round(this._room, this._deck, this._players, levels[this._levels[team]], this._roundNumber);
             // this._round = constants.game.round;
             this._round.dealAndBid.call(this._round);
         } else {
             const trumpValue = '2';
-            this._round = new Round(this._deck, this._players, trumpValue, this._roundNumber);
+            this._round = new Round(this._room, this._deck, this._players, trumpValue, this._roundNumber);
             // this._round = constants.game.round;
             this._round.dealAndBid();
             this._deck = this._round.deck;

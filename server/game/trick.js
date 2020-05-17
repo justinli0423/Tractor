@@ -4,8 +4,9 @@ const Card = require('./cards');
 
 
 class Trick {
-    constructor(players, hands, starter, trumpValue, trumpSuit) {
+    constructor(room, players, hands, starter, trumpValue, trumpSuit) {
         console.log('New Trick');
+        this._room = room;
         this._players = players;
         this._hands = hands;
         this._starter = starter;
@@ -24,7 +25,7 @@ class Trick {
     }
 
     play(i) {
-        constants.su.emitNextClient(this._players[(this._starter + i) % constants.numPlayers], i);
+        constants.su.emitNextClient(this._room, this._players[(this._starter + i) % constants.numPlayers], i);
     }
 
     isValid(socketId, play, other, i) {
@@ -429,6 +430,10 @@ class Trick {
 
     get winner() {
         return this._winner;
+    }
+
+    get room() {
+        return this._room;
     }
 
 }

@@ -4,7 +4,8 @@ const BidRound = require('./bidRound')
 const PlayRound = require('./playRound')
 
 class Round {
-    constructor(deck, players = null, trumpValue, roundNumber) {
+    constructor(room, deck, players = null, trumpValue, roundNumber) {
+        this._room = room;
         this._roundNumber = roundNumber
         this._deck = deck;
         this._players = players;
@@ -29,11 +30,11 @@ class Round {
     }
 
     dealAndBid() {
-        constants.su.emitTrumpValue(this._trumpValue);
+        constants.su.emitTrumpValue(this._room, this._trumpValue);
         // console.log('round:dealAndBid - typeof deck', typeof this._deck)
         // console.log('round:dealAndBid - round', this)
         // console.log('round:dealAndBid - deck numcards', this._deck.numCards)
-        this._bidRound = new BidRound(this._deck, this._players, this._trumpValue, this._roundNumber);
+        this._bidRound = new BidRound(this._room, this._deck, this._players, this._trumpValue, this._roundNumber);
         this._bidRound.deal.call(this._bidRound);
         _.map(this._players, function (socketId) {
             constants.su.subSetBid(socketId);

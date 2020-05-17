@@ -73,11 +73,11 @@ class App extends Component {
     })
   }
 
-  setConnectionStatus(connectionStatus, id, name) {
+  setConnectionStatus(connectionStatus, id, name, roomName) {
     this.setState({ connectionStatus });
     if (connectionStatus) {
       getConnectedClientsIO(this.setConnectedClients.bind(this));
-      this.props.setUser(name, id);
+      this.props.setUser(name, id, roomName);
     }
   }
 
@@ -85,26 +85,31 @@ class App extends Component {
     this.props.updateClientList(sockets);
   }
 
+  joinRoomValidator(isConnected) {
+    if(!isConnected) {
+      alert('Room is full.');
+    }
+  }
+
   connect(ev) {
     ev.preventDefault();
     let name = this.nameRef.value;
     let room = this.roomRef.value;
     if (!name) {
-      console.log('enter a name');
+      alert('enter a name');
       return;
     }
     if (!room) {
-      console.log('enter a room');
+      alert('enter a room');
       return;
     }
 
     if (name.length > 7) {
       name = name.slice(0, 7);
     }
-    connectToSocketIO(this.setConnectionStatus.bind(this), name, room);
+    connectToSocketIO(this.setConnectionStatus.bind(this), this.joinRoomValidator, name, room);
   }
 
-  // TODO: create popup on error to enter a name if no name is entered
   renderPreConnection() {
     const {
       appHeight,

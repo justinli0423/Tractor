@@ -3,18 +3,18 @@ const ENDPOINT = "http://127.0.0.1:8000";
 
 var socket = null;
 
-export function connectToSocketIO(getStatusCb, name, room) {
-  socket = io(ENDPOINT, room);
+export function connectToSocketIO(getStatusCb, validator, name, room) {
+  socket = io(ENDPOINT);
   // if (!socket.connected) {
   //   socket = io('tractorserver.herokuapp.com');
   // }
-  getConnectionStatus(getStatusCb, name);
-  setSocketIdIO(name);
+  getConnectionStatus(getStatusCb, name, room);
+  setSocketIdIO(name, room, validator);
 }
 
 // ------------------ EVENT EMITTERS ------------------
 export function makePlayIO(trick, cardsInHand, validator) {
-  socket.emit('clientPlay', trick, cardsInHand, validator);
+  socket.emit('clientPlay', trick, cardsInHand, validator); 
 }
 
 export function makeBidIO(bid) {
@@ -31,8 +31,9 @@ export function returnBottomIO(bottom) {
   socket.emit('newBottom', bottom);
 }
 
-function setSocketIdIO(id) {
-  socket.emit('setSocketId', id);
+function setSocketIdIO(name, room, validator) {
+  console.log(validator)
+  socket.emit('setSocketId', name, room, validator);
 }
 
 // ------------------ EVENT LISTENERS ------------------
@@ -81,9 +82,9 @@ export function getTrumpValueIO(setTrumpValueCb) {
   socket.on('setTrumpValue', trump => setTrumpValueCb(trump));
 }
 
-function getConnectionStatus(setStatusCb, name) {
+function getConnectionStatus(setStatusCb, name, room) {
   socket.on('connectionStatus', status => {
     console.log('connected');
-    setStatusCb(status, socket.id, name);
+    setStatusCb(status, socket.id, name, room);
   });
 }

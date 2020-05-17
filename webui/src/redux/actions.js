@@ -14,11 +14,12 @@ export const updateClientList = (clients) => ({
   }
 });
 
-export const setUser = (name, id) => ({
+export const setUser = (name, id, room) => ({
   type: 'SET_USER',
   payload: {
     name,
-    id
+    id,
+    room,
   }
 });
 

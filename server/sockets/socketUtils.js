@@ -6,6 +6,7 @@ const constants = require('../constants');
 class SocketUtil {
     constructor(io) {
         this._sockets = {};
+        this._rooms = {};
     }
 
     // ------------ HELPERS ------------
@@ -15,11 +16,14 @@ class SocketUtil {
     }
 
     clearNullSockets() {
-        this._sockets = _.omit(this._sockets, (value) => {
-            return value === null;
-        });
+        _.each(_.keys(this._sockets), (room) => {
+            this._sockets[room] = _.omit(this._sockets[room], (value) => {
+                return value === null;
+            });
+        })
     }
 
+    // do we need this?
     getNumClients() {
         return Object.keys(this._sockets).length;
     }
@@ -29,18 +33,19 @@ class SocketUtil {
     }
 
     start() {
-        // TODO: CHANGE SOCKET LENGTH BACK TO 4
-        if (Object.keys(this._sockets).length === constants.numPlayers) {
-            constants.game = new Game(Object.keys(this._sockets));
-            constants.game.newRound();
-        }
+        _.each(_.keys(this._sockets), (room) => {
+            if (Object.keys(this._sockets[room]).length === constants.numPlayers) {
+                constants.games[room] = new Game(room, Object.keys(this._sockets[room]));
+                constants.games[room].newRound();
+            }
+        })
     }
 
     // ------------ SOCKET EMITTERS ------------
-    emitConnectedClients() {
+    emitConnectedClients(room) {
         this.clearNullSockets();
-        console.log('Total clients:', Object.values(this._sockets));
-        constants.io.emit('newClientConnection', this._sockets);
+        console.log('Total clients:', Object.values(this._sockets[room]));
+        constants.io.to(room).emit('newClientConnection', this._sockets[room]);
     }
 
     emitDealCard(socketId, card) {
@@ -51,9 +56,9 @@ class SocketUtil {
         this.getSocket(socketId).emit('connectionStatus', socketStatus);
     }
 
-    emitTrumpValue(trumpValue) {
+    emitTrumpValue(room, trumpValue) {
         console.log(`A new round has started. ${trumpValue}'s are trump.`)
-        constants.io.emit('setTrumpValue', trumpValue)
+        constants.io.to(room).emit('setTrumpValue', trumpValue)
     }
 
     emitNewBid(socketId, bid) {
@@ -61,9 +66,9 @@ class SocketUtil {
         this.getSocket(socketId).broadcast.emit('setNewBid', socketId, bid);
     }
 
-    emitGeneratedTrump(clientId, trump) {
-        console.log('Emitted random trump to', clientId, trump);
-        constants.io.emit('generateTrump', clientId, trump);
+    emitGeneratedTrump(room, name, trump) {
+        console.log('Emitted random trump to', name, trump);
+        constants.io.to(room).emit('generateTrump', name, trump);
     }
 
     emitBottom(socketId, bottom) {
@@ -71,18 +76,18 @@ class SocketUtil {
         this.getSocket(socketId).emit('originalBottom', bottom);
     }
 
-    emitNextClient(socketId, i) {
+    emitNextClient(room, socketId, i) {
         console.log(`It's ${this._sockets[socketId]}'s turn.`);
-        constants.io.emit('nextClient', socketId);
+        constants.io.to(room).emit('nextClient', socketId);
         this.subClientPlay(socketId, i);
     }
 
-    emitCardsPlayed(cards) {
-        constants.io.emit('cardsPlayed', cards);
+    emitCardsPlayed(room, cards) {
+        constants.io.to(room).emit('cardsPlayed', cards);
     }
 
-    emitOpponentPoints(points) {
-        constants.io.emit('opponentPoints', points);
+    emitOpponentPoints(room, points) {
+        constants.io.to(room).emit('opponentPoints', points);
     }
 
     // ------------ SOCKET SUBS ------------
@@ -91,10 +96,22 @@ class SocketUtil {
         // once clientId is received:
         // 1. send back connection status
         // 2. send all connect clients
-        socket.on('setSocketId', (clientID) => {
-            this._sockets[socket.id] = clientID;
+        socket.on('setSocketId', (name, room, cb) => {
+            // this._sockets[socket.id] = name;
+            if (!this._sockets[room]) {
+                this._sockets[room] = {};
+                console.log(this._sockets[room])
+            } 
+            if (Object.keys(this._sockets[room]).length < constants.numPlayers) {
+                this._sockets[room][socket.id] = name;
+                this._rooms[socket.id] = room;
+                socket.join(room);
+                cb(true);
+            } else {
+                cb(false);
+            }
             this.emitConnectionStatus(socket.id, socket.connected);
-            this.emitConnectedClients();
+            this.emitConnectedClients(room);
             this.start();
         });
     }
@@ -102,9 +119,18 @@ class SocketUtil {
     removeSocket(socket) {
         socket.on('disconnect', () => {
             clearInterval(constants.interval);
-            console.log(`Client ${this._sockets[socket.id]} has disconnected`);
-            this._sockets[socket.id] = null;
-            this.emitConnectedClients();
+            let room = this._rooms[socket.id];
+            console.log(`Client ${this._sockets[room][socket.id]} has disconnected`);
+            delete this._sockets[room][socket.id];
+            socket.leave(room);
+            console.log(Object.keys(this._sockets[room]).length)
+            console.log(this._sockets[room])
+            if (Object.keys(this._sockets[room]).length === 0) {
+                delete this._sockets[room];
+            } else {
+                this.emitConnectedClients(room);
+            }
+            delete this._rooms[socket.id];
         });
     }
 
@@ -146,7 +172,7 @@ class SocketUtil {
             callback(valid[1], valid[2]);
             if (valid[0]) {
                 this.closeClientPlaySub(socketId);
-                this.emitCardsPlayed(Trick.cardsPlayed());
+                this.emitCardsPlayed(Trick.room, Trick.cardsPlayed());
                 if (i === constants.numPlayers - 1) {
                     constants.game.round.playRound.nextTrick();
                 } else {

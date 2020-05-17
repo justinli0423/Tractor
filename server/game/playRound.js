@@ -3,7 +3,8 @@ const constants = require('../constants');
 const Trick = require('./trick');
 
 class PlayRound {
-    constructor(deck, players, hands, trumpValue, trumpSuit, bottom) {
+    constructor(room, deck, players, hands, trumpValue, trumpSuit, bottom) {
+        this._room = room;
         this._discard = deck;
         this._players = players;
         this._hands = hands;
@@ -27,11 +28,11 @@ class PlayRound {
             })
             console.log('Trick won by', constants.su._sockets[this._players[this._trickStarter]]);
             console.log('Opponent points:', this._opponentPoints)
-            constants.su.emitOpponentPoints(this._opponentPoints);
+            constants.su.emitOpponentPoints(this._room, this._opponentPoints);
         }
 
         if (this._hands[this._players[0]].numCards > 0) {
-            this._trick = new Trick(this._players, this._hands, this._trickStarter, this._trumpValue, this._trumpSuit);
+            this._trick = new Trick(this._room, this._players, this._hands, this._trickStarter, this._trumpValue, this._trumpSuit);
             this._trick.play(0);
         } else {
             let bottomPoints = 0;
