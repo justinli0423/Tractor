@@ -7,6 +7,7 @@ class SocketUtil {
     constructor(io) {
         this._sockets = {};
         this._rooms = {};
+        this._started = {};
     }
 
     // ------------ HELPERS ------------
@@ -34,7 +35,8 @@ class SocketUtil {
 
     start() {
         _.each(_.keys(this._sockets), (room) => {
-            if (Object.keys(this._sockets[room]).length === constants.numPlayers) {
+            if (Object.keys(this._sockets[room]).length === constants.numPlayers && !this._started[room]) {
+                this._started[room] = true;
                 constants.games[room] = new Game(room, Object.keys(this._sockets[room]));
                 constants.games[room].newRound();
             }
@@ -49,7 +51,7 @@ class SocketUtil {
     }
 
     emitDealCard(socketId, card) {
-        this.getSocket(socketId).emit('dealCard', card)
+        this.getSocket(socketId).emit('dealCard', card);
     }
 
     emitConnectionStatus(socketId, socketStatus = false) {
