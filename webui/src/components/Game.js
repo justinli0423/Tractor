@@ -349,7 +349,7 @@ const CardImgContainer = styled.span`
 
   &:not(:first-child) {
     /* margin-left: ${prop => `-${prop.numCards * 2.3}px`}; */
-    margin-left: ${prop => `-${prop.cardWidth * 0.65}px`};
+    margin-left: ${prop => `-${prop.cardWidth * 0.7}px`};
   }
 
   &:hover ${CardImg} {

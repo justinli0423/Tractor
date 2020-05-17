@@ -79,7 +79,7 @@ class SocketUtil {
     }
 
     emitNextClient(socketId, i) {
-        console.log(`It's ${this._sockets[this._rooms[socketId]][socketId]}'s turn.`);
+        // console.log(`It's ${this._sockets[this._rooms[socketId]][socketId]}'s turn.`);
         constants.io.to(this._rooms[socketId]).emit('nextClient', socketId);
         this.subClientPlay(socketId, i);
     }
