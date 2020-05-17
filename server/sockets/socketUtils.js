@@ -64,7 +64,7 @@ class SocketUtil {
     }
 
     emitNewBid(socketId, bid) {
-        console.log('Sending', this._sockets[socketId], "'s bid of ", bid);
+        console.log('Sending', this._sockets[this._rooms[socketId]][socketId], "'s bid of ", bid);
         this.getSocket(socketId).broadcast.emit('setNewBid', socketId, bid);
     }
 
@@ -74,13 +74,13 @@ class SocketUtil {
     }
 
     emitBottom(socketId, bottom) {
-        console.log('Sending', this._sockets[socketId], 'the bottom:', bottom);
+        console.log('Sending', this._sockets[this._rooms[socketId]][socketId], 'the bottom:', bottom);
         this.getSocket(socketId).emit('originalBottom', bottom);
     }
 
-    emitNextClient(room, socketId, i) {
-        console.log(`It's ${this._sockets[socketId]}'s turn.`);
-        constants.io.to(room).emit('nextClient', socketId);
+    emitNextClient(socketId, i) {
+        console.log(`It's ${this._sockets[room][socketId]}'s turn.`);
+        constants.io.to(this._rooms[socketId]).emit('nextClient', socketId);
         this.subClientPlay(socketId, i);
     }
 
@@ -99,7 +99,7 @@ class SocketUtil {
         // 1. send back connection status
         // 2. send all connect clients
         socket.on('setSocketId', (name, room, cb) => {
-            // this._sockets[socket.id] = name;
+            // this._sockets[this._rooms[socketId]][socket.id] = name;
             if (!this._sockets[room]) {
                 this._sockets[room] = {};
                 console.log(this._sockets[room])
@@ -110,6 +110,7 @@ class SocketUtil {
                 socket.join(room);
                 cb(true);
             } else {
+                socket.disconnect();
                 cb(false);
             }
             this.emitConnectionStatus(socket.id, socket.connected);
@@ -140,7 +141,7 @@ class SocketUtil {
     subSetBid(socketId) {
         console.log('waiting for bids')
         this.getSocket(socketId).on('newBid', (bid) => {
-            console.log("Received bid of", bid, "from", this._sockets[socketId]);
+            console.log("Received bid of", bid, "from", this._sockets[this._rooms[socketId]][socketId]);
             // cb(bid, socketId);
             constants.games[this._rooms[socketId]].round.bidRound.receiveBid(bid, socketId);
             this.emitNewBid(socketId, bid);
@@ -149,7 +150,7 @@ class SocketUtil {
 
     subDoneBid(socketId) {
         this.getSocket(socketId).on('doneBid', () => {
-            console.log(`${this._sockets[socketId]} is done bidding.`);
+            console.log(`${this._sockets[this._rooms[socketId]][socketId]} is done bidding.`);
             this.closeBidSubs(socketId)
             constants.games[this._rooms[socketId]].round.bidRound.doneBid();
         })
@@ -157,7 +158,7 @@ class SocketUtil {
 
     subNewBottom(socketId) {
         this.getSocket(socketId).on('newBottom', (bottom) => {
-            console.log('New bottom sent by ', this._sockets[socketId], ':', bottom);
+            console.log('New bottom sent by ', this._sockets[this._rooms[socketId]][socketId], ':', bottom);
             constants.io.emit('bidWon');
             this.closeBottomSub(socketId);
             constants.games[this._rooms[socketId]].round.bidRound.bottom = bottom;
@@ -166,10 +167,10 @@ class SocketUtil {
     }
 
     subClientPlay(socketId, i) {
-        console.log('Waiting for play from', this._sockets[socketId]);
+        console.log('Waiting for play from', this._sockets[this._rooms[socketId]][socketId]);
         this.getSocket(socketId).on('clientPlay', (play, other, callback) => {
             const Trick = constants.games[this._rooms[socketId]].round.playRound.trick;
-            console.log('New play sent by ', this._sockets[socketId], ':', play);
+            console.log('New play sent by ', this._sockets[this._rooms[socketId]][socketId], ':', play);
             const valid = Trick.isValid.call(Trick, socketId, play, other, i);
             console.log()
             callback(valid[1], valid[2]);

@@ -48,7 +48,7 @@ class Round {
 
     play() {
         this._trumpSuit = this._bidRound.trumpSuit;
-        console.log(this._bidRound.bottom)
+        console.log('test2', this._bidRound.hands)
         this._playRound = new PlayRound(this._deck, this._players, this._bidRound.hands, this._trumpValue, this._trumpSuit, this._bidRound.bottom)
         this._playRound.nextTrick()
     }

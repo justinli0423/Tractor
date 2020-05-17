@@ -8,6 +8,7 @@ class PlayRound {
         this._discard = deck;
         this._players = players;
         this._hands = hands;
+        console.log('test3', this._hands)
         this._opponentPoints = 0;
         this._trumpValue = trumpValue;
         this._trumpSuit = trumpSuit;
@@ -30,7 +31,9 @@ class PlayRound {
             console.log('Opponent points:', this._opponentPoints)
             constants.su.emitOpponentPoints(this._room, this._opponentPoints);
         }
-
+        console.log('test4', this._hands)
+        console.log('test5', this._players[0])
+        console.log('test6', this._hands[this._players[0]])
         if (this._hands[this._players[0]].numCards > 0) {
             this._trick = new Trick(this._room, this._players, this._hands, this._trickStarter, this._trumpValue, this._trumpSuit);
             this._trick.play(0);
