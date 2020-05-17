@@ -18,6 +18,7 @@ export const Button = styled.button`
   display: inline-block;
   font-family: 'Roboto';
   font-weight: 400;
+  margin: 7px;
   outline: none;
   border: transparent 2px solid;
   border-radius: 2px;
