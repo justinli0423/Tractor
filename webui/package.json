@@ -2,7 +2,7 @@
   "name": "webui",
   "version": "0.1.0",
   "private": true,
-  "homepage": "http://jli0423.github.io/Tractor",
+  "homepage": "http://justinli0423.github.io/Tractor",
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
