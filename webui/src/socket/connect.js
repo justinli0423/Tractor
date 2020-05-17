@@ -3,8 +3,8 @@ const ENDPOINT = "http://127.0.0.1:8000";
 
 var socket = null;
 
-export function connectToSocketIO(getStatusCb, name) {
-  socket = io(ENDPOINT);
+export function connectToSocketIO(getStatusCb, name, room) {
+  socket = io(ENDPOINT, room);
   // if (!socket.connected) {
   //   socket = io('tractorserver.herokuapp.com');
   // }

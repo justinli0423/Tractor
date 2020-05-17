@@ -88,14 +88,20 @@ class App extends Component {
   connect(ev) {
     ev.preventDefault();
     let name = this.nameRef.value;
+    let room = this.roomRef.value;
     if (!name) {
       console.log('enter a name');
       return;
     }
+    if (!room) {
+      console.log('enter a room');
+      return;
+    }
+
     if (name.length > 7) {
       name = name.slice(0, 7);
     }
-    connectToSocketIO(this.setConnectionStatus.bind(this), name);
+    connectToSocketIO(this.setConnectionStatus.bind(this), name, room);
   }
 
   // TODO: create popup on error to enter a name if no name is entered
