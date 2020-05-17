@@ -53,17 +53,17 @@ class App extends Component {
       appWidth = 2560;
       appHeight = 1440;
       iconWidth = 250;
-      inputWidth = 170;
+      inputWidth = 200;
     } else if (screenWidth >= 1920 && screenHeight >= 1080) {
       appWidth = 1920;
       appHeight = 1080;
       iconWidth = 150;
-      inputWidth = 100;
+      inputWidth = 130;
     } else {
       appWidth = 1280;
       appHeight = 720;
       iconWidth = 150;
-      inputWidth = 100;
+      inputWidth = 130;
     }
 
     this.props.setScreenSize(appWidth, appHeight);
@@ -124,11 +124,17 @@ class App extends Component {
         <Form
           onSubmit={(ev) => { this.connect(ev) }}
         >
-          <NameInput
+          <Input
             autoFocus
             placeholder="Enter a name!"
             inputWidth={inputWidth}
             ref={(nameRef) => { this.nameRef = nameRef }}
+          />
+          <Input
+            autoFocus
+            placeholder="Enter a room code!"
+            inputWidth={inputWidth}
+            ref={(roomRef) => { this.roomRef = roomRef }}
           />
           <RegularButton
             label="Join"
@@ -194,11 +200,11 @@ const Title = styled.h1`
 
 const Form = styled.form`
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
 `;
 
-const NameInput = styled.input`
+const Input = styled.input`
   margin: 5px 15px;
   padding: 7px 10px;
   outline: none;
