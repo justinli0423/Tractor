@@ -24,9 +24,8 @@ class SocketUtil {
         })
     }
 
-    // do we need this?
-    getNumClients() {
-        return Object.keys(this._sockets).length;
+    get sockets() {
+        return this._sockets;
     }
 
     getSocket(socketId) {
@@ -64,7 +63,7 @@ class SocketUtil {
     }
 
     emitNewBid(socketId, bid) {
-        console.log('Sending', this._sockets[this._rooms[socketId]][socketId], "'s bid of ", bid);
+        console.log('Sending', constants.su.sockets[this._rooms[socketId]][socketId], "'s bid of ", bid);
         this.getSocket(socketId).broadcast.emit('setNewBid', socketId, bid);
     }
 
@@ -79,7 +78,7 @@ class SocketUtil {
     }
 
     emitNextClient(socketId, i) {
-        // console.log(`It's ${this._sockets[this._rooms[socketId]][socketId]}'s turn.`);
+        console.log(`It's ${constants.su.sockets[this._rooms[socketId]][socketId]}'s turn.`);
         constants.io.to(this._rooms[socketId]).emit('nextClient', socketId);
         this.subClientPlay(socketId, i);
     }
@@ -150,7 +149,7 @@ class SocketUtil {
 
     subDoneBid(socketId) {
         this.getSocket(socketId).on('doneBid', () => {
-            console.log(`${this._sockets[this._rooms[socketId]][socketId]} is done bidding.`);
+            console.log(`${constants.su.sockets[this._rooms[socketId]][socketId]} is done bidding.`);
             this.closeBidSubs(socketId)
             constants.games[this._rooms[socketId]].round.bidRound.doneBid();
         })
@@ -158,7 +157,7 @@ class SocketUtil {
 
     subNewBottom(socketId) {
         this.getSocket(socketId).on('newBottom', (bottom) => {
-            console.log('New bottom sent by ', this._sockets[this._rooms[socketId]][socketId], ':', bottom);
+            console.log('New bottom sent by ', constants.su.sockets[this._rooms[socketId]][socketId], ':', bottom);
             constants.io.emit('bidWon');
             this.closeBottomSub(socketId);
             constants.games[this._rooms[socketId]].round.bidRound.bottom = bottom;
@@ -167,12 +166,11 @@ class SocketUtil {
     }
 
     subClientPlay(socketId, i) {
-        console.log('Waiting for play from', this._sockets[this._rooms[socketId]][socketId]);
+        console.log('Waiting for play from', constants.su.sockets[this._rooms[socketId]][socketId]);
         this.getSocket(socketId).on('clientPlay', (play, other, callback) => {
             const Trick = constants.games[this._rooms[socketId]].round.playRound.trick;
-            console.log('New play sent by ', this._sockets[this._rooms[socketId]][socketId], ':', play);
+            console.log('New play sent by ', constants.su.sockets[this._rooms[socketId]][socketId], ':', play);
             const valid = Trick.isValid.call(Trick, socketId, play, other, i);
-            console.log()
             callback(valid[1], valid[2]);
             if (valid[0]) {
                 this.closeClientPlaySub(socketId);
