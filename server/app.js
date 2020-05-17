@@ -18,9 +18,6 @@ constants.su = su;
 io.on('connection', (socket) => {
     su.addSocket(socket);
     su.removeSocket(socket)
-    if (constants.interval) {
-        clearInterval(constants.interval);
-    }
 })
 
 server.listen(port, () => {

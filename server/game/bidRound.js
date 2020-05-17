@@ -25,14 +25,14 @@ class BidRound {
         this._deck.shuffle();
         console.log(this._deck.numCards)
         let i = 0;
-        constants.interval = setInterval(() => {
+        constants.intervals[this._room] = setInterval(() => {
             let card = this._deck.deal();
             // TODO: CHANGE mod back to 4, i === 100
             constants.su.emitDealCard(this._players[i % constants.numPlayers], [card.value, card.suit]);
             this._hands[this._players[i % constants.numPlayers]].pushCard(card);
             i++;
             if (this._deck.numCards === constants.numBottom) {
-                clearInterval(constants.interval);
+                clearInterval(constants.intervals[this._room]);
             }
         }, 150);
         // 150 seems to be a good dealing speed? could be slower

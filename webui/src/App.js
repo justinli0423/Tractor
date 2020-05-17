@@ -88,6 +88,9 @@ class App extends Component {
   joinRoomValidator(isConnected) {
     if(!isConnected) {
       alert('Room is full.');
+      this.setState({
+        connectionStatus: false
+      });
     }
   }
 

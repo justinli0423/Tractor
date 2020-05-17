@@ -46,7 +46,7 @@ class SocketUtil {
     // ------------ SOCKET EMITTERS ------------
     emitConnectedClients(room) {
         this.clearNullSockets();
-        console.log('Total clients:', Object.values(this._sockets[room]));
+        console.log(`Clients in room ${room}:`, Object.values(this._sockets[room]));
         constants.io.to(room).emit('newClientConnection', this._sockets[room]);
     }
 
@@ -120,7 +120,6 @@ class SocketUtil {
 
     removeSocket(socket) {
         socket.on('disconnect', () => {
-            clearInterval(constants.interval);
             let room = this._rooms[socket.id];
             if (this._sockets[room]) {
                 console.log(`Client ${this._sockets[room][socket.id]} has disconnected`);

@@ -1,5 +1,5 @@
 module.exports = {
-    interval: null,
+    intervals: {},
     io: null,
     su: null,
     games: {},
