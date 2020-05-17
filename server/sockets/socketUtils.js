@@ -35,7 +35,7 @@ class SocketUtil {
 
     start() {
         _.each(_.keys(this._sockets), (room) => {
-            if (Object.keys(this._sockets[room]).length === constants.numPlayers && this._started[room] === false) {
+            if (Object.keys(this._sockets[room]).length === constants.numPlayers && !this._started[room]) {
                 this._started[room] = true;
                 constants.games[room] = new Game(room, Object.keys(this._sockets[room]));
                 constants.games[room].newRound();
