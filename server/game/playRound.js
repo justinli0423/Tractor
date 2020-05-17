@@ -45,7 +45,7 @@ class PlayRound {
                 this._opponentPoints += bottomPoints * this._trick.trickNumCards * 2;
             }
             console.log('Opponent points:', this._opponentPoints)
-            constants.game.round.endRound();
+            constants.games[this._room].round.endRound();
         }
     }
 

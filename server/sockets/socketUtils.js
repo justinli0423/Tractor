@@ -139,7 +139,7 @@ class SocketUtil {
         this.getSocket(socketId).on('newBid', (bid) => {
             console.log("Received bid of", bid, "from", this._sockets[socketId]);
             // cb(bid, socketId);
-            constants.game.round.bidRound.receiveBid(bid, socketId);
+            constants.games[this._rooms[socketId]].round.bidRound.receiveBid(bid, socketId);
             this.emitNewBid(socketId, bid);
         })
     }
@@ -148,7 +148,7 @@ class SocketUtil {
         this.getSocket(socketId).on('doneBid', () => {
             console.log(`${this._sockets[socketId]} is done bidding.`);
             this.closeBidSubs(socketId)
-            constants.game.round.bidRound.doneBid();
+            constants.games[this._rooms[socketId]].round.bidRound.doneBid();
         })
     }
 
@@ -157,15 +157,15 @@ class SocketUtil {
             console.log('New bottom sent by ', this._sockets[socketId], ':', bottom);
             constants.io.emit('bidWon');
             this.closeBottomSub(socketId);
-            constants.game.round.bidRound.bottom = bottom;
-            constants.game.round.play();
+            constants.games[this._rooms[socketId]].round.bidRound.bottom = bottom;
+            constants.games[this._rooms[socketId]].round.play();
         })
     }
 
     subClientPlay(socketId, i) {
         console.log('Waiting for play from', this._sockets[socketId]);
         this.getSocket(socketId).on('clientPlay', (play, other, callback) => {
-            const Trick = constants.game.round.playRound.trick;
+            const Trick = constants.games[this._rooms[socketId]].round.playRound.trick;
             console.log('New play sent by ', this._sockets[socketId], ':', play);
             const valid = Trick.isValid.call(Trick, socketId, play, other, i);
             console.log()
@@ -174,7 +174,7 @@ class SocketUtil {
                 this.closeClientPlaySub(socketId);
                 this.emitCardsPlayed(Trick.room, Trick.cardsPlayed());
                 if (i === constants.numPlayers - 1) {
-                    constants.game.round.playRound.nextTrick();
+                    constants.games[this._rooms[socketId]].round.playRound.nextTrick();
                 } else {
                     Trick.play(i + 1);
                 }
