@@ -31,16 +31,16 @@ class PlayRound {
             console.log('Opponent points:', this._opponentPoints)
             constants.su.emitOpponentPoints(this._room, this._opponentPoints);
         }
-        console.log('test4', this._hands)
-        console.log('test5', this._players[0])
-        console.log('test6', this._hands[this._players[0]])
+        console.log('test4', this._hands);
+        console.log('test5', this._players[0]);
+        console.log('test6', this._hands[this._players[0]]);
         if (this._hands[this._players[0]].numCards > 0) {
             this._trick = new Trick(this._room, this._players, this._hands, this._trickStarter, this._trumpValue, this._trumpSuit);
             this._trick.play(0);
         } else {
             let bottomPoints = 0;
             for (let i = 0; i < constants.numBottom; i++) {
-                const card = this._bottom.deal()
+                const card = this._bottom.deal();
                 bottomPoints += card.getPoints();
                 this._discard.pushCard(card)
             }
