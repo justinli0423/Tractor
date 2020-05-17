@@ -45,11 +45,6 @@ import {
 const Cards = new PlayingCards();
 
 const CallBottomButtons = (props) => {
-  // TODO: 1. pass correct value
-  // TODO: 2. remove invalid bids
-
-  // e.g. if I have 2 (2 of spades) -> [2, 'S'];
-  // e.g. no trump: ['S', 'J'] or ['B', 'J']
   const setBottom = (bid) => {
     const {
       myId,
@@ -132,7 +127,6 @@ const CallBottomButtons = (props) => {
       currentBid,
       updateNumCardsSelected
     } = props;
-    // alert(isValidPlay)
     if (isValidPlay === 'valid') {
     updateCardsInHand(cardsInHand, trumpTracker);
       toggleCardSelector(false);

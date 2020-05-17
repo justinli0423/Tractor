@@ -134,7 +134,9 @@ class Game extends Component {
     Cards.newTrump(trumpTracker, validBids, newCard, currentBid, trumpValue);
     setValidBids(validBids);
     updateCardsInHand(cards, trumpTracker);
-    toggleBidButtons(true);
+    if (cards.length === 25) {
+      toggleBidButtons(true);
+    }
   }
 
   receiveBottomCards(bottomCards) {

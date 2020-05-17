@@ -21,7 +21,7 @@ const currState = {
   canSelectCards: false,
   numCardsSelected: 0,
   // canBidForBottom is only true beginning of each round
-  canBidForBottom: true,
+  canBidForBottom: false,
   // TODO: add everyone elses play - should be by socketId index
   // [[cards by player0], [cards by player1]]
   cardsPlayed: [],
