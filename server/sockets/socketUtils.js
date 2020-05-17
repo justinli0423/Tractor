@@ -18,7 +18,7 @@ class SocketUtil {
     clearNullSockets() {
         _.each(_.keys(this._sockets), (room) => {
             this._sockets[room] = _.omit(this._sockets[room], (value) => {
-                return value === null;
+                return !value;
             });
         })
     }
@@ -120,17 +120,19 @@ class SocketUtil {
         socket.on('disconnect', () => {
             clearInterval(constants.interval);
             let room = this._rooms[socket.id];
-            console.log(`Client ${this._sockets[room][socket.id]} has disconnected`);
-            delete this._sockets[room][socket.id];
-            socket.leave(room);
-            console.log(Object.keys(this._sockets[room]).length)
-            console.log(this._sockets[room])
-            if (Object.keys(this._sockets[room]).length === 0) {
-                delete this._sockets[room];
-            } else {
-                this.emitConnectedClients(room);
+            if (this._sockets[room]) {
+                console.log(`Client ${this._sockets[room][socket.id]} has disconnected`);
+                delete this._sockets[room][socket.id];
+                socket.leave(room);
+                console.log(Object.keys(this._sockets[room]).length)
+                console.log(this._sockets[room])
+                if (Object.keys(this._sockets[room]).length === 0) {
+                    delete this._sockets[room];
+                } else {
+                    this.emitConnectedClients(room);
+                }
+                delete this._rooms[socket.id];
             }
-            delete this._rooms[socket.id];
         });
     }
 
