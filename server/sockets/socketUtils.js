@@ -53,7 +53,7 @@ class SocketUtil {
     }
 
     emitDealCard(socketId, card) {
-        console.log('test3', this._sockets)
+        // console.log('test3', this._sockets)
 
         this.getSocket(socketId).emit('dealCard', card);
     }
@@ -65,14 +65,14 @@ class SocketUtil {
     }
 
     emitTrumpValue(room, trumpValue) {
-        console.log('test5', this._sockets)
+        // console.log('test5', this._sockets)
 
         console.log(`A new round has started. ${trumpValue}'s are trump.`)
         constants.io.to(room).emit('setTrumpValue', trumpValue)
     }
 
     emitNewBid(socketId, bid) {
-        console.log('test6', this._sockets)
+        // console.log('test6', this._sockets)
 
         console.log('Sending', this._sockets[this._rooms[socketId]][socketId], "'s bid of ", bid);
         this.getSocket(socketId).broadcast.emit('setNewBid', socketId, bid);
@@ -93,7 +93,7 @@ class SocketUtil {
     }
 
     emitNextClient(socketId, i) {
-        console.log('test9', this._sockets, this._rooms, socketId);
+        // console.log('test9', this._sockets, this._rooms, socketId);
 
         console.log("It's", this._sockets[this._rooms[socketId]][socketId], "'s turn.");
         constants.io.to(this._rooms[socketId]).emit('nextClient', socketId);
@@ -101,7 +101,7 @@ class SocketUtil {
     }
 
     emitCardsPlayed(room, cards) {
-        console.log('test10', this._sockets)
+        // console.log('test10', this._sockets)
 
         constants.io.to(room).emit('cardsPlayed', cards);
     }
@@ -115,7 +115,7 @@ class SocketUtil {
     // ------------ SOCKET SUBS ------------
 
     addSocket(socket) {
-        console.log('test12', this._sockets)
+        // console.log('test12', this._sockets)
 
         // once clientId is received:
         // 1. send back connection status
@@ -142,7 +142,7 @@ class SocketUtil {
     }
 
     removeSocket(socket) {
-        console.log('test13', this._sockets)
+        // console.log('test13', this._sockets)
 
         socket.on('disconnect', () => {
             let room = this._rooms[socket.id];
@@ -197,7 +197,7 @@ class SocketUtil {
     }
 
     subClientPlay(socketId, i) {
-        console.log('test17', this._sockets)
+        // console.log('test17', this._sockets)
 
         console.log('Waiting for play from', this._sockets[this._rooms[socketId]][socketId]);
         this.getSocket(socketId).on('clientPlay', (play, other, callback) => {

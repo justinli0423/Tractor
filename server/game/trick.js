@@ -246,7 +246,7 @@ class Trick {
                 } else if (this._trickNumDoubles > 0) {
                     playRank = playDoubles[0].getRank.call(playDoubles[0], trumpValue, trumpSuit);
                 } else {
-                    playRank = playSingles[0].getRank.call(playSingles[0], trumpValue, trumpSuit);
+                    playRank = cards[0].getRank.call(cards[0], trumpValue, trumpSuit);
                 }
             } else if (considerRank) {
                 playRank = cards[0].getRank.call(cards[0], trumpValue, trumpSuit);

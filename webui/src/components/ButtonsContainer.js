@@ -147,10 +147,11 @@ const CallBottomButtons = (props) => {
       }), trumpTracker);
     } else if (isValidPlay === 'badThrow') {
       let newCards = [];
+      alert('Bad Throw');
       cardsInHand.forEach(card => {
         console.log(card, card.card);
         Cards.insertCard(newCards, card.card, trumpValue, currentBid[1]);
-      })
+      });
       updateCardsInHand(newCards, trumpTracker);
     }
   }
