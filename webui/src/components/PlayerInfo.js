@@ -11,6 +11,7 @@ import {
   getClientTurn,
   getExistingTricks,
   getScreenSize,
+  getCurrentTrickWinner,
   updateState
 } from '../redux/selectors';
 
@@ -35,6 +36,7 @@ const PlayerInfo = (props) => {
   const player1 = (clientName, clientId, cardSvg) => {
     return (
       <Container1
+        curWinner={currentTrickWinner}
         clientTurn={currentClientTurn}
         myId={clientId}
         appWidth={appWidth}
@@ -53,6 +55,7 @@ const PlayerInfo = (props) => {
   const player2 = (clientName, clientId, cardSvg) => {
     return (
       <Container2
+        curWinner={currentTrickWinner}
         clientTurn={currentClientTurn}
         myId={clientId}
         appWidth={appWidth}
@@ -71,6 +74,7 @@ const PlayerInfo = (props) => {
   const player3 = (clientName, clientId, cardSvg) => {
     return (
       <Container3
+        curWinner={currentTrickWinner}
         clientTurn={currentClientTurn}
         myId={clientId}
         appWidth={appWidth}
@@ -127,12 +131,14 @@ const mapStateToProps = (state) => {
   const clientIds = getExistingClientIds(state);
   const existingTricks = getExistingTricks(state);
   const currentClientTurn = getClientTurn(state);
+  const currentTrickWinner = getCurrentTrickWinner(state);
   const { appWidth, appHeight } = getScreenSize(state);
   const updateNumState = updateState(state);
   return {
     myId,
     clients,
     clientIds,
+    currentTrickWinner,
     currentClientTurn,
     existingTricks,
     appWidth,
@@ -140,6 +146,16 @@ const mapStateToProps = (state) => {
     updateNumState
   }
 }
+
+const flash = keyframes`
+  from {
+    rgba(0,0,0, .30);
+  }
+
+  to {
+    rgba(0,0,0, .10);
+  }
+`;
 
 const Container = styled.div`
   position: fixed;
@@ -176,6 +192,7 @@ const Container1 = styled(Container)`
   transform: translateY(-50%);
   border: ${props => (props.clientTurn && props.myId === props.clientTurn) ? '2px solid red' : '2px solid transparent'};
   margin-left: 30px;
+  animation: ${props => (props.currentTrickWinner === props.myId) ? `${flash} 1s linear infinite` : ''};
 `;
 
 const Container2 = styled(Container)`
@@ -184,6 +201,7 @@ const Container2 = styled(Container)`
   transform: translateX(-50%);
   border: ${props => (props.clientTurn && props.myId === props.clientTurn) ? '2px solid red' : '2px solid transparent'};
   margin-top: 30px;
+  animation: ${props => (props.currentTrickWinner === props.myId) ? `${flash} 1s linear infinite` : ''};
 `;
 
 const Container3 = styled(Container)`
@@ -192,6 +210,7 @@ const Container3 = styled(Container)`
   transform: translateY(-50%);
   border: ${props => (props.clientTurn && props.myId === props.clientTurn) ? '2px solid red' : '2px solid transparent'};
   margin-right: 30px;
+  animation: ${props => (props.currentTrickWinner === props.myId) ? `${flash} 1s linear infinite` : ''};
 `;
 
 const PlayerSignal = styled.div`

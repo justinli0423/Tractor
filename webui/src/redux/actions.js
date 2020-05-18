@@ -23,6 +23,11 @@ export const setUser = (name, id, room) => ({
   }
 });
 
+export const setCurrentTrickWinner = (id) => ({
+  type: 'SET_CURRENT_TRICK_WINNER',
+  payload: id
+});
+
 export const setBottomClient = (socketId) => ({
   type: 'SET_DECLARER',
   payload: socketId

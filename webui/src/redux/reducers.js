@@ -10,6 +10,7 @@ const currState = {
   trump: '2',
   room: '',
   currentBid: null,
+  currentTrickWinner: null,
   currentBottomClient: null,
   currentClientTurn: null,
   existingTricks: {},
@@ -98,6 +99,10 @@ export default (state = currState, action) => {
     case 'SET_POINTS':
       return Object.assign({}, state, {
         points: action.payload,
+      })
+    case 'SET_CURRENT_TRICK_WINNER':
+      return Object.assign({}, state, {
+        currentTrickWinner: action.payload
       })
     default:
       return state;

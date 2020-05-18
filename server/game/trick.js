@@ -218,6 +218,32 @@ class Trick {
             } else {
                 return false;
             }
+            if (flag === 'badThrow') {
+                playDoubles = this.getDoubles(cards);
+                // console.log('trick.playDoubles', playDoubles);
+                playNumDoubles = playDoubles.length;
+                // console.log('trick.playNumDoubles', playNumDoubles)
+                playTractors = this.getTractors(playDoubles, trumpValue, trumpSuit);
+                // console.log('trick.playTractors', playTractors);
+                playNumTractors = this.countTractors(playTractors);
+                // console.log('trick.playNumTractors', playNumTractors);
+                playNumTractorCards = _.reduce(_.mapObject(playNumTractors, (key, val) => {
+                    return key * val;
+                }), (a, b) => {
+                    return a + b;
+                })
+                // console.log('trick.playNumTractorCards', playNumTractorCards);
+                playLongestTractor = _.findLastIndex(playNumTractors, (i) => {
+                    return i > 0;
+                })
+                playShortestTractor = _.findIndex(playNumTractors, (i) => {
+                    return i > 0;
+                })
+                playSingles = this.getSingles(cards, playDoubles);
+                // console.log('trick.playSingles', playSingles);
+                playNumSingles = playSingles.length;
+                // console.log('trick.playNumSingles', playNumSingles);
+            }
             if (valid) {
                 this._trickSuit = playSuit;
                 this._trickNumCards = cards.length;
