@@ -30,10 +30,12 @@ import {
 import {
   updateCardsInHand,
   setCurrentBid,
+  setClientTurn,
+  setTricksPlayed,
+  setPoints,
   setTrumpValue,
   updateNumCardsSelected,
   toggleCardSelector,
-  setPoints,
   toggleBidButtons,
   setValidBids
 } from '../redux/actions';
@@ -126,9 +128,22 @@ class Game extends Component {
       validBids,
       currentBid,
       toggleBidButtons,
+      setCurrentBid,
+      setClientTurn,
+      setTricksPlayed,
+      setPoints,
       setValidBids,
       updateCardsInHand
     } = this.props;
+
+    if (cards.length === 0) {
+      setCurrentBid('', []); // clears trump
+      updateCardsInHand([], { 'S': 0, 'D': 0, 'C': 0, 'H': 0, 'SJ': 0, 'BJ': 0 });
+      setClientTurn(null);
+      setTricksPlayed({});
+      setPoints(0);
+      console.log('resetting round');
+    }
 
     Cards.insertCard(cards, newCard, trumpValue, currentBid);
     Cards.newTrump(trumpTracker, validBids, newCard, currentBid, trumpValue);
@@ -368,6 +383,8 @@ export default connect(mapStateToProps, {
   toggleCardSelector,
   setPoints,
   toggleBidButtons,
+  setClientTurn,
+  setTricksPlayed,
   setCurrentBid
 })(Game);
 

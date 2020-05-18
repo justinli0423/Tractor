@@ -131,14 +131,6 @@ const CallBottomButtons = (props) => {
     updateCardsInHand(cardsInHand, trumpTracker);
       toggleCardSelector(false);
       updateNumCardsSelected(0);
-      if (cardsInHand.length === 0) {
-        setTimeout(() => {
-          setCurrentBid('', []); // clears trump
-          updateCardsInHand([], { 'S': 0, 'D': 0, 'C': 0, 'H': 0, 'SJ': 0, 'BJ': 0 });
-          setClientTurn(null);
-          setPoints(0);
-        }, 2000);
-      }
     } else if (isValidPlay === 'invalid') {
       alert('Invalid Trick');
       updateCardsInHand(cards.map(cardObj => {

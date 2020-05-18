@@ -94,7 +94,7 @@ class DisplayTrump extends Component {
     const { bidHistory } = this.state;
     return (
       <ClientsContainer>
-        Points: {points}
+        <ClientsHeader>Points: {points}</ClientsHeader>
         <ClientsHeader>TRUMP</ClientsHeader>
         {bidHistory.length ? bidHistory.map(bidArr => (
           <ClientItem>

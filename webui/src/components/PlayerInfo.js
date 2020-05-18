@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { keyframes, css } from 'styled-components';
 import { connect } from 'react-redux';
 
 import Cards from '../utils/Cards';
@@ -25,6 +25,7 @@ const PlayerInfo = (props) => {
     appWidth,
     existingTricks,
     currentClientTurn,
+    currentTrickWinner
   } = props;
   const filteredClientIds = [];
   const myIndex = clientIds.indexOf(myId);
@@ -192,7 +193,7 @@ const Container1 = styled(Container)`
   transform: translateY(-50%);
   border: ${props => (props.clientTurn && props.myId === props.clientTurn) ? '2px solid red' : '2px solid transparent'};
   margin-left: 30px;
-  animation: ${props => (props.currentTrickWinner === props.myId) ? `${flash} 1s linear infinite` : ''};
+  ${props => (props.currentTrickWinner === props.myId) ? css`animation: ${flash} 1s linear infinite` : ''};
 `;
 
 const Container2 = styled(Container)`
@@ -201,7 +202,7 @@ const Container2 = styled(Container)`
   transform: translateX(-50%);
   border: ${props => (props.clientTurn && props.myId === props.clientTurn) ? '2px solid red' : '2px solid transparent'};
   margin-top: 30px;
-  animation: ${props => (props.currentTrickWinner === props.myId) ? `${flash} 1s linear infinite` : ''};
+  ${props => (props.currentTrickWinner === props.myId) ? css`animation: ${flash} 1s linear infinite` : ''};
 `;
 
 const Container3 = styled(Container)`
@@ -210,7 +211,7 @@ const Container3 = styled(Container)`
   transform: translateY(-50%);
   border: ${props => (props.clientTurn && props.myId === props.clientTurn) ? '2px solid red' : '2px solid transparent'};
   margin-right: 30px;
-  animation: ${props => (props.currentTrickWinner === props.myId) ? `${flash} 1s linear infinite` : ''};
+  ${props => (props.currentTrickWinner === props.myId) ? css`animation: ${flash} 1s linear infinite` : ''};
 `;
 
 const PlayerSignal = styled.div`

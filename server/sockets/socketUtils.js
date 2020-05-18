@@ -45,7 +45,7 @@ class SocketUtil {
 
     // ------------ SOCKET EMITTERS ------------
     emitConnectedClients(room) {
-        console.log('test2', this._sockets)
+        // console.log('test2', this._sockets)
 
         this.clearNullSockets();
         console.log(`Clients in room ${room}:`, Object.values(this._sockets[room]));
@@ -124,7 +124,7 @@ class SocketUtil {
             // this._sockets[this._rooms[socketId]][socket.id] = name;
             if (!this._sockets[room]) {
                 this._sockets[room] = {};
-                console.log(this._sockets[room])
+                // console.log(this._sockets[room])
             } 
             if (Object.keys(this._sockets[room]).length < constants.numPlayers) {
                 this._sockets[room][socket.id] = name;
