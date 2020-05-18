@@ -117,42 +117,39 @@ class Game extends Component {
   }
 
   setCards(newCard) {
-    let {
+    const {
       cards,
-      trumpValue,
-      trumpTracker,
-      validBids,
-      currentBid,
-      toggleBidButtons,
       setCurrentBid,
       setClientTurn,
       setTricksPlayed,
       setPoints,
+      toggleBidButtons,
       setValidBids,
       updateCardsInHand
     } = this.props;
 
-    // if (cards.length === 0) {
-    //   setCurrentBid('', []); // clears trump
-    //   updateCardsInHand([], { 'S': 0, 'D': 0, 'C': 0, 'H': 0, 'SJ': 0, 'BJ': 0 });
-    //   setValidBids([]);
-    //   setClientTurn(null);
-    //   setTricksPlayed({});
-    //   setPoints(0);
-    //   console.log('resetting round');
-    // }
+    if (cards.length === 0) {
+      setCurrentBid('', null); // clears trump
+      updateCardsInHand(cards, { 'S': 0, 'D': 0, 'C': 0, 'H': 0, 'SJ': 0, 'BJ': 0 });
+      setValidBids([]);
+      setClientTurn(null);
+      setTricksPlayed({});
+      setPoints(0);
+      toggleBidButtons(true);
+      console.log('resetting round');
+    }
 
+    let {
+      trumpValue,
+      trumpTracker,
+      validBids,
+      currentBid,
+    } = this.props;
 
     Cards.insertCard(cards, newCard, trumpValue, currentBid);
     Cards.newTrump(trumpTracker, validBids, newCard, currentBid, trumpValue);
     setValidBids(validBids);
     updateCardsInHand(cards, trumpTracker);
-
-    console.log(validBids, trumpTracker);
-
-    if (cards.length === 25) {
-      toggleBidButtons(true);
-    }
   }
 
   receiveBottomCards(bottomCards) {

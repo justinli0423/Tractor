@@ -2,8 +2,8 @@ import _ from 'underscore';
 
 export default class Cards {
   // TODO: DEPLOYMENT CARDS PATH IS DIFFERENT
-  // path = 'https://jli0423.github.io/Tractor/cardsSVG/'; // local
-  path = '/Tractor/cardsSVG/'; //deployment
+  path = 'https://justinli0423.github.io/Tractor/cardsSVG/'; // local
+  // path = '/Tractor/cardsSVG/'; //deployment
   suits = [];
   jokers = [];
   cards = [];
@@ -193,7 +193,6 @@ export default class Cards {
         }
       }
     } else if (newCard[0] === trumpValue) {
-      console.log(trumpTracker);
       trumpTracker[newCard[1]] += 1;
       if (!currentBid || (currentBid[0] === 1 && trumpTracker[newCard[1]] === 2)) {
         validBids.push([trumpTracker[newCard[1]], newCard[1]])

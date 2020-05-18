@@ -39,7 +39,7 @@ class DisplayTrump extends Component {
       return;
     }
 
-    if (currentBid.length === 0) {
+    if (!currentBid || currentBid.length === 0) {
       this.setState({
         bidHistory: []
       });
@@ -94,7 +94,7 @@ class DisplayTrump extends Component {
     const { bidHistory } = this.state;
     return (
       <ClientsContainer>
-        <ClientsHeader>Points: {points}</ClientsHeader>
+        <ClientsHeader>POINTS: {points}</ClientsHeader>
         <ClientsHeader>TRUMP</ClientsHeader>
         {bidHistory.length ? bidHistory.map(bidArr => (
           <ClientItem>
