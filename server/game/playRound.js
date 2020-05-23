@@ -52,6 +52,7 @@ class PlayRound {
             console.log('Opponent final points:', this._opponentPoints);
             constants.su.emitOpponentPoints(this._room, this._opponentPoints);
             constants.su.emitEndBottom(this._room, bottom);
+
             constants.games[this._room].round.endRound();
         }
     }

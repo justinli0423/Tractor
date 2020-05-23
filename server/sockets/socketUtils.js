@@ -38,6 +38,7 @@ class SocketUtil {
         _.each(_.keys(this._sockets), (room) => {
             if (Object.keys(this._sockets[room]).length === constants.numPlayers && !this._started[room]) {
                 this._started[room] = true;
+                constants.io.in(room).emit('newRound');
                 constants.games[room] = new Game(room, Object.keys(this._sockets[room]));
                 constants.games[room].newRound();
             }
@@ -120,7 +121,9 @@ class SocketUtil {
     emitEndBottom(room, bottom) {
         constants.io.in(room).emit('originalBottom', bottom);
         constants.io.in(room).emit('nextClient', null);
-
+        setTimeout(() => {
+            constants.io.in(room).emit('newRound');
+        }, 5000);
     }
 
     // ------------ SOCKET SUBS ------------

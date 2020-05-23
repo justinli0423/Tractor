@@ -193,7 +193,7 @@ const Container1 = styled(Container)`
   transform: translateY(-50%);
   border: ${props => (props.clientTurn && props.myId === props.clientTurn) ? '2px solid red' : '2px solid transparent'};
   margin-left: 30px;
-  ${props => (props.currentTrickWinner === props.myId) ? css`animation: ${flash} 1s linear infinite` : ''};
+  ${props => (props.curWinner === props.myId) ? css`animation: ${flash} 1s linear infinite` : ''};
 `;
 
 const Container2 = styled(Container)`

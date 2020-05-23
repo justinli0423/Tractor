@@ -8,6 +8,7 @@ import {
   getNewBidIO,
   getTrumpValueIO,
   getPointsIO,
+  getNewRoundIO,
   getCurrentWinnerIO,
   getFinalBidIO,
   getBottomIO
@@ -69,10 +70,35 @@ class Game extends Component {
     getFinalBidIO(this.sortHand.bind(this));
     getPointsIO(this.getPoints.bind(this));
     getCurrentWinnerIO(this.getCurrentWinner.bind(this));
+    getNewRoundIO(this.startNewRound.bind(this));
     this.setCardSize();
   }
 
+  startNewRound() {
+    const {
+      setCurrentBid,
+      setClientTurn,
+      setTricksPlayed,
+      setPoints,
+      toggleBidButtons,
+      setValidBids,
+      setCurrentTrickWinner,
+      updateCardsInHand
+    } = this.props;
+
+    setCurrentBid('', null);
+    updateCardsInHand([], { 'S': 0, 'D': 0, 'C': 0, 'H': 0, 'SJ': 0, 'BJ': 0 });
+    setValidBids([]);
+    setClientTurn(null);
+    setTricksPlayed({});
+    setCurrentTrickWinner(null);
+    setPoints(0);
+    toggleBidButtons(true);
+    console.log('resetting round');
+  }
+
   getCurrentWinner(clientId) {
+    console.log('current trick winner', clientId);
     this.props.setCurrentTrickWinner(clientId);
   }
 
@@ -124,29 +150,8 @@ class Game extends Component {
   }
 
   setCards(newCard) {
-    const {
-      cards,
-      setCurrentBid,
-      setClientTurn,
-      setTricksPlayed,
-      setPoints,
-      toggleBidButtons,
-      setValidBids,
-      updateCardsInHand
-    } = this.props;
-
-    if (cards.length === 0) {
-      setCurrentBid('', null); // clears trump
-      updateCardsInHand(cards, { 'S': 0, 'D': 0, 'C': 0, 'H': 0, 'SJ': 0, 'BJ': 0 });
-      setValidBids([]);
-      setClientTurn(null);
-      setTricksPlayed({});
-      setPoints(0);
-      toggleBidButtons(true);
-      console.log('resetting round');
-    }
-
     let {
+      cards,
       trumpValue,
       trumpTracker,
       validBids,

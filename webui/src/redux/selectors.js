@@ -39,4 +39,4 @@ export const getClientTurn = store => store.currentClientTurn;
 
 export const getPoints = store => store.points;
 
-export const getCurrentTrickWinner = store => store.getCurrentTrickWinner;
+export const getCurrentTrickWinner = store => store.currentTrickWinner;

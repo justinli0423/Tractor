@@ -36,6 +36,10 @@ function setSocketIdIO(name, room, validator) {
 }
 
 // ------------------ EVENT LISTENERS ------------------
+export function getNewRoundIO(getNewRoundCb) {
+  socket.on('newRound', getNewRoundCb);
+}
+
 export function getPointsIO(getPointsCb) {
   socket.on('opponentPoints', (pointsFromNonBottom) => getPointsCb(pointsFromNonBottom));
 }
@@ -45,7 +49,10 @@ export function getGeneratedTrumpIO(getGeneratedTrumpCb) {
 }
 
 export function getCurrentWinnerIO(getCurrentWinnerCb) {
-  socket.on('currentWinner', (clientId) => getCurrentWinnerCb(clientId));
+  socket.on('currentWinner', (clientId) => {
+    getCurrentWinnerCb(clientId);
+    console.log(clientId);
+  });
 }
 
 export function getFinalBidIO (getFinalBidCb) {

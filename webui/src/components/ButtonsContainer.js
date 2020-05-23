@@ -24,6 +24,7 @@ import {
   updateCardsInHand,
   toggleCardSelector,
   updateNumCardsSelected,
+  setCurrentBid,
 } from '../redux/actions';
 
 import {
@@ -289,5 +290,6 @@ export default connect(mapStateToProps, {
   toggleCardSelector,
   setTricksPlayed,
   setClientTurn,
+  setCurrentBid,
   updateNumCardsSelected
 })(CallBottomButtons);
