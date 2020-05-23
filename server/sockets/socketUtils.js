@@ -76,7 +76,7 @@ class SocketUtil {
         // console.log('test6', this._sockets)
 
         console.log('Sending', this._sockets[this._rooms[socketId]][socketId], "'s bid of ", bid);
-        this.getSocket(socketId).broadcast.emit('setNewBid', socketId, bid);
+        constants.io.in(this._rooms[socketId]).emit('setNewBid', socketId, bid);
     }
 
     emitGeneratedTrump(room, name, trump) {
