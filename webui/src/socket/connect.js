@@ -4,9 +4,9 @@ const ENDPOINT = "http://127.0.0.1:8000";
 var socket = null;
 
 export function connectToSocketIO(getStatusCb, validator, name, room) {
-  socket = io(ENDPOINT);
+  // socket = io(ENDPOINT);
   // if (!socket.connected) {
-    // socket = io('tractorserver.herokuapp.com');
+    socket = io('tractorserver.herokuapp.com');
   // }
   getConnectionStatus(getStatusCb, name, room);
   setSocketIdIO(name, room, validator);

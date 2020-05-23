@@ -165,6 +165,7 @@ class SocketUtil {
                 console.log(this._sockets[room])
                 if (Object.keys(this._sockets[room]).length === 0) {
                     delete this._sockets[room];
+                    delete this._started[room];
                 } else {
                     this.emitConnectedClients(room);
                 }

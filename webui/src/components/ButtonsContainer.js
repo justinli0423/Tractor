@@ -19,6 +19,7 @@ import {
 
 import {
   setTricksPlayed,
+  setClientTurn,
   toggleBidButtons,
   updateCardsInHand,
   toggleCardSelector,
@@ -287,5 +288,6 @@ export default connect(mapStateToProps, {
   updateCardsInHand,
   toggleCardSelector,
   setTricksPlayed,
+  setClientTurn,
   updateNumCardsSelected
 })(CallBottomButtons);
