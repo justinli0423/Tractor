@@ -34,6 +34,7 @@ class SocketUtil {
 
     start() {
         console.log('test1', this._sockets)
+        console.log('test1.1', this._started)
         _.each(_.keys(this._sockets), (room) => {
             if (Object.keys(this._sockets[room]).length === constants.numPlayers && !this._started[room]) {
                 this._started[room] = true;
@@ -49,7 +50,7 @@ class SocketUtil {
 
         this.clearNullSockets();
         console.log(`Clients in room ${room}:`, Object.values(this._sockets[room]));
-        constants.io.to(room).emit('newClientConnection', this._sockets[room]);
+        constants.io.in(room).emit('newClientConnection', this._sockets[room]);
     }
 
     emitDealCard(socketId, card) {
@@ -68,7 +69,7 @@ class SocketUtil {
         // console.log('test5', this._sockets)
 
         console.log(`A new round has started. ${trumpValue}'s are trump.`)
-        constants.io.to(room).emit('setTrumpValue', trumpValue)
+        constants.io.in(room).emit('setTrumpValue', trumpValue)
     }
 
     emitNewBid(socketId, bid) {
@@ -82,7 +83,7 @@ class SocketUtil {
         console.log('test7', this._sockets)
 
         console.log('Emitted random trump to', name, trump);
-        constants.io.to(room).emit('generateTrump', name, trump);
+        constants.io.in(room).emit('generateTrump', name, trump);
     }
 
     emitBottom(socketId, bottom) {
@@ -96,29 +97,29 @@ class SocketUtil {
         // console.log('test9', this._sockets, this._rooms, socketId);
 
         console.log("It's", this._sockets[this._rooms[socketId]][socketId], "'s turn.");
-        constants.io.to(this._rooms[socketId]).emit('nextClient', socketId);
+        constants.io.in(this._rooms[socketId]).emit('nextClient', socketId);
         this.subClientPlay(socketId, i);
     }
 
     emitCardsPlayed(room, cards) {
         // console.log('test10', this._sockets)
 
-        constants.io.to(room).emit('cardsPlayed', cards);
+        constants.io.in(room).emit('cardsPlayed', cards);
     }
 
     emitCurrentWinner(socketId) {
-        constants.io.to(this._rooms[socketId]).emit('currentWinner', socketId)
+        constants.io.in(this._rooms[socketId]).emit('currentWinner', socketId)
     }
 
     emitOpponentPoints(room, points) {
         console.log('test11', this._sockets)
 
-        constants.io.to(room).emit('opponentPoints', points);
+        constants.io.in(room).emit('opponentPoints', points);
     }
 
     emitEndBottom(room, bottom) {
-        constants.io.to(room).emit('originalBottom', bottom);
-        constants.io.to(room).emit('nextClient', null);
+        constants.io.in(room).emit('originalBottom', bottom);
+        constants.io.in(room).emit('nextClient', null);
 
     }
 
