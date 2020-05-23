@@ -18,14 +18,11 @@ import {
 } from '../socket/connect';
 
 import {
-  setClientTurn,
   setTricksPlayed,
-  setCurrentBid,
   toggleBidButtons,
   updateCardsInHand,
   toggleCardSelector,
   updateNumCardsSelected,
-  setPoints,
 } from '../redux/actions';
 
 import {
@@ -122,8 +119,6 @@ const CallBottomButtons = (props) => {
       trumpTracker,
       toggleCardSelector,
       trumpValue,
-      setClientTurn,
-      setCurrentBid,
       currentBid,
       updateNumCardsSelected
     } = props;
@@ -286,11 +281,9 @@ const BidButtonContainer = styled.div`
 `;
 
 export default connect(mapStateToProps, {
-  setCurrentBid,
   toggleBidButtons,
   updateCardsInHand,
   toggleCardSelector,
-  setClientTurn,
   setTricksPlayed,
   updateNumCardsSelected
 })(CallBottomButtons);

@@ -6,6 +6,7 @@ const GameFunction = (props) => {
     <Button
       id={props.id}
       onClick={() => props.onClickCb && props.onClickCb()}
+      disabled={props.disabled === undefined ? false : props.disabled}
     >
       {props.label}
     </Button>

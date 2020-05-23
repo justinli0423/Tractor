@@ -39,15 +39,19 @@ class PlayRound {
             this._trick.play(0);
         } else {
             let bottomPoints = 0;
+            let bottom = [];
             for (let i = 0; i < constants.numBottom; i++) {
                 const card = this._bottom.deal();
                 bottomPoints += card.getPoints();
-                this._discard.pushCard(card)
+                bottom.push([card.value, card.suit]);
+                this._discard.pushCard(card);
             }
             if (this._trickStarter % 2 !== 0) {
                 this._opponentPoints += bottomPoints * this._trick.trickNumCards * 2;
             }
-            console.log('Opponent points:', this._opponentPoints)
+            console.log('Opponent final points:', this._opponentPoints);
+            constants.su.emitOpponentPoints(this._room, this._opponentPoints);
+            constants.su.emitEndBottom(this._room, bottom);
             constants.games[this._room].round.endRound();
         }
     }

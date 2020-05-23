@@ -106,10 +106,20 @@ class SocketUtil {
         constants.io.to(room).emit('cardsPlayed', cards);
     }
 
+    emitCurrentWinner(socketId) {
+        constants.io.to(this._rooms[socketId]).emit('currentWinner', socketId)
+    }
+
     emitOpponentPoints(room, points) {
         console.log('test11', this._sockets)
 
         constants.io.to(room).emit('opponentPoints', points);
+    }
+
+    emitEndBottom(room, bottom) {
+        constants.io.to(room).emit('originalBottom', bottom);
+        constants.io.to(room).emit('nextClient', null);
+
     }
 
     // ------------ SOCKET SUBS ------------

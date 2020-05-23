@@ -291,6 +291,7 @@ class Trick {
             if (playRank > this._maxRank) {
                 this._maxRank = playRank;
                 this._winner = i;
+                constants.su.emitCurrentWinner(this._players[this._winner])
             }
 
 

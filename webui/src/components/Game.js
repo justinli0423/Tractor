@@ -8,6 +8,7 @@ import {
   getNewBidIO,
   getTrumpValueIO,
   getPointsIO,
+  getCurrentWinnerIO,
   getFinalBidIO,
   getBottomIO
 } from "../socket/connect";
@@ -37,6 +38,7 @@ import {
   updateNumCardsSelected,
   toggleCardSelector,
   toggleBidButtons,
+  setCurrentTrickWinner,
   setValidBids
 } from '../redux/actions';
 
@@ -66,7 +68,12 @@ class Game extends Component {
     getBottomIO(this.receiveBottomCards.bind(this));
     getFinalBidIO(this.sortHand.bind(this));
     getPointsIO(this.getPoints.bind(this));
+    getCurrentWinnerIO(this.getCurrentWinner.bind(this));
     this.setCardSize();
+  }
+
+  getCurrentWinner(clientId) {
+    this.props.setCurrentTrickWinner(clientId);
   }
 
   sortHand() {
@@ -376,6 +383,7 @@ const CardImgContainer = styled.span`
 export default connect(mapStateToProps, {
   updateCardsInHand,
   setValidBids,
+  setCurrentTrickWinner,
   setTrumpValue,
   updateNumCardsSelected,
   toggleCardSelector,

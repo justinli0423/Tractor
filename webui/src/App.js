@@ -32,7 +32,8 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      connectionStatus: false, 
+      connectionStatus: false,
+      isConnecting: false,
       iconWidth: 150,
       inputWidth: 100
     };
@@ -92,6 +93,9 @@ class App extends Component {
         connectionStatus: false
       });
     }
+    this.setState({
+      isConnecting: false
+    });
   }
 
   connect(ev) {
@@ -110,7 +114,12 @@ class App extends Component {
     if (name.length > 7) {
       name = name.slice(0, 7);
     }
-    connectToSocketIO(this.setConnectionStatus.bind(this), this.joinRoomValidator, name, room);
+
+    this.setState({
+      isConnecting: true
+    });
+
+    connectToSocketIO(this.setConnectionStatus.bind(this), this.joinRoomValidator.bind(this), name, room);
   }
 
   renderPreConnection() {
@@ -120,7 +129,8 @@ class App extends Component {
     } = this.props;
     const {
       iconWidth,
-      inputWidth
+      inputWidth,
+      isConnecting
     } = this.state;
     return (
       <Container
@@ -151,6 +161,7 @@ class App extends Component {
           />
           <RegularButton
             label="Join"
+            disabled={isConnecting}
           />
         </Form>
       </Container>
