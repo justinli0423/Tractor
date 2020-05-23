@@ -157,7 +157,7 @@ class Game extends Component {
       validBids,
       currentBid,
     } = this.props;
-
+    console.log('newCard', newCard);
     Cards.insertCard(cards, newCard, trumpValue, currentBid);
     Cards.newTrump(trumpTracker, validBids, newCard, currentBid, trumpValue);
     setValidBids(validBids);

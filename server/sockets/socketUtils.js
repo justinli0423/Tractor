@@ -33,8 +33,7 @@ class SocketUtil {
     }
 
     start() {
-        console.log('test1', this._sockets)
-        console.log('test1.1', this._started)
+        console.log('test1', this._started)
         _.each(_.keys(this._sockets), (room) => {
             if (Object.keys(this._sockets[room]).length === constants.numPlayers && !this._started[room]) {
                 this._started[room] = true;
@@ -47,42 +46,30 @@ class SocketUtil {
 
     // ------------ SOCKET EMITTERS ------------
     emitConnectedClients(room) {
-        // console.log('test2', this._sockets)
-
         this.clearNullSockets();
         console.log(`Clients in room ${room}:`, Object.values(this._sockets[room]));
         constants.io.in(room).emit('newClientConnection', this._sockets[room]);
     }
 
     emitDealCard(socketId, card) {
-        // console.log('test3', this._sockets)
-
         this.getSocket(socketId).emit('dealCard', card);
     }
 
     emitConnectionStatus(socketId, socketStatus = false) {
-        console.log('test4', this._sockets)
-
         this.getSocket(socketId).emit('connectionStatus', socketStatus);
     }
 
     emitTrumpValue(room, trumpValue) {
-        // console.log('test5', this._sockets)
-
         console.log(`A new round has started. ${trumpValue}'s are trump.`)
         constants.io.in(room).emit('setTrumpValue', trumpValue)
     }
 
     emitNewBid(socketId, bid) {
-        // console.log('test6', this._sockets)
-
         console.log('Sending', this._sockets[this._rooms[socketId]][socketId], "'s bid of ", bid);
         constants.io.in(this._rooms[socketId]).emit('setNewBid', socketId, bid);
     }
 
     emitGeneratedTrump(room, name, trump) {
-        console.log('test7', this._sockets)
-
         console.log('Emitted random trump to', name, trump);
         constants.io.in(room).emit('generateTrump', name, trump);
     }
@@ -95,16 +82,12 @@ class SocketUtil {
     }
 
     emitNextClient(socketId, i) {
-        // console.log('test9', this._sockets, this._rooms, socketId);
-
         console.log("It's", this._sockets[this._rooms[socketId]][socketId], "'s turn.");
         constants.io.in(this._rooms[socketId]).emit('nextClient', socketId);
         this.subClientPlay(socketId, i);
     }
 
     emitCardsPlayed(room, cards) {
-        // console.log('test10', this._sockets)
-
         constants.io.in(room).emit('cardsPlayed', cards);
     }
 
@@ -113,8 +96,6 @@ class SocketUtil {
     }
 
     emitOpponentPoints(room, points) {
-        console.log('test11', this._sockets)
-
         constants.io.in(room).emit('opponentPoints', points);
     }
 
@@ -129,8 +110,6 @@ class SocketUtil {
     // ------------ SOCKET SUBS ------------
 
     addSocket(socket) {
-        // console.log('test12', this._sockets)
-
         // once clientId is received:
         // 1. send back connection status
         // 2. send all connect clients
@@ -156,8 +135,6 @@ class SocketUtil {
     }
 
     removeSocket(socket) {
-        // console.log('test13', this._sockets)
-
         socket.on('disconnect', () => {
             let room = this._rooms[socket.id];
             if (this._sockets[room]) {
@@ -178,8 +155,6 @@ class SocketUtil {
     }
 
     subSetBid(socketId) {
-        console.log('test14', this._sockets)
-
         console.log('waiting for bids')
         this.getSocket(socketId).on('newBid', (bid) => {
             console.log("Received bid of", bid, "from", this._sockets[this._rooms[socketId]][socketId]);
@@ -190,8 +165,6 @@ class SocketUtil {
     }
 
     subDoneBid(socketId) {
-        console.log('test15', this._sockets)
-
         this.getSocket(socketId).on('doneBid', () => {
             console.log(`${this._sockets[this._rooms[socketId]][socketId]} is done bidding.`);
             this.closeBidSubs(socketId)
@@ -200,8 +173,6 @@ class SocketUtil {
     }
 
     subNewBottom(socketId) {
-        console.log('test16', this._sockets)
-
         this.getSocket(socketId).on('newBottom', (bottom) => {
             console.log('New bottom sent by ', this._sockets[this._rooms[socketId]][socketId], ':', bottom);
             constants.io.emit('bidWon');

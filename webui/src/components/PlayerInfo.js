@@ -150,11 +150,11 @@ const mapStateToProps = (state) => {
 
 const flash = keyframes`
   from {
-    rgba(0,0,0, .30);
+    background-color: rgba(0,0,0, .30);
   }
 
   to {
-    rgba(0,0,0, .10);
+    background-color: rgba(0,0,0, .10);
   }
 `;
 
