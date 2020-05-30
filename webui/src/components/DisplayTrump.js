@@ -11,9 +11,14 @@ import {
   getTrumpValue,
   getPoints,
   getBottomClient,
+  getCanStartNewRound,
   getScreenSize,
   updateState
 } from '../redux/selectors';
+
+import {
+  setCanStartRound
+} from '../redux/actions';
 
 import RegularButton from './RegularButton';
 import Cards from '../utils/Cards';
@@ -100,19 +105,25 @@ class DisplayTrump extends Component {
       clients,
       appHeight,
       appWidth,
-      myCards,
-      points
+      points,
+      canStartNewRound,
+      setCanStartRound,
     } = this.props;
     const { bidHistory } = this.state;
     return (
       <ClientsContainer
         isMobile={appHeight > appWidth}
       >
-        <RegularButton
-          margin='2px 0 7px'
-          label='Start Round'
-          onClick={() => startNewRoundIO()}
-        />
+        {canStartNewRound && (
+          <RegularButton
+            margin='2px 0 7px'
+            label='Start Round'
+            onClick={() => {
+              startNewRoundIO();
+              setCanStartRound(false);
+            }}
+          />
+        )}
         <ClientsHeader>
           POINTS: {points}
         </ClientsHeader>
@@ -133,6 +144,7 @@ const mapStateToProps = state => {
   const currentBid = getCurrentBid(state);
   const points = getPoints(state);
   const trumpValue = getTrumpValue(state);
+  const canStartNewRound = getCanStartNewRound(state);
   const { appWidth, appHeight } = getScreenSize(state);
   const myCards = getMyCards(state);
   const numStateChanges = updateState(state);
@@ -143,6 +155,7 @@ const mapStateToProps = state => {
     appWidth,
     appHeight,
     trumpValue,
+    canStartNewRound,
     points,
     currentBottomClient,
     numStateChanges
@@ -194,4 +207,6 @@ const SvgContainer = styled.img`
   }
 `;
 
-export default connect(mapStateToProps)(DisplayTrump);
+export default connect(mapStateToProps, {
+  setCanStartRound
+})(DisplayTrump);

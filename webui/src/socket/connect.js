@@ -80,6 +80,10 @@ export function getBottomIO(setBottomCardsCb) {
   socket.on('originalBottom', (cards) => setBottomCardsCb(cards));
 }
 
+export function getHiddenBottomIO(setBottomCardsCb) {
+  socket.on('hiddenBottom', (cards) => setBottomCardsCb(cards));
+}
+
 export function getConnectedClientsIO(setClientsCb) {
   socket.on('newClientConnection', setClientsCb);
 }
