@@ -26,7 +26,7 @@ class PlayRound {
             _.forEach(discard, (card) => {
                 this._discard.pushCard(card);
             })
-            console.log('Trick won by', constants.su.sockets[constants.su.rooms[this._trickStarter]][this._trickStarter]);
+            console.log('Trick won by', constants.su.sockets[constants.su.rooms[this._players[this._trickStarter]]][this._players[this._trickStarter]]);
             console.log('Opponent points:', this._opponentPoints)
             constants.su.emitOpponentPoints(this._room, this._opponentPoints);
         }
