@@ -101,8 +101,8 @@ class SocketUtil {
         console.log('Showing everyone the bottom:', bottom);
         constants.io.in(room).emit('hiddenBottom', bottom);
         constants.io.in(room).emit('nextClient', null);
-        _.forEach(this._sockets[room], (socketId) => {
-            this.subStartRound(socketId)
+        _.forEach(Object.keys(this._sockets[room]), (socketId) => {
+            this.subStartRound(socketId);
         })
         setTimeout(() => {
             constants.io.in(room).emit('newRound');
