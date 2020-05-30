@@ -104,9 +104,6 @@ class SocketUtil {
         _.forEach(Object.keys(this._sockets[room]), (socketId) => {
             this.subStartRound(socketId);
         })
-        setTimeout(() => {
-            constants.io.in(room).emit('newRound');
-        }, 5000);
     }
 
     // ------------ SOCKET SUBS ------------
@@ -208,8 +205,13 @@ class SocketUtil {
         console.log('Waiting to start next round.');
         this.getSocket(socketId).on('startNewRound', () => {
             console.log('Round started by', this._sockets[this._rooms[socketId]][socketId])
-            this.closeStartRoundSub(socketId);
+            _.forEach(Object.keys(this._sockets[this._rooms[socketId]]), (socketId) => {
+                this.closeStartRoundSub(socketId);
+            })
             constants.games[this._rooms[socketId]].newRound();
+            setTimeout(() => {
+                constants.io.in(this._rooms[socketId]).emit('newRound');
+            }, 5000);
         })
     }
 

@@ -24,6 +24,7 @@ class Game {
     newRound() {
 
         if (this._round) {
+            console.log('Starting next round');
             this._roundNumber++;
             let opponentPoints = this._round.opponentPoints;
             console.log(`game.newRound - Opponent Points: ${opponentPoints}`);

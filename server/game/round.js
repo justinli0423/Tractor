@@ -54,10 +54,7 @@ class Round {
 
     endRound() {
         this._opponentPoints = this._playRound.opponentPoints;
-        console.log('round.endRound - opponentPoints', this._opponentPoints, this._playRound.opponentPoints)
-        console.log('round.endRound - this._deck before discard', this._deck.numCards, this._playRound.discard.numCards)
         constants.games[this._room]._deck = this._playRound.discard;
-        console.log('round.endRound - this._deck after discard', this._deck.numCards, this._playRound.discard.numCards)
     }
 
     get opponentPoints() {
