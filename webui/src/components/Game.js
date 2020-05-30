@@ -86,6 +86,7 @@ class Game extends Component {
       toggleBidButtons,
       setValidBids,
       setCurrentTrickWinner,
+      setCanStartRound,
       updateCardsInHand
     } = this.props;
 
@@ -94,6 +95,7 @@ class Game extends Component {
     setValidBids([]);
     setClientTurn(null);
     setTricksPlayed({});
+    setCanStartRound(false);
     setCurrentTrickWinner('nobody');
     setPoints(0);
     toggleBidButtons(true);
