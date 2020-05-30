@@ -34,6 +34,7 @@ import {
   getValidBids,
   getCurrentBid,
   getTrumpValue,
+  getScreenSize,
   getTrumpTracker,
   getCanBidForBottom,
   getClientTurn,
@@ -189,7 +190,9 @@ const CallBottomButtons = (props) => {
 
 
   const renderBidButtons = () => (
-    <BidButtonContainer>
+    <BidButtonContainer
+      isMobile={props.appHeight > props.appWidth}
+    >
       {props.canBidForBottom && getAvailableBidButtons().map((buttonObject, i) => {
         return (
           <GameButton
@@ -246,6 +249,7 @@ const mapStateToProps = (state) => {
   const trumpTracker = getTrumpTracker(state);
   const canBidForBottom = getCanBidForBottom(state);
   const currentBid = getCurrentBid(state);
+  const { appWidth, appHeight } = getScreenSize(state);
   const clientTurnId = getClientTurn(state);
   const cards = getMyCards(state);
   const numCardsSelected = getNumCardsSelected(state);
@@ -255,6 +259,8 @@ const mapStateToProps = (state) => {
     myId,
     name,
     cards,
+    appWidth,
+    appHeight,
     validBids,
     clientTurnId,
     currentBid,
@@ -280,6 +286,8 @@ const BidButtonContainer = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: ${props => props.isMobile && '1'};
+  max-width: ${props => props.isMobile && '80%'};
   margin: 10px;
   height: 40px;
 `;

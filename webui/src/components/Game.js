@@ -118,7 +118,8 @@ class Game extends Component {
 
   setCardSize() {
     const {
-      appWidth
+      appWidth,
+      appHeight
     } = this.props;
     let cardWidth, cardHeight, cardHoveredHeight, cardSelectedHeight;
 
@@ -139,6 +140,13 @@ class Game extends Component {
       cardHeight = 148;
       cardSelectedHeight = -30;
       cardHoveredHeight = -50;
+    }
+
+    if (appHeight > appWidth) {
+      cardWidth = 80;
+      cardHeight = 120;
+      cardSelectedHeight = -20;
+      cardHoveredHeight = -40;
     }
 
     this.setState({
@@ -237,6 +245,8 @@ class Game extends Component {
     const {
       cards,
       numCards,
+      appWidth,
+      appHeight
     } = this.props;
     const {
       cardWidth,
@@ -266,7 +276,9 @@ class Game extends Component {
             })
           }
         </CardContainer>
-        <CardContainer>
+        <CardContainer
+          isMobile={appHeight > appWidth}
+        >
           {cards.map((card, i) => {
             return (
               <CardImgContainer
@@ -351,6 +363,9 @@ const CardImg = styled.img`
 const CardContainer = styled.div`
   display: flex;
   flex-direction: row;
+  width: ${props => props.isMobile && '80vw'};
+  justify-content: ${props => props.isMobile && 'right'};
+  overflow: ${props => props.isMobile && 'scroll'};
 `;
 
 const MyCardImgContainer = styled.span`

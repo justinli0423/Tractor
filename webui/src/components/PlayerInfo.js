@@ -23,6 +23,7 @@ const PlayerInfo = (props) => {
     clients,
     clientIds,
     appWidth,
+    appHeight,
     existingTricks,
     currentClientTurn,
     currentTrickWinner
@@ -119,9 +120,19 @@ const PlayerInfo = (props) => {
       >
         Go
       </PlayerSignal>
-      {renderPlayerInfo(0)}
-      {renderPlayerInfo(1)}
-      {renderPlayerInfo(2)}
+      {(appHeight > appWidth) ? (
+        <Wrapper>
+          {renderPlayerInfo(0)}
+          {renderPlayerInfo(1)}
+          {renderPlayerInfo(2)}
+        </Wrapper>
+      ) : (
+        <>
+          {renderPlayerInfo(0)}
+          {renderPlayerInfo(1)}
+          {renderPlayerInfo(2)}
+        </>
+      )}
     </>
   )
 };
@@ -159,6 +170,26 @@ const flash = keyframes`
   
   100% {
     background-color: rgba(0,0,0, .30);
+  }
+`;
+
+const Wrapper = styled.div`
+  position: fixed;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  top: 0;
+  height: 130px;
+  width: 100%;
+
+  div {
+    position: unset;
+    width: 25%;
+    min-width: auto;
+    height: 120px;
+    transform: none;
+    margin: 5px;
+    font-size: 12px;
   }
 `;
 

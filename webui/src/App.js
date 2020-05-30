@@ -60,6 +60,12 @@ class App extends Component {
       appHeight = 1080;
       iconWidth = 150;
       inputWidth = 130;
+    } else if (screenWidth < screenHeight) {
+      // mobile
+      appWidth = screenWidth;
+      appHeight = screenHeight;
+      iconWidth = 150;
+      inputWidth = 130;
     } else {
       appWidth = 1280;
       appHeight = 720;

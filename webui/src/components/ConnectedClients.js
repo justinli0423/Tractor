@@ -6,6 +6,7 @@ import {
   getExistingClients,
   getExistingClientIds,
   getClientTurn,
+  getScreenSize,
   getRoom,
   getId,
   getName,
@@ -16,6 +17,8 @@ const ConnectedClients = (props) => {
   const {
     myId,
     name,
+    appHeight,
+    appWidth,
     clientIds,
     roomName,
     clients,
@@ -41,7 +44,9 @@ const ConnectedClients = (props) => {
 
   // TODO: show player levels as well as level
   return (
-    <ClientsContainer>
+    <ClientsContainer
+      isMobile={appHeight > appWidth}
+    >
       <ClientsHeader>PLAYERS ({roomName})</ClientsHeader>
       {clientIds.map(id => {
         return (
@@ -62,6 +67,7 @@ const mapStateToProps = state => {
   const clients = getExistingClients(state);
   const clientIds = getExistingClientIds(state);
   const roomName = getRoom(state);
+  const { appWidth, appHeight } = getScreenSize(state);
   const clientTurn = getClientTurn(state);
 
   const numStateChanges = updateState(state);
@@ -70,6 +76,8 @@ const mapStateToProps = state => {
     name,
     clients,
     roomName,
+    appWidth,
+    appHeight,
     clientTurn,
     clientIds,
     numStateChanges
@@ -78,10 +86,11 @@ const mapStateToProps = state => {
 
 const ClientsContainer = styled.ul`
   position: fixed;
-  transform: translateX(-25%);
-  top: 10px;
+  transform: ${props => props.isMobile ? '' : 'translateX(-25%)'};
+  top: ${props => props.isMobile ? '145px' : '10px'};
   right: 0;
   padding: 10px 30px 10px 10px;
+  margin: 5px;
   width: 150px;
   border-radius: 5px;
   background-color: rgba(0,0,0, .20);

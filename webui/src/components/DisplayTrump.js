@@ -8,6 +8,7 @@ import {
   getTrumpValue,
   getPoints,
   getBottomClient,
+  getScreenSize,
   updateState
 } from '../redux/selectors';
 
@@ -89,11 +90,15 @@ class DisplayTrump extends Component {
   render() {
     const {
       clients,
+      appHeight,
+      appWidth,
       points
     } = this.props;
     const { bidHistory } = this.state;
     return (
-      <ClientsContainer>
+      <ClientsContainer
+        isMobile={appHeight > appWidth}
+      >
         <ClientsHeader>POINTS: {points}</ClientsHeader>
         <ClientsHeader>TRUMP</ClientsHeader>
         {bidHistory.length ? bidHistory.map(bidArr => (
@@ -112,11 +117,13 @@ const mapStateToProps = state => {
   const currentBid = getCurrentBid(state);
   const points = getPoints(state);
   const trumpValue = getTrumpValue(state);
-
+  const { appWidth, appHeight } = getScreenSize(state);
   const numStateChanges = updateState(state);
   return {
     clients,
     currentBid,
+    appWidth,
+    appHeight,
     trumpValue,
     points,
     currentBottomClient,
@@ -126,9 +133,11 @@ const mapStateToProps = state => {
 
 const ClientsContainer = styled.ul`
   position: fixed;
-  transform: translateX(25%);
-  top: 10px;
+  box-sizing: border-box;
+  transform: ${props => props.isMobile ? '' : 'translateX(25%)'};
+  top: ${props => props.isMobile ? '145px' : '10px'};
   left: 0;
+  margin: 5px;
   padding: 10px 30px 10px 10px;
   width: 150px;
   border-radius: 5px;
