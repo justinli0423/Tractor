@@ -125,7 +125,7 @@ class App extends Component {
       isConnecting: true
     });
 
-    connectToSocketIO(this.setConnectionStatus.bind(this), this.joinRoomValidator.bind(this), name, room);
+    connectToSocketIO(this.setConnectionStatus.bind(this), this.joinRoomValidator.bind(this), name, room.toLowerCase());
   }
 
   renderPreConnection() {
