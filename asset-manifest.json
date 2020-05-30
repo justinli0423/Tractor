@@ -1,23 +1,23 @@
 {
   "files": {
     "main.css": "/Tractor/static/css/main.706e7acd.chunk.css",
-    "main.js": "/Tractor/static/js/main.aeee5dec.chunk.js",
-    "main.js.map": "/Tractor/static/js/main.aeee5dec.chunk.js.map",
+    "main.js": "/Tractor/static/js/main.fc8bc390.chunk.js",
+    "main.js.map": "/Tractor/static/js/main.fc8bc390.chunk.js.map",
     "runtime-main.js": "/Tractor/static/js/runtime-main.af918e0e.js",
     "runtime-main.js.map": "/Tractor/static/js/runtime-main.af918e0e.js.map",
-    "static/js/2.789769e7.chunk.js": "/Tractor/static/js/2.789769e7.chunk.js",
-    "static/js/2.789769e7.chunk.js.map": "/Tractor/static/js/2.789769e7.chunk.js.map",
+    "static/js/2.d1faff90.chunk.js": "/Tractor/static/js/2.d1faff90.chunk.js",
+    "static/js/2.d1faff90.chunk.js.map": "/Tractor/static/js/2.d1faff90.chunk.js.map",
     "index.html": "/Tractor/index.html",
-    "precache-manifest.fed61ac97ad7c91917d63f476e85d50e.js": "/Tractor/precache-manifest.fed61ac97ad7c91917d63f476e85d50e.js",
+    "precache-manifest.e083f80f9fa133a998114c3bd725f07a.js": "/Tractor/precache-manifest.e083f80f9fa133a998114c3bd725f07a.js",
     "service-worker.js": "/Tractor/service-worker.js",
     "static/css/main.706e7acd.chunk.css.map": "/Tractor/static/css/main.706e7acd.chunk.css.map",
-    "static/js/2.789769e7.chunk.js.LICENSE.txt": "/Tractor/static/js/2.789769e7.chunk.js.LICENSE.txt",
+    "static/js/2.d1faff90.chunk.js.LICENSE.txt": "/Tractor/static/js/2.d1faff90.chunk.js.LICENSE.txt",
     "static/media/tractor_logo.svg": "/Tractor/static/media/tractor_logo.e6e625d4.svg"
   },
   "entrypoints": [
     "static/js/runtime-main.af918e0e.js",
-    "static/js/2.789769e7.chunk.js",
+    "static/js/2.d1faff90.chunk.js",
     "static/css/main.706e7acd.chunk.css",
-    "static/js/main.aeee5dec.chunk.js"
+    "static/js/main.fc8bc390.chunk.js"
   ]
 }
