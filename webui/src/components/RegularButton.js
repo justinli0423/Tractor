@@ -5,6 +5,7 @@ const GameFunction = (props) => {
   return(
     <Button
       id={props.id}
+      margin={props.margin}
       onClick={() => props.onClickCb && props.onClickCb()}
       disabled={props.disabled === undefined ? false : props.disabled}
     >
@@ -19,7 +20,7 @@ export const Button = styled.button`
   display: inline-block;
   font-family: 'Roboto';
   font-weight: 400;
-  margin: 7px;
+  margin: ${props => props.margin || '7px'};
   outline: none;
   border: transparent 2px solid;
   border-radius: 2px;

@@ -2,9 +2,12 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
+import { startNewRoundIO } from '../socket/connect';
+
 import {
   getExistingClients,
   getCurrentBid,
+  getMyCards,
   getTrumpValue,
   getPoints,
   getBottomClient,
@@ -12,6 +15,7 @@ import {
   updateState
 } from '../redux/selectors';
 
+import RegularButton from './RegularButton';
 import Cards from '../utils/Cards';
 
 class DisplayTrump extends Component {
@@ -96,6 +100,7 @@ class DisplayTrump extends Component {
       clients,
       appHeight,
       appWidth,
+      myCards,
       points
     } = this.props;
     const { bidHistory } = this.state;
@@ -103,7 +108,14 @@ class DisplayTrump extends Component {
       <ClientsContainer
         isMobile={appHeight > appWidth}
       >
-        <ClientsHeader>POINTS: {points}</ClientsHeader>
+        <RegularButton
+          margin='2px 0 7px'
+          label='Start Round'
+          onClick={() => startNewRoundIO()}
+        />
+        <ClientsHeader>
+          POINTS: {points}
+        </ClientsHeader>
         <ClientsHeader>TRUMP</ClientsHeader>
         {bidHistory.length ? bidHistory.map(bidArr => (
           <ClientItem>
@@ -122,9 +134,11 @@ const mapStateToProps = state => {
   const points = getPoints(state);
   const trumpValue = getTrumpValue(state);
   const { appWidth, appHeight } = getScreenSize(state);
+  const myCards = getMyCards(state);
   const numStateChanges = updateState(state);
   return {
     clients,
+    myCards,
     currentBid,
     appWidth,
     appHeight,
@@ -143,7 +157,7 @@ const ClientsContainer = styled.ul`
   left: 0;
   margin: 5px;
   padding: 10px 30px 10px 10px;
-  width: ${props => props.isMobile ? '150px': '200px'};
+  width: ${props => props.isMobile ? '150px' : '200px'};
   border-radius: 5px;
   background-color: rgba(0,0,0, .20);
   color: rgba(255, 255, 255, .6);

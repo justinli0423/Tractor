@@ -17,6 +17,10 @@ export function makePlayIO(trick, cardsInHand, validator) {
   socket.emit('clientPlay', trick, cardsInHand, validator); 
 }
 
+export function startNewRoundIO() {
+  socket.emit('startNewRound');
+}
+
 export function makeBidIO(bid) {
   socket.emit('newBid', bid);
 }
