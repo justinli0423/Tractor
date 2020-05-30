@@ -33,7 +33,6 @@ class SocketUtil {
     }
 
     start() {
-        console.log('test1', this._started)
         _.each(_.keys(this._sockets), (room) => {
             if (Object.keys(this._sockets[room]).length === constants.numPlayers && !this._started[room]) {
                 this._started[room] = true;
@@ -75,8 +74,6 @@ class SocketUtil {
     }
 
     emitBottom(socketId, bottom) {
-        console.log('test8', this._sockets)
-
         console.log('Sending', this._sockets[this._rooms[socketId]][socketId], 'the bottom:', bottom);
         this.getSocket(socketId).emit('originalBottom', bottom);
     }
@@ -93,6 +90,7 @@ class SocketUtil {
 
     emitCurrentWinner(socketId) {
         constants.io.in(this._rooms[socketId]).emit('currentWinner', socketId)
+        console.log(this._sockets[this._rooms[socketId]][socketId], 'is now winning the trick.')
     }
 
     emitOpponentPoints(room, points) {
@@ -183,8 +181,6 @@ class SocketUtil {
     }
 
     subClientPlay(socketId, i) {
-        // console.log('test17', this._sockets)
-
         console.log('Waiting for play from', this._sockets[this._rooms[socketId]][socketId]);
         this.getSocket(socketId).on('clientPlay', (play, other, callback) => {
             const Trick = constants.games[this._rooms[socketId]].round.playRound.trick;
