@@ -103,7 +103,7 @@ const PlayerInfo = (props) => {
     if (clientCards && clientCards.length > 0) {
       clientCards.forEach(card => {
         svg = Card.getSvg(card);
-        allSvgs.push(<SvgContainer src={svg} />)
+        allSvgs.push(<SvgContainer isMobile={appHeight > appWidth} src={svg} />)
       })
     }
 
@@ -210,8 +210,8 @@ const Container = styled.div`
 
 const SvgContainer = styled.img`
   margin: 0 5px;
-  width: 60px;
-  height: 90px;
+  width: ${props => props.isMobile ? '30px' : '60px'};
+  height: ${props => props.isMobile ? '50px' : '90px'};
   
   &:nth-child(n + 2) {
     margin: 0 -20px;
