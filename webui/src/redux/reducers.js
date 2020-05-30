@@ -10,7 +10,7 @@ const currState = {
   trump: '2',
   room: '',
   currentBid: null,
-  currentTrickWinner: null,
+  currentTrickWinner: 'nobody',
   currentBottomClient: null,
   currentClientTurn: null,
   existingTricks: {},

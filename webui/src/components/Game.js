@@ -91,7 +91,7 @@ class Game extends Component {
     setValidBids([]);
     setClientTurn(null);
     setTricksPlayed({});
-    setCurrentTrickWinner(null);
+    setCurrentTrickWinner('nobody');
     setPoints(0);
     toggleBidButtons(true);
     console.log('resetting round');
@@ -156,8 +156,9 @@ class Game extends Component {
       trumpTracker,
       validBids,
       currentBid,
+      setValidBids,
+      updateCardsInHand
     } = this.props;
-    console.log('newCard', newCard);
     Cards.insertCard(cards, newCard, trumpValue, currentBid);
     Cards.newTrump(trumpTracker, validBids, newCard, currentBid, trumpValue);
     setValidBids(validBids);

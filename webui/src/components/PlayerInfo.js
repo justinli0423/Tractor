@@ -149,12 +149,16 @@ const mapStateToProps = (state) => {
 }
 
 const flash = keyframes`
-  from {
+  0% {
     background-color: rgba(0,0,0, .30);
   }
 
-  to {
+  50% {
     background-color: rgba(0,0,0, .10);
+  }
+  
+  100% {
+    background-color: rgba(0,0,0, .30);
   }
 `;
 
@@ -202,7 +206,7 @@ const Container2 = styled(Container)`
   transform: translateX(-50%);
   border: ${props => (props.clientTurn && props.myId === props.clientTurn) ? '2px solid red' : '2px solid transparent'};
   margin-top: 30px;
-  ${props => (props.currentTrickWinner === props.myId) ? css`animation: ${flash} 1s linear infinite` : ''};
+  ${props => (props.curWinner === props.myId) ? css`animation: ${flash} 1s linear infinite` : ''};
 `;
 
 const Container3 = styled(Container)`
@@ -211,7 +215,7 @@ const Container3 = styled(Container)`
   transform: translateY(-50%);
   border: ${props => (props.clientTurn && props.myId === props.clientTurn) ? '2px solid red' : '2px solid transparent'};
   margin-right: 30px;
-  ${props => (props.currentTrickWinner === props.myId) ? css`animation: ${flash} 1s linear infinite` : ''};
+  ${props => (props.curWinner === props.myId) ? css`animation: ${flash} 1s linear infinite` : ''};
 `;
 
 const PlayerSignal = styled.div`
