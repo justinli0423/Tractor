@@ -170,7 +170,7 @@ class Trick {
         } else {
             if (isSameSuit) {
                 // if (false) {
-                if (playNumSingles >= 2 || playNumSingles + playNumDoubles >= 2) {
+                if (playNumSingles >= 2 || playNumSingles + playNumDoubles - playNumTractorCards >= 2) {
                     if (playNumSingles > 0) {
                         const lowestSingle = playSingles[playSingles.length - 1]
                         for (let i = 0; i < constants.numPlayers; i++) {
@@ -191,7 +191,7 @@ class Trick {
                             }
                         }
                     }
-                    if (playNumDoubles > 0 && flag !== 'badThrow') {
+                    if (playNumDoubles - playNumTractorCards > 0 && flag !== 'badThrow') {
                         const lowestDouble = playDoubles[playDoubles.length - 1]
                         for (let i = 0; i < constants.numPlayers; i++) {
                             if (this._players[i] === socketId) {
