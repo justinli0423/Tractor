@@ -18,6 +18,7 @@ export function makePlayIO(trick, cardsInHand, validator) {
 }
 
 export function startNewRoundIO() {
+  console.log('STARTING NEW ROUND');
   socket.emit('startNewRound');
 }
 
