@@ -11,6 +11,7 @@ import {
   getNewRoundIO,
   getCurrentWinnerIO,
   getFinalBidIO,
+  getHiddenBottomIO,
   getBottomIO
 } from "../socket/connect";
 
@@ -38,6 +39,7 @@ import {
   setTrumpValue,
   updateNumCardsSelected,
   toggleCardSelector,
+  setCanStartRound,
   toggleBidButtons,
   setCurrentTrickWinner,
   setValidBids
@@ -66,6 +68,7 @@ class Game extends Component {
     getTrumpValueIO(this.props.setTrumpValue.bind(this));
     getCardsIO(this.setCards.bind(this));
     getNewBidIO(this.updateBidStatus.bind(this));
+    getHiddenBottomIO(this.receiveHiddenBottom.bind(this));
     getBottomIO(this.receiveBottomCards.bind(this));
     getFinalBidIO(this.sortHand.bind(this));
     getPointsIO(this.getPoints.bind(this));
@@ -83,6 +86,7 @@ class Game extends Component {
       toggleBidButtons,
       setValidBids,
       setCurrentTrickWinner,
+      setCanStartRound,
       updateCardsInHand
     } = this.props;
 
@@ -91,6 +95,7 @@ class Game extends Component {
     setValidBids([]);
     setClientTurn(null);
     setTricksPlayed({});
+    setCanStartRound(false);
     setCurrentTrickWinner('nobody');
     setPoints(0);
     toggleBidButtons(true);
@@ -181,6 +186,15 @@ class Game extends Component {
     this.props.toggleBidButtons(false);
   }
 
+  receiveHiddenBottom(bottomCards) {
+    bottomCards.forEach(bottomCard => {
+      this.setCards(bottomCard);
+    });
+    this.props.toggleCardSelector(false);
+    this.props.toggleBidButtons(false);
+    this.props.setCanStartRound(true);
+  }
+
   toggleSingleCard(cardIndex) {
     const {
       cards,
@@ -205,10 +219,6 @@ class Game extends Component {
     } = this.props;
     let isSelected = cards[cardIndex].isSelected;
     console.log('canToggleCards', canSelectCards);
-
-    if (!canSelectCards) {
-      return;
-    }
 
     // numBottom
     if (cards.length > 25 && !isSelected && numCardsSelected === 8) {
@@ -408,6 +418,7 @@ export default connect(mapStateToProps, {
   setTrumpValue,
   updateNumCardsSelected,
   toggleCardSelector,
+  setCanStartRound,
   setPoints,
   toggleBidButtons,
   setClientTurn,

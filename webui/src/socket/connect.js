@@ -17,6 +17,11 @@ export function makePlayIO(trick, cardsInHand, validator) {
   socket.emit('clientPlay', trick, cardsInHand, validator); 
 }
 
+export function startNewRoundIO() {
+  console.log('STARTING NEW ROUND');
+  socket.emit('startNewRound');
+}
+
 export function makeBidIO(bid) {
   socket.emit('newBid', bid);
 }
@@ -74,6 +79,10 @@ export function getTricksPlayedIO(getTricksPlayedCb) {
 
 export function getBottomIO(setBottomCardsCb) {
   socket.on('originalBottom', (cards) => setBottomCardsCb(cards));
+}
+
+export function getHiddenBottomIO(setBottomCardsCb) {
+  socket.on('hiddenBottom', (cards) => setBottomCardsCb(cards));
 }
 
 export function getConnectedClientsIO(setClientsCb) {

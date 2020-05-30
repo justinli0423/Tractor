@@ -128,7 +128,7 @@ const CallBottomButtons = (props) => {
       updateNumCardsSelected
     } = props;
     if (isValidPlay === 'valid') {
-    updateCardsInHand(cardsInHand, trumpTracker);
+      updateCardsInHand(cardsInHand, trumpTracker);
       toggleCardSelector(false);
       updateNumCardsSelected(0);
     } else if (isValidPlay === 'invalid') {

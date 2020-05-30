@@ -88,3 +88,8 @@ export const setPoints = (points) => ({
   type: 'SET_POINTS',
   payload: points
 })
+
+export const setCanStartRound = (toggle) => ({
+  type: 'TOGGLE_NEW_ROUND',
+  payload: toggle
+})

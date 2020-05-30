@@ -26,6 +26,7 @@ const currState = {
   // TODO: add everyone elses play - should be by socketId index
   // [[cards by player0], [cards by player1]]
   cardsPlayed: [],
+  canStartNewRound: false,
   numStateUpdated: 0
 }
 
@@ -103,6 +104,10 @@ export default (state = currState, action) => {
     case 'SET_CURRENT_TRICK_WINNER':
       return Object.assign({}, state, {
         currentTrickWinner: action.payload
+      })
+    case 'TOGGLE_NEW_ROUND':
+      return Object.assign({}, state, {
+        canStartNewRound: action.payload
       })
     default:
       return state;

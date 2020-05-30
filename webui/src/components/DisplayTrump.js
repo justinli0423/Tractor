@@ -2,16 +2,25 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
+import { startNewRoundIO } from '../socket/connect';
+
 import {
   getExistingClients,
   getCurrentBid,
+  getMyCards,
   getTrumpValue,
   getPoints,
   getBottomClient,
+  getCanStartNewRound,
   getScreenSize,
   updateState
 } from '../redux/selectors';
 
+import {
+  setCanStartRound
+} from '../redux/actions';
+
+import RegularButton from './RegularButton';
 import Cards from '../utils/Cards';
 
 class DisplayTrump extends Component {
@@ -65,7 +74,11 @@ class DisplayTrump extends Component {
   }
 
   getTrumpCardSvgs(currentBid) {
-    const { trumpValue } = this.props;
+    const {
+      trumpValue,
+      appWidth,
+      appHeight
+    } = this.props;
     const Card = new Cards('/cardsSVG/');
     const allSvgs = [];
     let svg;
@@ -74,12 +87,12 @@ class DisplayTrump extends Component {
       if (currentBid[1] === 'J') {
         svg = Card.getSvg(currentBid);
         for (let i = 0; i < 2; i++) {
-          allSvgs.push(<SvgContainer src={svg} />);
+          allSvgs.push(<SvgContainer isMobile={appHeight > appWidth} src={svg} />);
         }
       } else {
         svg = Card.getSvg([trumpValue, currentBid[1]]);
         for (let i = 0; i < currentBid[0]; i++) {
-          allSvgs.push(<SvgContainer src={svg} />);
+          allSvgs.push(<SvgContainer isMobile={appHeight > appWidth} src={svg} />);
         }
       }
     }
@@ -92,14 +105,28 @@ class DisplayTrump extends Component {
       clients,
       appHeight,
       appWidth,
-      points
+      points,
+      canStartNewRound,
+      setCanStartRound,
     } = this.props;
     const { bidHistory } = this.state;
     return (
       <ClientsContainer
         isMobile={appHeight > appWidth}
       >
-        <ClientsHeader>POINTS: {points}</ClientsHeader>
+        {canStartNewRound && (
+          <RegularButton
+            margin='2px 0 7px'
+            label='Start Round'
+            onClick={() => {
+              startNewRoundIO();
+              setCanStartRound(false);
+            }}
+          />
+        )}
+        <ClientsHeader>
+          POINTS: {points}
+        </ClientsHeader>
         <ClientsHeader>TRUMP</ClientsHeader>
         {bidHistory.length ? bidHistory.map(bidArr => (
           <ClientItem>
@@ -117,14 +144,18 @@ const mapStateToProps = state => {
   const currentBid = getCurrentBid(state);
   const points = getPoints(state);
   const trumpValue = getTrumpValue(state);
+  const canStartNewRound = getCanStartNewRound(state);
   const { appWidth, appHeight } = getScreenSize(state);
+  const myCards = getMyCards(state);
   const numStateChanges = updateState(state);
   return {
     clients,
+    myCards,
     currentBid,
     appWidth,
     appHeight,
     trumpValue,
+    canStartNewRound,
     points,
     currentBottomClient,
     numStateChanges
@@ -139,7 +170,7 @@ const ClientsContainer = styled.ul`
   left: 0;
   margin: 5px;
   padding: 10px 30px 10px 10px;
-  width: 150px;
+  width: ${props => props.isMobile ? '150px' : '200px'};
   border-radius: 5px;
   background-color: rgba(0,0,0, .20);
   color: rgba(255, 255, 255, .6);
@@ -168,12 +199,14 @@ const ClientItem = styled.li`
 
 const SvgContainer = styled.img`
   margin: 0 5px;
-  width: 40px;
-  height: 60px;
+  width: ${props => props.isMobile ? '30px' : '40px'};
+  height: ${props => props.isMobile ? '40px' : '60px'};
   
   &:nth-child(n + 2) {
     margin: 0 -20px;
   }
 `;
 
-export default connect(mapStateToProps)(DisplayTrump);
+export default connect(mapStateToProps, {
+  setCanStartRound
+})(DisplayTrump);
