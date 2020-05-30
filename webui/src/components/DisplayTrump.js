@@ -118,7 +118,7 @@ class DisplayTrump extends Component {
           <RegularButton
             margin='2px 0 7px'
             label='Start Round'
-            onClick={() => {
+            onClickCb={() => {
               startNewRoundIO();
               setCanStartRound(false);
             }}
