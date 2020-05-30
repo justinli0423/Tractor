@@ -12,8 +12,8 @@ class SocketUtil {
 
     // ------------ HELPERS ------------
 
-    get sockets() {
-        return this._sockets;
+    get rooms() {
+        return this._rooms
     }
 
     clearNullSockets() {
@@ -100,6 +100,9 @@ class SocketUtil {
     emitEndBottom(room, bottom) {
         constants.io.in(room).emit('originalBottom', bottom);
         constants.io.in(room).emit('nextClient', null);
+        _.forEach(this._sockets[room], (socketId) => {
+            this.subStartRound(socketId)
+        })
         setTimeout(() => {
             constants.io.in(room).emit('newRound');
         }, 5000);
@@ -200,6 +203,14 @@ class SocketUtil {
         })
     }
 
+    subStartRound(socketId) {
+        console.log('Waiting to start next round.');
+        this.getSocket(socketId).on('startNewRound', () => {
+            console.log('Round started by', this._sockets[this._rooms[socketId]][socketId])
+            this.closeStartRoundSub(socketId);
+            constants.games[this._rooms[socketId]].newRound();
+        })
+    }
 
     // ------------ SOCKET CLOSERS ------------
 
@@ -219,6 +230,11 @@ class SocketUtil {
         this.getSocket(socketId).removeAllListeners('clientPlay');
     }
 
+    closeStartRoundSub(socketId) {
+        _.forEach(this._sockets[this._rooms[socketId]], (socket) => {
+            this.getSocket(socketId).removeAllListeners('clientPlay');
+        })
+    }
 }
 
 module.exports = SocketUtil;
