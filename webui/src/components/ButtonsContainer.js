@@ -12,18 +12,19 @@ import {
   returnBottomIO,
   getClientTurnIO,
   getTricksPlayedIO,
+  getGeneratedTrumpIO,
   makePlayIO,
   setDoneBidIO
 } from '../socket/connect';
 
 import {
-  setClientTurn,
   setTricksPlayed,
-  setCurrentBid,
+  setClientTurn,
   toggleBidButtons,
   updateCardsInHand,
   toggleCardSelector,
   updateNumCardsSelected,
+  setCurrentBid,
 } from '../redux/actions';
 
 import {
@@ -33,6 +34,7 @@ import {
   getValidBids,
   getCurrentBid,
   getTrumpValue,
+  getScreenSize,
   getTrumpTracker,
   getCanBidForBottom,
   getClientTurn,
@@ -43,11 +45,6 @@ import {
 const Cards = new PlayingCards();
 
 const CallBottomButtons = (props) => {
-  // TODO: 1. pass correct value
-  // TODO: 2. remove invalid bids
-
-  // e.g. if I have 2 (2 of spades) -> [2, 'S'];
-  // e.g. no trump: ['S', 'J'] or ['B', 'J']
   const setBottom = (bid) => {
     const {
       myId,
@@ -60,8 +57,20 @@ const CallBottomButtons = (props) => {
   }
 
   const setDoneBid = () => {
+    const {
+      cards,
+      trumpTracker
+    } = props;
     setDoneBidIO();
     props.toggleBidButtons(false);
+    getClientTurnIO(enableTurnsListener);
+    getTricksPlayedIO(enableTricksListener);
+    getGeneratedTrumpIO(enableTrumpListener);
+    updateCardsInHand(cards, trumpTracker);
+  }
+
+  const enableTrumpListener = (clientId, trumpCard) => {
+    props.setCurrentBid(clientId, trumpCard);
   }
 
   const enableTurnsListener = (clientId) => {
@@ -86,6 +95,7 @@ const CallBottomButtons = (props) => {
   const emitReturnBottom = () => {
     const {
       cards,
+      trumpTracker,
       updateCardsInHand,
       toggleCardSelector,
       updateNumCardsSelected
@@ -100,28 +110,41 @@ const CallBottomButtons = (props) => {
       }
     })
 
-    getClientTurnIO(enableTurnsListener);
-    getTricksPlayedIO(enableTricksListener);
-    updateCardsInHand(cardsInHand);
+    console.log('cards sent back for bottom', bottomCards);
+    updateCardsInHand(cardsInHand, trumpTracker);
     toggleCardSelector(false);
     updateNumCardsSelected(0);
     returnBottomIO(bottomCards);
-    // TODO: CAN START ROUND STATUS HERE
   }
 
   const emitTrickValidator = (isValidPlay, cardsInHand) => {
-    const { 
+    const {
+      cards,
       updateCardsInHand,
+      trumpTracker,
       toggleCardSelector,
+      trumpValue,
+      currentBid,
       updateNumCardsSelected
     } = props;
-    if (isValidPlay) {
-      updateCardsInHand(cardsInHand);
+    if (isValidPlay === 'valid') {
+      updateCardsInHand(cardsInHand, trumpTracker);
       toggleCardSelector(false);
       updateNumCardsSelected(0);
-    } else {
+    } else if (isValidPlay === 'invalid') {
       alert('Invalid Trick');
-      // TODO: reset hand for them?
+      updateCardsInHand(cards.map(cardObj => {
+        cardObj.isSelected = false;
+        return cardObj;
+      }), trumpTracker);
+    } else if (isValidPlay === 'badThrow') {
+      let newCards = [];
+      alert('Bad Throw');
+      cardsInHand.forEach(card => {
+        console.log(card, card.card);
+        Cards.insertCard(newCards, card.card, trumpValue, currentBid[1]);
+      });
+      updateCardsInHand(newCards, trumpTracker);
     }
   }
 
@@ -136,7 +159,6 @@ const CallBottomButtons = (props) => {
         cardsInHand.push(card);
       }
     })
-
     makePlayIO(selectedCards, cardsInHand, emitTrickValidator);
   }
 
@@ -168,7 +190,9 @@ const CallBottomButtons = (props) => {
 
 
   const renderBidButtons = () => (
-    <BidButtonContainer>
+    <BidButtonContainer
+      isMobile={props.appHeight > props.appWidth}
+    >
       {props.canBidForBottom && getAvailableBidButtons().map((buttonObject, i) => {
         return (
           <GameButton
@@ -186,25 +210,26 @@ const CallBottomButtons = (props) => {
 
   const renderFinishButtons = () => (
     <span>
-      {props.canBidForBottom && <RegularButton
-        id="finishBidBtn"
-        label="Finish Bid"
-        onClickCb={setDoneBid}
-      />}
+      {props.canBidForBottom &&
+        <RegularButton
+          id="finishBidBtn"
+          label="Finish Bid"
+          onClickCb={setDoneBid}
+        />}
       {/* TODO: set num cards selected to 8 later */}
-      {props.numCardsSelected === 4 &&
+      {props.numCardsSelected === 8 && props.cards.length > 25 &&
         <RegularButton
           id="finishBottomBtn"
           label="Finish Bottom"
           onClickCb={emitReturnBottom}
         />}
-        {props.clientTurnId === props.myId && props.numCardsSelected &&
+      {props.clientTurnId === props.myId && !!props.numCardsSelected &&
         <RegularButton
           id="finishTrickBtn"
           label="Finish Trick"
           onClickCb={emitTrick}
         />
-        }
+      }
     </span>
   )
 
@@ -222,8 +247,9 @@ const mapStateToProps = (state) => {
   const validBids = getValidBids(state);
   const trumpValue = getTrumpValue(state);
   const trumpTracker = getTrumpTracker(state);
-  const currentBid = getCurrentBid(state);
   const canBidForBottom = getCanBidForBottom(state);
+  const currentBid = getCurrentBid(state);
+  const { appWidth, appHeight } = getScreenSize(state);
   const clientTurnId = getClientTurn(state);
   const cards = getMyCards(state);
   const numCardsSelected = getNumCardsSelected(state);
@@ -233,6 +259,8 @@ const mapStateToProps = (state) => {
     myId,
     name,
     cards,
+    appWidth,
+    appHeight,
     validBids,
     clientTurnId,
     currentBid,
@@ -245,6 +273,7 @@ const mapStateToProps = (state) => {
 }
 
 const AllButtonsContainer = styled.div`
+  z-index: 100;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -257,16 +286,18 @@ const BidButtonContainer = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: ${props => props.isMobile && '1'};
+  max-width: ${props => props.isMobile && '80%'};
   margin: 10px;
   height: 40px;
 `;
 
 export default connect(mapStateToProps, {
-  setCurrentBid,
   toggleBidButtons,
   updateCardsInHand,
   toggleCardSelector,
-  setClientTurn,
   setTricksPlayed,
+  setClientTurn,
+  setCurrentBid,
   updateNumCardsSelected
 })(CallBottomButtons);

@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { keyframes, css } from 'styled-components';
 import { connect } from 'react-redux';
 
 import Cards from '../utils/Cards';
@@ -8,10 +8,10 @@ import {
   getId,
   getExistingClients,
   getExistingClientIds,
-  getTrumpValue,
-  getBottomClient,
+  getClientTurn,
+  getExistingTricks,
   getScreenSize,
-  getCurrentBid,
+  getCurrentTrickWinner,
   updateState
 } from '../redux/selectors';
 
@@ -22,61 +22,72 @@ const PlayerInfo = (props) => {
     myId,
     clients,
     clientIds,
-    bottomClient,
     appWidth,
-    trumpValue,
-    currentBid,
+    appHeight,
+    existingTricks,
+    currentClientTurn,
+    currentTrickWinner
   } = props;
-  const filteredClientIds = clientIds.filter(id => id !== myId);
+  const filteredClientIds = [];
+  const myIndex = clientIds.indexOf(myId);
+  for (let i = 1; i < 4; i++) {
+    filteredClientIds.push(clientIds[(myIndex + i) % 4]);
+  }
 
-  // keep track of bidding history as well...
 
-  const player1 = (clientName, playerId, cardSvg) => {
-    if (bottomClient === playerId) {
-      return (
-        <Container1
-          appWidth={appWidth}
-        >
-          <Name> {clientName}: </Name>
-          {cardSvg}
-        </Container1>
-      )
-    }
+  const player1 = (clientName, clientId, cardSvg) => {
     return (
-      <Container1>
-        {filteredClientIds[0] ? clientName : 'Waiting for P1...'}
+      <Container1
+        curWinner={currentTrickWinner}
+        clientTurn={currentClientTurn}
+        myId={clientId}
+        appWidth={appWidth}
+      >
+        {filteredClientIds[0] ?
+          <>
+            <Name>
+              {clientName}:
+            </Name>
+            {cardSvg}
+          </> : 'Waiting for Player...'}
       </Container1>
     )
   }
 
-  const player2 = (clientName, playerId, cardSvg) => {
-    if (bottomClient === playerId) {
-      return (
-        <Container2>
-          <Name> {clientName}: </Name>
-          {cardSvg}
-        </Container2>
-      )
-    }
+  const player2 = (clientName, clientId, cardSvg) => {
     return (
-      <Container2>
-        {filteredClientIds[1] ? clientName : 'Waiting for P2...'}
+      <Container2
+        curWinner={currentTrickWinner}
+        clientTurn={currentClientTurn}
+        myId={clientId}
+        appWidth={appWidth}
+      >
+        {filteredClientIds[1] ?
+          <>
+            <Name>
+              {clientName}:
+            </Name>
+            {cardSvg}
+          </> : 'Waiting for Player...'}
       </Container2>
     )
   }
 
-  const player3 = (clientName, playerId, cardSvg) => {
-    if (bottomClient === playerId) {
-      return (
-        <Container3>
-          <Name> {clientName}: </Name>
-          {cardSvg}
-        </Container3>
-      )
-    }
+  const player3 = (clientName, clientId, cardSvg) => {
     return (
-      <Container3>
-        {filteredClientIds[2] ? clientName : 'Waiting for P3...'}
+      <Container3
+        curWinner={currentTrickWinner}
+        clientTurn={currentClientTurn}
+        myId={clientId}
+        appWidth={appWidth}
+      >
+        {filteredClientIds[2] ?
+          <>
+            <Name>
+              {clientName}:
+            </Name>
+            {cardSvg}
+          </> : 'Waiting for Player...'}
       </Container3>
     )
   }
@@ -85,24 +96,15 @@ const PlayerInfo = (props) => {
     const Card = new Cards('/cardsSVG/');
     const clientId = filteredClientIds[index];
     const clientName = clients[clientId];
+    const clientCards = existingTricks[clientId];
     const allSvgs = [];
     let svg;
 
-    // TODO: distinguish bottom bids vs regular tricks
-    // TODO: does not show regular tricks yet
-    if (currentBid && currentBid.length) {
-      if (currentBid[1] === 'J') {
-        svg = Card.getSvg(currentBid);
-        // call with 2 jokers only
-        for(let i = 0; i < 2; i++) {
-          allSvgs.push(<SvgContainer src={svg}/>);
-        }
-      } else {
-        svg = Card.getSvg([trumpValue, currentBid[1]]);
-        for(let i = 0; i < currentBid[0]; i++) {
-          allSvgs.push(<SvgContainer src={svg} />);
-        }
-      }
+    if (clientCards && clientCards.length > 0) {
+      clientCards.forEach(card => {
+        svg = Card.getSvg(card);
+        allSvgs.push(<SvgContainer isMobile={appHeight > appWidth} src={svg} />)
+      })
     }
 
     return (index === 0) ? player1(clientName, clientId, allSvgs) :
@@ -112,9 +114,25 @@ const PlayerInfo = (props) => {
 
   return (
     <>
-      {renderPlayerInfo(0)}
-      {renderPlayerInfo(1)}
-      {renderPlayerInfo(2)}
+      <PlayerSignal
+        myId={myId}
+        clientTurn={currentClientTurn}
+      >
+        Go
+      </PlayerSignal>
+      {(appHeight > appWidth) ? (
+        <Wrapper>
+          {renderPlayerInfo(0)}
+          {renderPlayerInfo(1)}
+          {renderPlayerInfo(2)}
+        </Wrapper>
+      ) : (
+        <>
+          {renderPlayerInfo(0)}
+          {renderPlayerInfo(1)}
+          {renderPlayerInfo(2)}
+        </>
+      )}
     </>
   )
 };
@@ -123,24 +141,57 @@ const mapStateToProps = (state) => {
   const myId = getId(state);
   const clients = getExistingClients(state);
   const clientIds = getExistingClientIds(state);
-  const bottomClient = getBottomClient(state);
-  const trumpValue = getTrumpValue(state);
-  const currentBid = getCurrentBid(state);
-  const updateNumState = updateState(state);
+  const existingTricks = getExistingTricks(state);
+  const currentClientTurn = getClientTurn(state);
+  const currentTrickWinner = getCurrentTrickWinner(state);
   const { appWidth, appHeight } = getScreenSize(state);
-
+  const updateNumState = updateState(state);
   return {
     myId,
     clients,
     clientIds,
+    currentTrickWinner,
+    currentClientTurn,
+    existingTricks,
     appWidth,
     appHeight,
-    bottomClient,
-    trumpValue,
-    currentBid,
     updateNumState
   }
 }
+
+const flash = keyframes`
+  0% {
+    background-color: rgba(0,0,0, .30);
+  }
+
+  50% {
+    background-color: rgba(0,0,0, .10);
+  }
+  
+  100% {
+    background-color: rgba(0,0,0, .30);
+  }
+`;
+
+const Wrapper = styled.div`
+  position: fixed;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  top: 0;
+  height: 130px;
+  width: 100%;
+
+  div {
+    position: unset;
+    width: 25%;
+    min-width: auto;
+    height: 120px;
+    transform: none;
+    margin: 5px;
+    font-size: 12px;
+  }
+`;
 
 const Container = styled.div`
   position: fixed;
@@ -159,8 +210,8 @@ const Container = styled.div`
 
 const SvgContainer = styled.img`
   margin: 0 5px;
-  width: 60px;
-  height: 90px;
+  width: ${props => props.isMobile ? '30px' : '60px'};
+  height: ${props => props.isMobile ? '50px' : '90px'};
   
   &:nth-child(n + 2) {
     margin: 0 -20px;
@@ -175,21 +226,42 @@ const Container1 = styled(Container)`
   top: 50%;
   left: 0;
   transform: translateY(-50%);
+  border: ${props => (props.clientTurn && props.myId === props.clientTurn) ? '2px solid red' : '2px solid transparent'};
   margin-left: 30px;
+  ${props => (props.curWinner === props.myId) ? css`animation: ${flash} 1s linear infinite` : ''};
 `;
 
 const Container2 = styled(Container)`
   top: 0;
   left: 50%;
   transform: translateX(-50%);
+  border: ${props => (props.clientTurn && props.myId === props.clientTurn) ? '2px solid red' : '2px solid transparent'};
   margin-top: 30px;
+  ${props => (props.curWinner === props.myId) ? css`animation: ${flash} 1s linear infinite` : ''};
 `;
 
 const Container3 = styled(Container)`
   top: 50%;
   right: 0;
   transform: translateY(-50%);
+  border: ${props => (props.clientTurn && props.myId === props.clientTurn) ? '2px solid red' : '2px solid transparent'};
   margin-right: 30px;
+  ${props => (props.curWinner === props.myId) ? css`animation: ${flash} 1s linear infinite` : ''};
+`;
+
+const PlayerSignal = styled.div`
+  z-index: 0;
+  position: absolute;
+  display: ${props => props.myId === props.clientTurn ? 'flex' : 'none'};
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+  color: rgba(255, 255, 255, .1);
+  font-size: 20rem;
 `;
 
 

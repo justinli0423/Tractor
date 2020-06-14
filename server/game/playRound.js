@@ -1,31 +1,55 @@
+const _ = require('underscore');
 const constants = require('../constants');
 const Trick = require('./trick');
 
 class PlayRound {
-    constructor(deck, players, hands, trumpValue, trumpSuit, bottom) {
-        console.log('New PlayRound');
+    constructor(room, deck, players, hands, trumpValue, trumpSuit, bottom) {
+        this._room = room;
         this._discard = deck;
         this._players = players;
         this._hands = hands;
-        this._declarer_points = 0;
-        this._opponent_points = 0;
+        this._opponentPoints = 0;
         this._trumpValue = trumpValue;
         this._trumpSuit = trumpSuit;
         this._bottom = bottom;
         this._trick = null;
         this._trickStarter = 0;
-        this._winner = null;
     }
 
-    play() {
-        if (this._hands[this._players[0]].numCards > 0) {
-            this.newTrick();
+    nextTrick() {
+        if (this._trick) {
+            this._trickStarter = (this._trickStarter + this._trick.winner) % constants.numPlayers;
+            if (this._trickStarter % 2 !== 0) {
+                this._opponentPoints += this._trick.points;
+            }
+            let discard = Object.values(this._trick._cards).flat();
+            _.forEach(discard, (card) => {
+                this._discard.pushCard(card);
+            })
+            console.log('Trick won by', constants.su.sockets[constants.su.rooms[this._players[this._trickStarter]]][this._players[this._trickStarter]]);
+            console.log('Opponent points:', this._opponentPoints)
+            constants.su.emitOpponentPoints(this._room, this._opponentPoints);
         }
-    }
-
-    newTrick() {
-        this._trick = new Trick(this._players, this._hands, this._trickStarter, this._trumpValue, this._trumpSuit);
-        this._trick.play(0);
+        if (this._hands[this._players[0]].numCards > 0) {
+            this._trick = new Trick(this._room, this._players, this._hands, this._trickStarter, this._trumpValue, this._trumpSuit);
+            this._trick.play(0);
+        } else {
+            let bottomPoints = 0;
+            let bottom = [];
+            for (let i = 0; i < constants.numBottom; i++) {
+                const card = this._bottom.deal();
+                bottomPoints += card.getPoints();
+                bottom.push([card.value, card.suit]);
+                this._discard.pushCard(card);
+            }
+            if (this._trickStarter % 2 !== 0) {
+                this._opponentPoints += bottomPoints * this._trick.trickNumCards * 2;
+            }
+            console.log('Opponent final points:', this._opponentPoints);
+            constants.games[this._room].round.endRound();
+            constants.su.emitOpponentPoints(this._room, this._opponentPoints);
+            constants.su.emitEndBottom(this._room, bottom);
+        }
     }
 
     get trick() {
@@ -33,6 +57,7 @@ class PlayRound {
     }
 
     get discard() {
+        console.log('discard numcards', this._discard.numCards);
         return this._discard;
     }
 
@@ -41,36 +66,16 @@ class PlayRound {
             this._discard.pushCard(cards[i]);
     }
 
-    get players() {
-        return this._players;
+    get opponentPoints() {
+        return this._opponentPoints;
     }
 
-    get declarer_points() {
-        return this._declarer_points;
+    get trumpValue() {
+        return this._trumpValue;
     }
 
-    set declarer_point(points) {
-        this._declarer_points += points;
-    }
-
-    get opponent_points() {
-        return this._opponent_points;
-    }
-
-    set opponent_point(points) {
-        this._opponent_points += points;
-    }
-
-    get trump_value() {
-        return this._trump_value;
-    }
-
-    get trump_suit() {
-        return this._trump_suit;
-    }
-
-    set trump_suit(suit) {
-        this._trump_suit = suit;
+    get trumpSuit() {
+        return this._trumpSuit;
     }
 
     get bottom() {
@@ -79,10 +84,6 @@ class PlayRound {
 
     set bottom(cards) {
         this._bottom = cards;
-    }
-
-    winner() {
-        self._winner = this._opponent_points >= 80 ? 'Opponents' : 'Declarers';
     }
 
 }

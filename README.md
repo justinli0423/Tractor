@@ -17,13 +17,11 @@
   - allow for choosing teams? (easier for choosing display location)
   - refactor redux actions/selectors/reducer into proper files
   - support for other resolutions
-    - [] 1680*939 (mac)
-    - [] 2560x1440 (later)
-    - [done] 1920x1080
-    - [] 1280x720
-    - ipad / ipad pro res
+
   - custom backgrounds? way way later
   - load svgs before game starts to avoid render delay
+
+  - refresh client when disconnected
 
   - auto emit done bid 
     - when no cards can be used to bid

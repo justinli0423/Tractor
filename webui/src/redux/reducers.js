@@ -8,21 +8,25 @@ const currState = {
   id: '',
   cards: [],
   trump: '2',
+  room: '',
   currentBid: null,
+  currentTrickWinner: 'nobody',
   currentBottomClient: null,
   currentClientTurn: null,
-  currentTricks: [],
+  existingTricks: {},
   trumpTracker: { 'S': 0, 'D': 0, 'C': 0, 'H': 0, 'SJ': 0, 'BJ': 0 },
   validBids: [],
-  // canSelectCards & numCardsSelected is for 
+  points: 0,
+  // canSelectCards & numCardsSelected is for
   // both returning bottom and playing cards on your turn
   canSelectCards: false,
   numCardsSelected: 0,
   // canBidForBottom is only true beginning of each round
-  canBidForBottom: true,
+  canBidForBottom: false,
   // TODO: add everyone elses play - should be by socketId index
   // [[cards by player0], [cards by player1]]
   cardsPlayed: [],
+  canStartNewRound: false,
   numStateUpdated: 0
 }
 
@@ -43,6 +47,7 @@ export default (state = currState, action) => {
       console.log(action.payload)
       return Object.assign({}, state, {
         name: action.payload.name,
+        room: action.payload.room,
         id: action.payload.id
       })
     case 'SET_DECLARER':
@@ -89,8 +94,20 @@ export default (state = currState, action) => {
       })
     case 'SET_ALL_TRICKS':
       return Object.assign({}, state, {
-        currentTricks: action.payload,
+        existingTricks: action.payload,
         numStateUpdated: state.numStateUpdated + 1
+      })
+    case 'SET_POINTS':
+      return Object.assign({}, state, {
+        points: action.payload,
+      })
+    case 'SET_CURRENT_TRICK_WINNER':
+      return Object.assign({}, state, {
+        currentTrickWinner: action.payload
+      })
+    case 'TOGGLE_NEW_ROUND':
+      return Object.assign({}, state, {
+        canStartNewRound: action.payload
       })
     default:
       return state;

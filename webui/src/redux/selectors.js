@@ -3,6 +3,8 @@ export const getScreenSize = store => ({
   appHeight: store.appHeight
 });
 
+export const getRoom = store => store.room;
+
 export const getExistingClients = store => store.clients;
 
 export const getExistingClientIds = store => store.clientIds;
@@ -31,6 +33,12 @@ export const getNumCardsSelected = store => store.numCardsSelected;
 
 export const getCanBidForBottom = store => store.canBidForBottom;
 
-export const getCurrentTrick = store => store.currentTricks;
+export const getExistingTricks = store => store.existingTricks;
 
 export const getClientTurn = store => store.currentClientTurn;
+
+export const getPoints = store => store.points;
+
+export const getCurrentTrickWinner = store => store.currentTrickWinner;
+
+export const getCanStartNewRound = store => store.canStartNewRound;

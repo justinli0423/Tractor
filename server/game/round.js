@@ -4,16 +4,15 @@ const BidRound = require('./bidRound')
 const PlayRound = require('./playRound')
 
 class Round {
-    constructor(deck, players = null, trumpValue, roundNumber) {
+    constructor(room, deck, players = null, trumpValue, roundNumber) {
+        this._room = room;
         this._roundNumber = roundNumber
         this._deck = deck;
         this._players = players;
-        this._declarerPoints = 0;
         this._opponentPoints = 0;
         this._trumpValue = trumpValue;
         this._trumpSuit = null;
         this._bottom = null;
-        this._winner = null;
         this._bidRound = null;
         this._playRound = null;
         this._bids = {};
@@ -31,10 +30,13 @@ class Round {
     }
 
     dealAndBid() {
-        constants.su.emitTrumpValue(this._trumpValue);
-        this._bidRound = new BidRound(this._deck, this._players, this._trumpValue, this._trumpSuit, this._roundNumber);
-        this._bidRound.deal();
-        _.map(this._players, function(socketId) {
+        constants.su.emitTrumpValue(this._room, this._trumpValue);
+        // console.log('round:dealAndBid - typeof deck', typeof this._deck)
+        // console.log('round:dealAndBid - round', this)
+        // console.log('round:dealAndBid - deck numcards', this._deck.numCards)
+        this._bidRound = new BidRound(this._room, this._deck, this._players, this._trumpValue, this._roundNumber);
+        this._bidRound.deal.call(this._bidRound);
+        _.map(this._players, function (socketId) {
             constants.su.subSetBid(socketId);
             constants.su.subDoneBid(socketId);
         })
@@ -45,41 +47,18 @@ class Round {
     }
 
     play() {
-        this._playRound = new PlayRound(this._deck, this._players, this._bidRound.hands, this._trumpValue, this._trumpSuit, this._bidRound.bottom)
-        this._playRound.play()
+        this._trumpSuit = this._bidRound.trumpSuit;
+        this._playRound = new PlayRound(this._room, this._deck, this._players, this._bidRound.hands, this._trumpValue, this._trumpSuit, this._bidRound.bottom)
+        this._playRound.nextTrick()
     }
 
-
-    get players() {
-        return this._players;
-    }
-
-    get declarerPoints() {
-        return this._declarerPoints;
-    }
-
-    set declarerPoint(points) {
-        this._declarerPoints += points;
+    endRound() {
+        this._opponentPoints = this._playRound.opponentPoints;
+        constants.games[this._room]._deck = this._playRound.discard;
     }
 
     get opponentPoints() {
         return this._opponentPoints;
-    }
-
-    set opponentPoint(points) {
-        this._opponentPoints += points;
-    }
-
-    get bottom() {
-        return this._bottom;
-    }
-
-    set bottom(cards) {
-        this._bottom = cards;
-    }
-
-    winner() {
-        self._winner = this._opponentPoints >= 80 ? 'Opponents' : 'Declarers';
     }
 
 }

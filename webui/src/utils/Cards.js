@@ -1,7 +1,9 @@
 import _ from 'underscore';
 
 export default class Cards {
-  path = '';
+  // TODO: DEPLOYMENT CARDS PATH IS DIFFERENT
+  // path = 'https://justinli0423.github.io/Tractor/cardsSVG/'; // local
+  path = '/Tractor/cardsSVG/'; //deployment
   suits = [];
   jokers = [];
   cards = [];
@@ -25,7 +27,7 @@ export default class Cards {
   }
 
   constructor(path) {
-    this.path = path;
+    // this.path = path;
     this.suits = new Set(['H', 'C', 'S', 'D']); //hearts, clubs, spades, diamonds
     this.jokers = new Set(['S', 'B']); // Small, big
     this.cards = new Set(['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']);
@@ -107,6 +109,80 @@ export default class Cards {
       cards.push(cardObject);
     }
   }
+  
+  // This is for after receiving trump
+  // direction:
+    // 1: increasing (3....A)
+    // 0: decreasing (A....3)
+  sortHand(cards, trumpValue, trumpSuit, direction = 0) {
+    let diamonds = [];
+    let clubs = [];
+    let spades = [];
+    let hearts = [];
+    let jokers = [];
+    let trumpD = [];
+    let trumpS = [];
+    let trumpH = [];
+    let trumpC = [];
+
+    let sortedCards = [];
+
+    if (trumpSuit === 'S' || trumpSuit === 'J') {
+      // if direction changed, sort otherway
+      // otherwise nothing to do for no trump or spades
+      return cards;
+    }
+
+    // only get here if there is a trump suit change
+    cards.forEach((cardObj) => {
+      let cardVal = cardObj.card;
+      if (cardVal[1] === 'J') {
+        jokers.push(cardObj);
+      }
+      if (cardVal[0] === trumpValue) {
+        if (cardVal[1] === 'S') {
+          trumpS.push(cardObj);
+        }
+        if (cardVal[1] === 'C') {
+          trumpC.push(cardObj);      
+        }
+        if (cardVal[1] === 'H') {
+          trumpH.push(cardObj);
+        }
+        if (cardVal[1] === 'D') {
+          trumpD.push(cardObj);
+        }
+      }
+      else {
+        if (cardVal[1] === 'S') {
+          spades.push(cardObj);
+        }
+        if (cardVal[1] === 'C') {
+          clubs.push(cardObj);      
+        }
+        if (cardVal[1] === 'H') {
+          hearts.push(cardObj);
+        }
+        if (cardVal[1] === 'D') {
+          diamonds.push(cardObj);
+        }
+      }
+    });
+
+    sortedCards = sortedCards.concat(jokers);
+    if (trumpSuit === 'C') {
+      sortedCards = sortedCards.concat(trumpC, trumpH, trumpS, trumpD, clubs, hearts, spades, diamonds);
+    }
+    if (trumpSuit === 'H') {
+      sortedCards = sortedCards.concat(trumpH, trumpS, trumpD, trumpC, hearts, spades, diamonds, clubs);
+    }
+    if (trumpSuit === 'D') {
+      sortedCards = sortedCards.concat(trumpD, trumpC, trumpH, trumpS, diamonds, clubs, hearts, spades);
+    }
+    console.log('sortedCards', sortedCards);
+    return sortedCards;
+  }
+
   // TODO
   newTrump(trumpTracker, validBids, newCard, currentBid, trumpValue) {
     if (newCard[1] === 'J') {
@@ -117,7 +193,7 @@ export default class Cards {
         }
       }
     } else if (newCard[0] === trumpValue) {
-      trumpTracker[newCard[1]] += 1
+      trumpTracker[newCard[1]] += 1;
       if (!currentBid || (currentBid[0] === 1 && trumpTracker[newCard[1]] === 2)) {
         validBids.push([trumpTracker[newCard[1]], newCard[1]])
       }

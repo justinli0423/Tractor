@@ -14,12 +14,18 @@ export const updateClientList = (clients) => ({
   }
 });
 
-export const setUser = (name, id) => ({
+export const setUser = (name, id, room) => ({
   type: 'SET_USER',
   payload: {
     name,
-    id
+    id,
+    room,
   }
+});
+
+export const setCurrentTrickWinner = (id) => ({
+  type: 'SET_CURRENT_TRICK_WINNER',
+  payload: id
 });
 
 export const setBottomClient = (socketId) => ({
@@ -76,4 +82,14 @@ export const setClientTurn = (clientId) => ({
 export const setTricksPlayed = (tricks) => ({
   type: 'SET_ALL_TRICKS',
   payload: tricks
+})
+
+export const setPoints = (points) => ({
+  type: 'SET_POINTS',
+  payload: points
+})
+
+export const setCanStartRound = (toggle) => ({
+  type: 'TOGGLE_NEW_ROUND',
+  payload: toggle
 })

@@ -1,10 +1,10 @@
 module.exports = {
-    interval: null,
+    intervals: {},
     io: null,
     su: null,
-    game: null,
+    games: {},
     round: null,
-    numPlayers: 1,
-    numBottom: 4
+    numPlayers: 4,
+    numBottom: 8
 }
 

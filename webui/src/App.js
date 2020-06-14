@@ -32,7 +32,8 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      connectionStatus: false, 
+      connectionStatus: false,
+      isConnecting: false,
       iconWidth: 150,
       inputWidth: 100
     };
@@ -53,17 +54,23 @@ class App extends Component {
       appWidth = 2560;
       appHeight = 1440;
       iconWidth = 250;
-      inputWidth = 170;
+      inputWidth = 200;
     } else if (screenWidth >= 1920 && screenHeight >= 1080) {
       appWidth = 1920;
       appHeight = 1080;
       iconWidth = 150;
-      inputWidth = 100;
+      inputWidth = 130;
+    } else if (screenWidth < screenHeight) {
+      // mobile
+      appWidth = screenWidth;
+      appHeight = screenHeight;
+      iconWidth = 150;
+      inputWidth = 130;
     } else {
       appWidth = 1280;
       appHeight = 720;
       iconWidth = 150;
-      inputWidth = 100;
+      inputWidth = 130;
     }
 
     this.props.setScreenSize(appWidth, appHeight);
@@ -73,11 +80,11 @@ class App extends Component {
     })
   }
 
-  setConnectionStatus(connectionStatus, id, name) {
+  setConnectionStatus(connectionStatus, id, name, roomName) {
     this.setState({ connectionStatus });
     if (connectionStatus) {
       getConnectedClientsIO(this.setConnectedClients.bind(this));
-      this.props.setUser(name, id);
+      this.props.setUser(name, id, roomName);
     }
   }
 
@@ -85,20 +92,42 @@ class App extends Component {
     this.props.updateClientList(sockets);
   }
 
+  joinRoomValidator(isConnected) {
+    if(!isConnected) {
+      alert('Room is full.');
+      this.setState({
+        connectionStatus: false
+      });
+    }
+    this.setState({
+      isConnecting: false
+    });
+  }
+
   connect(ev) {
     ev.preventDefault();
     let name = this.nameRef.value;
+    let room = this.roomRef.value;
     if (!name) {
-      console.log('enter a name');
+      alert('enter a name');
       return;
     }
+    if (!room) {
+      alert('enter a room');
+      return;
+    }
+
     if (name.length > 7) {
       name = name.slice(0, 7);
     }
-    connectToSocketIO(this.setConnectionStatus.bind(this), name);
+
+    this.setState({
+      isConnecting: true
+    });
+
+    connectToSocketIO(this.setConnectionStatus.bind(this), this.joinRoomValidator.bind(this), name, room.toLowerCase());
   }
 
-  // TODO: create popup on error to enter a name if no name is entered
   renderPreConnection() {
     const {
       appHeight,
@@ -106,7 +135,8 @@ class App extends Component {
     } = this.props;
     const {
       iconWidth,
-      inputWidth
+      inputWidth,
+      isConnecting
     } = this.state;
     return (
       <Container
@@ -124,14 +154,20 @@ class App extends Component {
         <Form
           onSubmit={(ev) => { this.connect(ev) }}
         >
-          <NameInput
+          <Input
             autoFocus
             placeholder="Enter a name!"
             inputWidth={inputWidth}
             ref={(nameRef) => { this.nameRef = nameRef }}
           />
+          <Input
+            placeholder="Enter a room code!"
+            inputWidth={inputWidth}
+            ref={(roomRef) => { this.roomRef = roomRef }}
+          />
           <RegularButton
             label="Join"
+            disabled={isConnecting}
           />
         </Form>
       </Container>
@@ -194,11 +230,11 @@ const Title = styled.h1`
 
 const Form = styled.form`
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
 `;
 
-const NameInput = styled.input`
+const Input = styled.input`
   margin: 5px 15px;
   padding: 7px 10px;
   outline: none;
