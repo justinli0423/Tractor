@@ -19,7 +19,7 @@
     "socket.io-client": "^2.3.0",
     "styled-components": "^5.1.0",
     "typescript": "^3.7.5",
-    "underscore": "^1.10.2"
+    "underscore": "^1.12.1"
   },
   "scripts": {
     "start": "react-scripts start --no-cache",
